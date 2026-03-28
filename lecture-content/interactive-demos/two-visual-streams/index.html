@@ -1385,9 +1385,6 @@
       if (type === 'dorsal' || type === 'all') {
         dorsalLines.forEach(l => { l.style.stroke = '#6ab4e8'; l.style.strokeWidth = '3'; });
         shared.forEach(l => { l.style.stroke = 'rgba(255,255,255,0.35)'; l.style.strokeWidth = '2.5'; });
-        // Also show the pulvinar→dorsal shortcut
-        pulvDorsalLines.forEach(l => { l.style.stroke = '#a08de0'; l.style.strokeWidth = '2.5'; });
-        pulvDorsalLabel.style.opacity = '0.7';
       }
       if (type === 'subcortical' || type === 'all') {
         subLines.forEach(l => { l.style.stroke = '#c89af0'; l.style.strokeWidth = '3'; });
