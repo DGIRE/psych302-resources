@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Demos — PSYCH 302: Neuroscience of the Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--alpenglow); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+      padding: 52px 28px 44px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      animation: fadeIn 0.6s ease-out;
+    }
+    .hero .overline {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
+    }
+    .hero h1 {
+      font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 12px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero p {
+      font-size: 0.92rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto; line-height: 1.6;
+    }
+
+    /* Teaser grid */
+    .teaser-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .teaser-card {
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.025);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+      transition: all 0.3s;
+      animation: fadeIn 0.5s ease-out both;
+    }
+    .teaser-card:nth-child(1) { animation-delay: 0.05s; }
+    .teaser-card:nth-child(2) { animation-delay: 0.1s; }
+    .teaser-card:nth-child(3) { animation-delay: 0.15s; }
+    .teaser-card:nth-child(4) { animation-delay: 0.2s; }
+    .teaser-card:nth-child(5) { animation-delay: 0.25s; }
+    .teaser-card:nth-child(6) { animation-delay: 0.3s; }
+
+    .teaser-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      border-style: solid;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .teaser-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      opacity: 0.5;
+    }
+    .teaser-card h3 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .teaser-card p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .teaser-tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 40px 20px;
+      margin-bottom: 40px;
+    }
+    .cta-section p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 20px 0 20px;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.4rem; }
+      .teaser-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-bg"></div>
+
+  <div class="container">
+
+    <a class="back-link" href="index.html">&#8592; Back to PSYCH 302 Home</a>
+
+    <div class="hero">
+      <div class="overline">PSYCH 302 &mdash; Spring 2026</div>
+      <h1>Interactive Demos</h1>
+      <p>Hands-on visualizations and explorations that bring neuroscience concepts to life. Each demo is designed to deepen your understanding of key lecture topics.</p>
+    </div>
+
+    <div class="teaser-grid">
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F9E0;</div>
+        <h3>Brain Network Explorer</h3>
+        <p>Interact with a 3D model of large-scale brain networks. Trace connections between regions and explore how damage changes network dynamics.</p>
+        <span class="teaser-tag">Lectures 3&ndash;4</span>
+      </div>
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F441;</div>
+        <h3>Two Visual Streams</h3>
+        <p>Experience how the ventral ("what") and dorsal ("where") pathways process visual information differently through interactive illusions.</p>
+        <span class="teaser-tag">Lecture 5</span>
+      </div>
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F50D;</div>
+        <h3>Attention &amp; Awareness</h3>
+        <p>Test your own attentional limits. Can you spot the change? Explore subliminal, preconscious, and conscious processing firsthand.</p>
+        <span class="teaser-tag">Lecture 6</span>
+      </div>
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F52E;</div>
+        <h3>Predictive Coding Simulator</h3>
+        <p>Build intuition for prediction error and precision weighting. Watch how the brain generates expectations and corrects itself in real time.</p>
+        <span class="teaser-tag">Lecture 14</span>
+      </div>
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F30A;</div>
+        <h3>Neural Dynamics Playground</h3>
+        <p>Visualize attractors, phase transitions, and criticality. Explore how the brain operates at the edge of chaos and what that means for cognition.</p>
+        <span class="teaser-tag">Lecture 13</span>
+      </div>
+
+      <div class="teaser-card">
+        <div class="teaser-icon">&#x1F9EC;</div>
+        <h3>Split Brain Experiment</h3>
+        <p>Step into a classic callosotomy paradigm. Present stimuli to different visual fields and discover what each hemisphere knows and doesn't know.</p>
+        <span class="teaser-tag">Lecture 16</span>
+      </div>
+
+    </div>
+
+    <div class="cta-section">
+      <p>These interactive demos are being developed alongside the course. They'll be released as each topic is covered in lectures. Check back soon!</p>
+    </div>
+
+    <footer>
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </footer>
+
+  </div>
+
+</body>
+</html>

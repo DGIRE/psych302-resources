@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 14 Content — PSYCH 302</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+      --accent: #8b2d2d;
+      --glow-rgb: 139,45,45;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--alpenglow); }
+
+    .header-card {
+      padding: 36px 28px 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      animation: fadeIn 0.6s ease-out;
+    }
+    .lecture-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .lecture-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .arc-tag {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .header-card h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.25;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Placeholder */
+    .placeholder-section {
+      text-align: center;
+      padding: 80px 28px;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    .placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+    .placeholder-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .placeholder-section p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 380px;
+      margin: 0 auto;
+      line-height: 1.55;
+    }
+
+    /* Quick links */
+    .quick-links {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .quick-link:hover {
+      border-color: var(--accent);
+      background: rgba(var(--glow-rgb), 0.08);
+      color: var(--accent);
+    }
+    .quick-link svg { width: 14px; height: 14px; }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 40px 0 20px;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .header-card { padding: 24px 18px 20px; }
+      .header-card h1 { font-size: 1.25rem; }
+      .quick-links { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-bg"></div>
+
+  <div class="container">
+
+    <a class="back-link" href="../course-literature.html">&#8592; Back to Course Literature</a>
+
+    <div class="header-card">
+      <div class="lecture-label">
+        <span class="lecture-num">Lecture 14</span>
+        <span class="arc-tag">Agency, Theories & Prediction</span>
+      </div>
+      <h1>The Predictive Brain — Predictive Coding and Active Inference</h1>
+    </div>
+
+    <div class="quick-links">
+      <a class="quick-link" href="../lectures/lecture-14.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Lecture 14 Literature
+      </a>
+    </div>
+
+    <div class="placeholder-section">
+      <div class="placeholder-icon">&#x1F3A8;</div>
+      <h2>Lecture Content Coming Soon</h2>
+      <p>Slides, diagrams, in-class activities, and supporting media for this lecture will appear here as the course progresses.</p>
+    </div>
+
+    <footer>
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </footer>
+
+  </div>
+
+</body>
+</html>

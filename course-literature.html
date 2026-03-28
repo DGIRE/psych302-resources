@@ -262,6 +262,71 @@
       transform: translateX(2px);
     }
 
+    /* ── Button row (literature + content side by side) ── */
+    .lecture-btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .content-btn {
+      border-color: rgba(240,200,160,0.2);
+      color: var(--peak-gold);
+      background: rgba(240,200,160,0.04);
+    }
+    .content-btn:hover {
+      border-color: var(--peak-gold);
+      background: rgba(240,200,160,0.12);
+      color: var(--peak-gold);
+    }
+
+    /* ── Sunrise glow on upcoming lecture ── */
+    @keyframes sunriseBreath {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    .lecture-card.upcoming {
+      position: relative;
+      border-color: rgba(240,180,120,0.25);
+      background: rgba(240,180,120,0.03);
+    }
+    .lecture-card.upcoming::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 12px;
+      background: radial-gradient(ellipse 120% 80% at 50% 100%,
+        rgba(240,180,120,0.12) 0%,
+        rgba(232,145,122,0.06) 30%,
+        rgba(212,114,122,0.03) 50%,
+        transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: sunriseBreath 4s ease-in-out infinite;
+    }
+    .lecture-card.upcoming::after {
+      content: 'UP NEXT';
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--peak-gold);
+      background: rgba(240,200,160,0.1);
+      border: 1px solid rgba(240,200,160,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      z-index: 1;
+    }
+    .lecture-card.upcoming .lecture-body {
+      position: relative;
+      z-index: 1;
+    }
+    .lecture-card.upcoming:hover {
+      border-color: rgba(240,180,120,0.4);
+      background: rgba(240,180,120,0.06);
+    }
+
     /* ── Star badge ── */
     .star-badge {
       display: inline-block;
@@ -342,10 +407,16 @@
           </div>
           <p class="lecture-desc">Neural imperialism &middot; Why neuroscience and philosophy must work together &middot; Theory-ladenness &middot; The hard problem of consciousness</p>
           <p class="lecture-readings"><strong>Reading:</strong> Buccella, Maoz &amp; Mudrik (2024). Preprint.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-01.html">
             Lecture 1 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-01/index.html">
+            Lecture 1 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -360,10 +431,16 @@
           </div>
           <p class="lecture-desc">Neuron morphology and action potentials &middot; Excitatory and inhibitory synaptic transmission &middot; Six circuit motifs &middot; Glial cells and myelination</p>
           <p class="lecture-readings"><strong>Reading:</strong> Byrne et al. <em>Neuroscience Online</em>, Sec. 1; Ch. 6; Ch. 8.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-02.html">
             Lecture 2 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-02/index.html">
+            Lecture 2 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -398,10 +475,16 @@
           </div>
           <p class="lecture-desc">Unimodal vs. transmodal cortex &middot; Large-scale networks and convergence zones &middot; Attentional gating</p>
           <p class="lecture-readings"><strong>Reading:</strong> Mesulam (1998). <em>Brain</em>, 121, 1013&ndash;1052. <strong>[COURSE ANCHOR]</strong></p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-03.html">
             Lecture 3 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-03/index.html">
+            Lecture 3 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -416,10 +499,16 @@
           </div>
           <p class="lecture-desc">Disconnection syndromes &middot; Broca and Wernicke areas &middot; Dual-stream language processing &middot; Brodmann map</p>
           <p class="lecture-readings"><strong>Reading:</strong> Geschwind (1970). <em>Science</em>. Zilles &amp; Amunts (2010). <em>Nat Rev Neurosci</em>.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-04.html">
             Lecture 4 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-04/index.html">
+            Lecture 4 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -443,10 +532,16 @@
           </div>
           <p class="lecture-desc">Ventral vs. dorsal visual streams &middot; Feedforward vs. recurrent processing &middot; Blindsight</p>
           <p class="lecture-readings"><strong>Reading:</strong> Goodale &amp; Milner (1992). Lamme &amp; Roelfsema (2000). Weiskrantz (1996).</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-05.html">
             Lecture 5 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-05/index.html">
+            Lecture 5 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -461,10 +556,16 @@
           </div>
           <p class="lecture-desc">Inattentional blindness &middot; Three levels of processing: subliminal, preconscious, conscious &middot; Global Neuronal Workspace first appearance</p>
           <p class="lecture-readings"><strong>Reading:</strong> Dehaene et al. (2006). Freiberger &amp; Cerf (2022). Simons (2000).</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-06.html">
             Lecture 6 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-06/index.html">
+            Lecture 6 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -479,10 +580,16 @@
           </div>
           <p class="lecture-desc">Amygdala as salience hub &middot; Three emotion processes &middot; Emotion as network property &middot; Prefrontal regulation</p>
           <p class="lecture-readings"><strong>Reading:</strong> Phillips et al. (2003). Pessoa (2017).</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-07.html">
             Lecture 7 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-07/index.html">
+            Lecture 7 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -497,10 +604,16 @@
           </div>
           <p class="lecture-desc">Declarative vs. non-declarative memory &middot; Hippocampal relational binding &middot; Prefrontal control of encoding and retrieval</p>
           <p class="lecture-readings"><strong>Reading:</strong> Eichenbaum (2017). <em>Annu Rev Psychol</em>, 68, 19&ndash;45.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-08.html">
             Lecture 8 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-08/index.html">
+            Lecture 8 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -515,10 +628,16 @@
           </div>
           <p class="lecture-desc">Multiple-demand (MD) network &middot; Adaptive coding &middot; Fluid intelligence &middot; Mental programs</p>
           <p class="lecture-readings"><strong>Reading:</strong> Duncan (2010). Cole &amp; Schneider (2007). Woolgar et al. (2011).</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-09.html">
             Lecture 9 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-09/index.html">
+            Lecture 9 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -533,10 +652,16 @@
           </div>
           <p class="lecture-desc">Vegetative state vs. minimally conscious state &middot; Covert consciousness &middot; DTI &middot; Axonal plasticity</p>
           <p class="lecture-readings"><strong>Reading:</strong> Laureys et al. (2004). Voss et al. (2006).</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-10.html">
             Lecture 10 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-10/index.html">
+            Lecture 10 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -571,10 +696,16 @@
           </div>
           <p class="lecture-desc">Temporal binding &middot; The Libet paradigm and free will &middot; Constructive agency</p>
           <p class="lecture-readings"><strong>Reading:</strong> Haggard, Clark &amp; Kalogeras (2002). <em>Nat Neurosci</em>, 5, 382&ndash;385.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-11.html">
             Lecture 11 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-11/index.html">
+            Lecture 11 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -589,10 +720,16 @@
           </div>
           <p class="lecture-desc">GNWT broadcast model &middot; Global ignition, P3b, gamma synchrony &middot; GNWT vs. IIT vs. HOT</p>
           <p class="lecture-readings"><strong>Reading:</strong> Dehaene &amp; Changeux (2011). <em>Neuron</em>, 70, 200&ndash;227.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-12.html">
             Lecture 12 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-12/index.html">
+            Lecture 12 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -607,10 +744,16 @@
           </div>
           <p class="lecture-desc">Nonlinear dynamical systems &middot; Mean-field models &middot; Brain criticality &middot; Phase transitions</p>
           <p class="lecture-readings"><strong>Reading:</strong> Breakspear (2017). <em>Nat Neurosci</em>, 20, 340&ndash;352.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-13.html">
             Lecture 13 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-13/index.html">
+            Lecture 13 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -625,10 +768,16 @@
           </div>
           <p class="lecture-desc">Predictive coding &middot; Prediction error &middot; Active inference &middot; Precision-weighting &middot; Schizophrenia/autism</p>
           <p class="lecture-readings"><strong>Reading:</strong> Clark (2013). <em>Behav Brain Sci</em>, 36, 181&ndash;253.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-14.html">
             Lecture 14 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-14/index.html">
+            Lecture 14 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -652,10 +801,16 @@
           </div>
           <p class="lecture-desc">Theory of Mind &middot; Mentalizing &middot; Simulation theory &middot; TPJ, medial PFC, STS &middot; Mirror neurons</p>
           <p class="lecture-readings"><strong>Reading:</strong> Adolphs (2009). <em>Annu Rev Psychol</em>, 60, 693&ndash;716.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-15.html">
             Lecture 15 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-15/index.html">
+            Lecture 15 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -670,10 +825,16 @@
           </div>
           <p class="lecture-desc">Hemispheric lateralization &middot; Left-hemisphere interpreter &middot; Callosotomy &middot; Constructed self</p>
           <p class="lecture-readings"><strong>Reading:</strong> Gazzaniga (2000). <em>Brain</em>, 123, 1293&ndash;1326.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-16.html">
             Lecture 16 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-16/index.html">
+            Lecture 16 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -697,10 +858,16 @@
           </div>
           <p class="lecture-desc">REBUS model &middot; Entropic brain &middot; Serotonin 5-HT2A &middot; Free-energy landscape &middot; Ego-dissolution &middot; Therapeutic window</p>
           <p class="lecture-readings"><strong>Reading:</strong> Carhart-Harris et al. (2016). <em>PNAS</em>. Van Eyghen (2023). <em>Int J Psychol Religion</em>.</p>
+          <div class="lecture-btn-row">
           <a class="lecture-btn" href="lectures/lecture-17.html">
             Lecture 17 Literature
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
+          <a class="lecture-btn content-btn" href="lecture-content/lecture-17/index.html">
+            Lecture 17 Content
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          </div>
         </div>
       </div>
     </div>
@@ -710,6 +877,59 @@
     </footer>
 
   </div>
+
+<script>
+(function() {
+  // Lecture dates for determining the "next upcoming" lecture
+  const lectureDates = [
+    { num: 1,  date: '2026-03-30' },
+    { num: 2,  date: '2026-04-01' },
+    { num: 3,  date: '2026-04-06' },
+    { num: 4,  date: '2026-04-08' },
+    { num: 5,  date: '2026-04-13' },
+    { num: 6,  date: '2026-04-15' },
+    { num: 7,  date: '2026-04-20' },
+    { num: 8,  date: '2026-04-22' },
+    { num: 9,  date: '2026-04-27' },
+    { num: 10, date: '2026-04-29' },
+    { num: 11, date: '2026-05-06' },
+    { num: 12, date: '2026-05-11' },
+    { num: 13, date: '2026-05-13' },
+    { num: 14, date: '2026-05-18' },
+    { num: 15, date: '2026-05-20' },
+    { num: 16, date: '2026-05-27' },
+    { num: 17, date: '2026-06-01' },
+  ];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Find the next upcoming lecture (first one whose date >= today)
+  let nextLecture = null;
+  for (const l of lectureDates) {
+    const d = new Date(l.date + 'T00:00:00');
+    if (d >= today) {
+      nextLecture = l.num;
+      break;
+    }
+  }
+
+  if (nextLecture) {
+    // Find the lecture card that contains "L{num}" in its .lecture-num span
+    const allCards = document.querySelectorAll('.lecture-card');
+    allCards.forEach(card => {
+      const numSpan = card.querySelector('.lecture-num');
+      if (numSpan && numSpan.textContent.trim() === 'L' + nextLecture) {
+        card.classList.add('upcoming');
+        // Scroll into view smoothly after a short delay
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 600);
+      }
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
