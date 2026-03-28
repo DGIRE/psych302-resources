@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSYCH 302: Neuroscience of the Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --forest-dark: #0f1a12;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Hero Section ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 60% at 50% 20%, rgba(240,200,160,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 40% at 50% 15%, rgba(212,114,122,0.15) 0%, transparent 50%),
+        linear-gradient(180deg,
+          #1a1028 0%,
+          #2a1a3a 8%,
+          #3d2248 14%,
+          #5a3058 20%,
+          #8a4a5a 28%,
+          #c85a6a 35%,
+          #d4727a 40%,
+          #e8a088 46%,
+          #f0c8a0 50%,
+          #d4a090 54%,
+          #a07888 60%,
+          #6a5878 68%,
+          #3a3a68 78%,
+          #1a2744 88%,
+          #0c1525 100%
+        );
+      z-index: 0;
+    }
+
+    /* Layered mountain silhouettes */
+    .mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      z-index: 1;
+    }
+
+    .mountain-layer {
+      position: absolute;
+      bottom: 0;
+      left: -5%;
+      right: -5%;
+    }
+
+    /* Atmospheric mist overlay */
+    .mist {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        radial-gradient(ellipse 100% 30% at 50% 75%, rgba(74,58,107,0.4) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 20% at 50% 85%, rgba(26,39,68,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 35%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: var(--brightness); }
+    }
+
+    /* Peak glow */
+    .peak-glow {
+      position: absolute;
+      top: 28%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 180px;
+      background: radial-gradient(ellipse, rgba(240,200,160,0.15) 0%, transparent 70%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── Content ── */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 800px;
+      animation: contentFadeIn 1.2s ease-out;
+    }
+
+    .dept-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--alpenglow);
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .course-code {
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--snow-pink);
+      margin-bottom: 8px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 40%, #d4727a 80%, #e8a088 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── Navigation Cards ── */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .nav-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 28px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: radial-gradient(ellipse at 50% 0%, var(--glow) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--glow-border);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 40px var(--glow-shadow);
+    }
+    .nav-card:hover::before {
+      opacity: 1;
+    }
+
+    .nav-icon {
+      position: relative;
+      z-index: 1;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .nav-card:hover .nav-icon {
+      transform: scale(1.1);
+    }
+
+    .nav-card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .nav-card p {
+      position: relative;
+      z-index: 1;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      transition: color 0.3s;
+    }
+    .nav-card:hover p {
+      color: var(--text-secondary);
+    }
+
+    .nav-card .stub-badge {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      margin-top: 12px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Card themes */
+    .nav-card.demos {
+      --glow: rgba(212,114,122,0.12);
+      --glow-border: rgba(212,114,122,0.4);
+      --glow-shadow: rgba(212,114,122,0.15);
+    }
+    .nav-card.demos .nav-icon {
+      background: rgba(212,114,122,0.15);
+      border: 1px solid rgba(212,114,122,0.3);
+      color: var(--alpenglow);
+      box-shadow: 0 4px 20px rgba(212,114,122,0.1);
+    }
+    .nav-card.demos:hover .nav-icon {
+      box-shadow: 0 4px 24px rgba(212,114,122,0.3);
+    }
+
+    .nav-card.course {
+      --glow: rgba(160,120,136,0.12);
+      --glow-border: rgba(160,120,136,0.4);
+      --glow-shadow: rgba(160,120,136,0.15);
+    }
+    .nav-card.course .nav-icon {
+      background: rgba(160,120,136,0.15);
+      border: 1px solid rgba(160,120,136,0.3);
+      color: var(--snow-pink);
+      box-shadow: 0 4px 20px rgba(160,120,136,0.1);
+    }
+    .nav-card.course:hover .nav-icon {
+      box-shadow: 0 4px 24px rgba(160,120,136,0.3);
+    }
+
+    .nav-card.literature {
+      --glow: rgba(74,58,107,0.15);
+      --glow-border: rgba(120,100,160,0.4);
+      --glow-shadow: rgba(74,58,107,0.15);
+    }
+    .nav-card.literature .nav-icon {
+      background: rgba(120,100,160,0.15);
+      border: 1px solid rgba(120,100,160,0.3);
+      color: #b8a0d8;
+      box-shadow: 0 4px 20px rgba(120,100,160,0.1);
+    }
+    .nav-card.literature:hover .nav-icon {
+      box-shadow: 0 4px 24px rgba(120,100,160,0.3);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 40px 20px 24px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    .footer a {
+      color: var(--alpenglow);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer a:hover { color: var(--alpenglow-warm); }
+
+    /* ── Animations ── */
+    @keyframes contentFadeIn {
+      0% { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .nav-grid {
+        grid-template-columns: 1fr;
+        max-width: 340px;
+      }
+      .hero-content { padding: 0 16px; }
+    }
+    @media (min-width: 701px) and (max-width: 900px) {
+      .nav-grid { gap: 14px; }
+      .nav-card { padding: 24px 16px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <!-- Layered background -->
+    <div class="hero-bg"></div>
+
+    <!-- Stars -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Peak glow -->
+    <div class="peak-glow"></div>
+
+    <!-- Mountain silhouettes -->
+    <div class="mountains">
+      <svg class="mountain-layer" viewBox="0 0 1200 500" preserveAspectRatio="none" style="height: 100%; opacity: 0.12;">
+        <path d="M-50,500 L100,280 L200,320 L350,180 L450,250 L550,140 L600,100 L650,140 L750,200 L850,160 L950,220 L1050,280 L1150,240 L1250,500 Z" fill="#0c1525"/>
+      </svg>
+      <svg class="mountain-layer" viewBox="0 0 1200 400" preserveAspectRatio="none" style="height: 75%; opacity: 0.25;">
+        <path d="M-50,400 L80,260 L180,290 L300,200 L420,260 L520,180 L600,220 L700,170 L800,230 L900,190 L1020,250 L1120,220 L1250,400 Z" fill="#1a1830"/>
+      </svg>
+      <svg class="mountain-layer" viewBox="0 0 1200 300" preserveAspectRatio="none" style="height: 55%; opacity: 0.45;">
+        <path d="M-50,300 L60,220 L160,240 L280,180 L380,220 L480,170 L560,200 L680,160 L780,210 L880,180 L1000,220 L1100,200 L1250,300 Z" fill="#1a2040"/>
+      </svg>
+      <svg class="mountain-layer" viewBox="0 0 1200 250" preserveAspectRatio="none" style="height: 42%; opacity: 0.65;">
+        <path d="M-50,250 L100,200 L200,210 L340,170 L440,200 L560,165 L660,190 L780,170 L900,195 L1000,180 L1100,200 L1250,250 Z" fill="#1a2548"/>
+      </svg>
+      <svg class="mountain-layer" viewBox="0 0 1200 180" preserveAspectRatio="none" style="height: 30%; opacity: 0.85;">
+        <path d="M-50,180 L80,150 L200,155 L320,135 L460,150 L580,130 L700,148 L840,132 L960,150 L1100,140 L1250,180 Z" fill="#0f1a25"/>
+      </svg>
+      <!-- Treeline -->
+      <svg class="mountain-layer" viewBox="0 0 1200 120" preserveAspectRatio="none" style="height: 18%;">
+        <path d="M-50,120 L0,95 L15,100 L30,85 L45,98 L60,80 L75,95 L90,78 L105,92 L120,75 L135,90 L150,72 L165,88 L180,70 L195,85 L210,68 L225,82 L240,66 L255,80 L270,64 L285,78 L300,62 L315,76 L330,60 L345,74 L360,58 L375,72 L390,56 L405,70 L420,55 L435,68 L450,54 L465,66 L480,52 L495,65 L510,50 L525,64 L540,52 L555,62 L570,48 L585,60 L600,46 L615,58 L630,48 L645,60 L660,46 L675,58 L690,44 L705,56 L720,42 L735,55 L750,44 L765,56 L780,42 L795,54 L810,40 L825,52 L840,44 L855,54 L870,42 L885,52 L900,38 L915,50 L930,42 L945,52 L960,40 L975,50 L990,38 L1005,48 L1020,36 L1035,48 L1050,40 L1065,50 L1080,38 L1095,48 L1110,36 L1125,46 L1140,38 L1155,48 L1170,40 L1185,50 L1200,42 L1215,48 L1250,120 Z" fill="#0a1218"/>
+      </svg>
+    </div>
+
+    <!-- Atmospheric mist -->
+    <div class="mist"></div>
+
+    <!-- Content -->
+    <div class="hero-content">
+      <div class="dept-label">University of Washington &mdash; Department of Psychology</div>
+      <div class="course-code">PSYCH 302</div>
+      <h1 class="hero-title">Neuroscience of the Mind</h1>
+      <p class="hero-subtitle">From the firing of a single neuron to the emergence of consciousness, explore how the brain creates the mind.</p>
+
+      <div class="nav-grid">
+
+        <a class="nav-card demos" href="#" onclick="event.preventDefault();">
+          <div class="nav-icon">&#x1F9E0;</div>
+          <h3>Interactive Demos</h3>
+          <p>Explore brain networks, sensory pathways, and cognitive processes through hands-on visualizations.</p>
+          <span class="stub-badge">Coming Soon</span>
+        </a>
+
+        <a class="nav-card course" href="#" onclick="event.preventDefault();">
+          <div class="nav-icon">&#x1F9ED;</div>
+          <h3>Course Navigation</h3>
+          <p>Syllabus, lecture schedule, assignments, and everything you need to navigate the course.</p>
+          <span class="stub-badge">Coming Soon</span>
+        </a>
+
+        <a class="nav-card literature" href="#" onclick="event.preventDefault();">
+          <div class="nav-icon">&#x1F4DA;</div>
+          <h3>Course Literature</h3>
+          <p>Required readings, reference papers, and curated resources organized by lecture topic.</p>
+          <span class="stub-badge">Coming Soon</span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </div>
+  </div>
+
+  <script>
+    // Generate twinkling stars
+    (function() {
+      const container = document.getElementById('stars');
+      const count = 60;
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--dur', (3 + Math.random() * 5) + 's');
+        star.style.setProperty('--delay', (Math.random() * 6) + 's');
+        star.style.setProperty('--brightness', (0.3 + Math.random() * 0.5).toString());
+        if (Math.random() > 0.85) {
+          star.style.width = '3px';
+          star.style.height = '3px';
+        }
+        container.appendChild(star);
+      }
+    })();
+  </script>
+
+</body>
+</html>
