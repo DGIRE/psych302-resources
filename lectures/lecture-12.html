@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 12: Global Neuronal Workspace Theory (GNWT) — PSYCH 302</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+      --accent: #6b2d8b;
+      --glow-rgb: 160,106,208;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* ── Back nav ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--alpenglow); }
+
+    /* ── Header card ── */
+    .header-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 36px 32px 28px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .header-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .lecture-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .lecture-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(var(--glow-rgb), 0.9);
+    }
+    .arc-tag {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 100px;
+      background: rgba(var(--glow-rgb), 0.1);
+      color: rgba(var(--glow-rgb), 0.85);
+      border: 1px solid rgba(var(--glow-rgb), 0.15);
+    }
+    .part-tag {
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .header-card h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 60%, #d4727a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+    .level-low { background: rgba(46,139,139,0.15); color: #5ec4c4; }
+    .level-moderate { background: rgba(46,109,164,0.15); color: #6aade0; }
+    .level-high { background: rgba(232,119,34,0.15); color: #e89745; }
+    .level-very-high { background: rgba(192,57,43,0.15); color: #e06050; }
+    .level-expert { background: rgba(139,45,45,0.15); color: #d05050; }
+    .star-badge { color: var(--peak-gold); }
+    .star-badge::before { content: "\2605"; }
+
+    /* ── Section cards ── */
+    .section-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .section-card h2 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Topic pills ── */
+    .topic-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .topic-list li {
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: rgba(var(--glow-rgb), 0.06);
+      border: 1px solid rgba(var(--glow-rgb), 0.12);
+      color: var(--text-secondary);
+      transition: all 0.25s;
+    }
+    .topic-list li:hover {
+      background: rgba(var(--glow-rgb), 0.12);
+      border-color: rgba(var(--glow-rgb), 0.25);
+      color: var(--text-primary);
+    }
+
+    /* ── Readings ── */
+    .reading-list {
+      list-style: none;
+    }
+    .reading-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .reading-list li:last-child { border-bottom: none; }
+
+    .reading-name {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      flex: 1;
+      min-width: 0;
+    }
+    .reading-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .reading-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-muted);
+      transition: all 0.25s;
+    }
+    .reading-link:hover {
+      border-color: rgba(var(--glow-rgb), 0.4);
+      background: rgba(var(--glow-rgb), 0.08);
+      color: var(--text-secondary);
+    }
+    .reading-link svg {
+      width: 13px; height: 13px;
+    }
+
+    /* ══════════════════════════════════════
+       ETHEREAL GLOW BUTTONS
+       ══════════════════════════════════════ */
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .glow-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(var(--glow-rgb), 0.18);
+      background: rgba(var(--glow-rgb), 0.04);
+      color: var(--text-secondary);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      z-index: 1;
+    }
+
+    /* Outer ethereal glow */
+    .glow-btn::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 13px;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(var(--glow-rgb), 0.0),
+        rgba(var(--glow-rgb), 0.25),
+        rgba(var(--glow-rgb), 0.0)
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      z-index: -1;
+    }
+
+    /* Inner soft radial glow */
+    .glow-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: radial-gradient(
+        ellipse 120% 80% at 50% 110%,
+        rgba(var(--glow-rgb), 0.08) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      z-index: -1;
+    }
+
+    .glow-btn:hover {
+      border-color: rgba(var(--glow-rgb), 0.35);
+      background: rgba(var(--glow-rgb), 0.06);
+      color: var(--text-primary);
+      box-shadow:
+        0 0 20px rgba(var(--glow-rgb), 0.08),
+        0 0 60px rgba(var(--glow-rgb), 0.04);
+      transform: translateY(-2px);
+    }
+    .glow-btn:hover::before { opacity: 1; }
+    .glow-btn:hover::after { opacity: 1; }
+
+    /* Breathing animation */
+    .glow-btn .glow-orb {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(var(--glow-rgb), 0.12) 0%,
+        rgba(var(--glow-rgb), 0.03) 40%,
+        transparent 70%
+      );
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: breathe 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .glow-btn .btn-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .glow-btn:hover .btn-icon { opacity: 1; }
+
+    .glow-btn .btn-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .glow-btn .btn-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .glow-btn .btn-sub {
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+      transition: color 0.3s;
+    }
+    .glow-btn:hover .btn-sub { color: var(--text-secondary); }
+
+    /* Stagger the breathing for each button */
+    .glow-btn:nth-child(2) .glow-orb { animation-delay: -2s; }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.85); }
+      50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Placeholder note ── */
+    .placeholder-note {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 40px 0 20px;
+    }
+    footer a {
+      color: var(--alpenglow);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--alpenglow-warm); }
+
+    @media (max-width: 600px) {
+      .header-card { padding: 24px 18px 20px; }
+      .header-card h1 { font-size: 1.25rem; }
+      .section-card { padding: 18px 16px; }
+      .action-buttons { flex-direction: column; }
+      .glow-btn { width: 100%; justify-content: center; }
+      .reading-list li { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-bg"></div>
+
+  <div class="container">
+
+    <a class="back-link" href="../course-literature.html">&#8592; Back to Course Literature</a>
+
+    <!-- Header -->
+    <div class="header-card">
+      <div class="lecture-label">
+        <span class="lecture-num">Lecture 12</span>
+        <span class="arc-tag">Agency, Theories, Dynamics &amp; Prediction</span>
+        <span class="part-tag">Part 2 — The Whole</span>
+      </div>
+      <h1>Global Neuronal Workspace Theory (GNWT) <span class="star-badge"></span></h1>
+      <span class="level-badge level-very-high">Very High</span>
+    </div>
+
+    <!-- Topics -->
+    <div class="section-card">
+      <h2>Key Topics</h2>
+      <ul class="topic-list">
+        <li>GNWT broadcast model</li><li>Global ignition and the P3b wave</li><li>Gamma-band synchrony</li><li>GNWT vs. IIT vs. Higher-Order Theories</li>
+      </ul>
+    </div>
+
+    <!-- Readings / PDFs -->
+    <div class="section-card">
+      <h2>Readings &amp; PDFs</h2>
+      <ul class="reading-list">
+        
+            <li>
+              <span class="reading-name">Dehaene &amp; Changeux (2011) — Neuron, 70, 200–227</span>
+              <span class="reading-actions">
+                <a class="reading-link" href="#" onclick="event.preventDefault();" title="View PDF">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </a>
+                <a class="reading-link" href="#" onclick="event.preventDefault();" title="Download PDF">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download
+                </a>
+              </span>
+            </li>
+      </ul>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="section-card" style="border: none; background: none;">
+      <div class="action-buttons">
+        <a class="glow-btn" href="#" onclick="event.preventDefault();">
+          <div class="glow-orb"></div>
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+          </svg>
+          <div class="btn-text">
+            <span class="btn-label">NotebookLM</span>
+            <span class="btn-sub">AI-powered study companion</span>
+          </div>
+        </a>
+        <a class="glow-btn" href="#" onclick="event.preventDefault();">
+          <div class="glow-orb"></div>
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          <div class="btn-text">
+            <span class="btn-label">Interactive Learning</span>
+            <span class="btn-sub">Explore concepts visually</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <p class="placeholder-note">Additional resources and interactive content will be added as the course progresses.</p>
+
+    <footer>
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </footer>
+
+  </div>
+
+</body>
+</html>
