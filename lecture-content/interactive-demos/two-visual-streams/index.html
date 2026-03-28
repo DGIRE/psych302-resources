@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Two Visual Streams &mdash; Interactive Demo &mdash; PSYCH 302</title>
+  <title>Dual Visual Pathways Explorer &mdash; Interactive Demo &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,6 +23,9 @@
       --text-muted: #7a6a82;
       --accent: #2e6da4;
       --glow-rgb: 46,109,164;
+      --ventral-color: #e8917a;
+      --dorsal-color: #6ab4e8;
+      --subcortical-color: #c89af0;
     }
 
     html { scroll-behavior: smooth; }
@@ -47,229 +50,1817 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 780px;
+      max-width: 860px;
       width: 100%;
       margin: 0 auto;
       padding: 20px;
     }
 
-    .back-link {
+    /* ── Navigation ── */
+    .nav-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .nav-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      transition: all 0.25s;
     }
-    .back-link:hover { color: var(--alpenglow); }
+    .nav-link:hover {
+      color: var(--alpenglow);
+      border-color: rgba(212,114,122,0.3);
+      background: rgba(212,114,122,0.06);
+    }
 
-    .header-card {
-      padding: 40px 28px 32px;
+    /* ── Header ── */
+    .hero {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 16px;
-      margin-bottom: 24px;
+      padding: 40px 32px 32px;
+      margin-bottom: 32px;
       text-align: center;
-      animation: fadeIn 0.6s ease-out;
+      animation: fadeIn 0.5s ease-out;
     }
-    .header-icon {
-      font-size: 2.5rem;
+    .hero-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
       margin-bottom: 12px;
     }
-    .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--peak-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
     }
-    .header-card .arc-tag {
-      display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
-    }
-    .header-card p {
-      font-size: 0.88rem;
+    .hero p {
+      font-size: 0.92rem;
       color: var(--text-secondary);
       line-height: 1.6;
-      max-width: 540px;
+      max-width: 640px;
       margin: 0 auto;
     }
 
-    .quick-links {
+    /* ── Section nav ── */
+    .section-nav {
       display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
+      margin-bottom: 36px;
     }
-    .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
+    .section-nav a {
+      font-size: 0.72rem;
       font-weight: 600;
+      color: var(--text-muted);
       text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
       transition: all 0.25s;
+      white-space: nowrap;
     }
-    .quick-link:hover {
-      border-color: var(--accent);
+    .section-nav a:hover {
+      color: var(--text-primary);
+      border-color: rgba(var(--glow-rgb), 0.3);
       background: rgba(var(--glow-rgb), 0.08);
-      color: var(--accent);
     }
-    .quick-link svg { width: 14px; height: 14px; }
 
-    .section-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
+    /* ── Section cards ── */
+    .section {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
+      padding: 28px 24px;
+      margin-bottom: 28px;
+      animation: fadeIn 0.5s ease-out;
     }
-    .section-card h2 {
+    .section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--peak-gold);
+    }
+    .section h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 18px 0 10px;
+      color: var(--text-primary);
+    }
+    .section p, .section li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .section ul { list-style: none; padding-left: 0; }
+    .section ul li::before {
+      content: "\2022";
+      color: var(--accent);
+      font-weight: 700;
+      display: inline-block;
+      width: 1em;
+      margin-left: 0;
+    }
+
+    /* ── Pathway Diagram ── */
+    .pathway-diagram {
+      position: relative;
+      width: 100%;
+      min-height: 520px;
+      margin: 20px 0;
+    }
+    .pathway-svg {
+      width: 100%;
+      height: 520px;
+    }
+
+    /* ── Interactive buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .btn {
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      border-color: rgba(var(--glow-rgb), 0.4);
+      background: rgba(var(--glow-rgb), 0.1);
+      color: var(--text-primary);
+    }
+    .btn.active {
+      border-color: rgba(var(--glow-rgb), 0.6);
+      background: rgba(var(--glow-rgb), 0.15);
+      color: var(--text-primary);
+      box-shadow: 0 0 20px rgba(var(--glow-rgb), 0.15);
+    }
+    .btn-ventral { --btn-color: var(--ventral-color); }
+    .btn-ventral.active {
+      border-color: var(--ventral-color);
+      background: rgba(232,145,122,0.15);
+      color: var(--ventral-color);
+      box-shadow: 0 0 20px rgba(232,145,122,0.2);
+    }
+    .btn-dorsal { --btn-color: var(--dorsal-color); }
+    .btn-dorsal.active {
+      border-color: var(--dorsal-color);
+      background: rgba(106,180,232,0.15);
+      color: var(--dorsal-color);
+      box-shadow: 0 0 20px rgba(106,180,232,0.2);
+    }
+    .btn-subcortical { --btn-color: var(--subcortical-color); }
+    .btn-subcortical.active {
+      border-color: var(--subcortical-color);
+      background: rgba(200,154,240,0.15);
+      color: var(--subcortical-color);
+      box-shadow: 0 0 20px rgba(200,154,240,0.2);
+    }
+
+    /* ── Info panel ── */
+    .info-panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      min-height: 80px;
+      transition: all 0.4s;
+    }
+    .info-panel h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .info-panel p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .info-panel .speed-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Speed Race Demo ── */
+    .race-track {
+      position: relative;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .race-lane {
+      position: relative;
+      height: 44px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .race-lane:last-child { margin-bottom: 0; }
+    .race-lane-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+    }
+    .race-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      z-index: 2;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    .race-signal {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 0;
+      border-radius: 6px;
+      transition: none;
+      z-index: 1;
+    }
+    .race-time {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      font-weight: 700;
+      z-index: 2;
+      opacity: 0;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+
+    /* ── Blindsight Simulation ── */
+    .blindsight-arena {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      cursor: crosshair;
+      margin: 16px 0;
+      user-select: none;
+    }
+    .blindsight-fixation {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--peak-gold);
+      z-index: 5;
+      box-shadow: 0 0 12px rgba(240,200,160,0.5);
+    }
+    .blindsight-fixation::after {
+      content: "Fix here";
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .blind-field-overlay {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .blind-field-overlay.left { left: 0; border-right: 1px dashed rgba(255,255,255,0.15); }
+    .blind-field-overlay.right { right: 0; border-left: 1px dashed rgba(255,255,255,0.15); }
+    .blind-field-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .stimulus-dot {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--alpenglow);
+      box-shadow: 0 0 16px rgba(212,114,122,0.6);
+      z-index: 4;
+      opacity: 0;
+      transition: opacity 0.05s;
+      pointer-events: none;
+    }
+    .stimulus-dot.in-blind-field {
+      z-index: 2;
+    }
+    .bs-scoreboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .bs-stat {
+      text-align: center;
+      padding: 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .bs-stat-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--peak-gold);
+    }
+    .bs-stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Lesion Explorer ── */
+    .lesion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .lesion-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .lesion-card:hover {
+      border-color: rgba(var(--glow-rgb), 0.3);
+      background: rgba(var(--glow-rgb), 0.05);
+    }
+    .lesion-card.selected {
+      border-color: var(--alpenglow);
+      background: rgba(212,114,122,0.08);
+      box-shadow: 0 0 24px rgba(212,114,122,0.1);
+    }
+    .lesion-card h4 {
       font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .lesion-card p {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin-bottom: 14px;
+      line-height: 1.5;
     }
-    .concept-list {
-      list-style: none;
+    .lesion-result {
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      min-height: 100px;
     }
-    .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
+    .lesion-result h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--alpenglow);
+      margin-bottom: 8px;
+    }
+    .lesion-result p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .lesion-result .preserved, .lesion-result .impaired {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin: 4px 4px 0 0;
+    }
+    .preserved { background: rgba(100,200,140,0.15); color: #7ae0a0; }
+    .impaired { background: rgba(212,114,122,0.15); color: var(--alpenglow); }
+
+    /* ── Timeline visualization ── */
+    .timeline {
+      position: relative;
+      padding: 20px 0 20px 40px;
+      margin: 16px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 18px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255,255,255,0.08);
+    }
+    .timeline-event {
+      position: relative;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.025);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.4s ease;
+    }
+    .timeline-event.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .timeline-event::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 16px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--twilight-deep);
+    }
+    .timeline-event .time-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .timeline-event p {
+      font-size: 0.82rem;
       color: var(--text-secondary);
       line-height: 1.5;
     }
-    .concept-list li:last-child { border-bottom: none; }
-    .concept-list li::before {
-      content: '\2022';
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 10px;
-    }
 
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
+    /* ── Quiz ── */
+    .quiz-container { margin: 16px 0; }
+    .quiz-question {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
     }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.84rem;
+      padding: 12px 16px;
       margin-bottom: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
     }
-    .demo-area p {
+    .quiz-option:hover:not(.answered) {
+      border-color: rgba(var(--glow-rgb), 0.3);
+      background: rgba(var(--glow-rgb), 0.08);
+      color: var(--text-primary);
+    }
+    .quiz-option.correct {
+      border-color: #7ae0a0;
+      background: rgba(100,200,140,0.12);
+      color: #7ae0a0;
+    }
+    .quiz-option.incorrect {
+      border-color: var(--alpenglow);
+      background: rgba(212,114,122,0.1);
+      color: var(--alpenglow);
+    }
+    .quiz-feedback {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      display: none;
+    }
+    .quiz-feedback.correct-fb {
+      background: rgba(100,200,140,0.08);
+      border: 1px solid rgba(100,200,140,0.2);
+      color: #b8e8c8;
+      display: block;
+    }
+    .quiz-feedback.incorrect-fb {
+      background: rgba(212,114,122,0.08);
+      border: 1px solid rgba(212,114,122,0.2);
+      color: var(--snow-pink);
+      display: block;
+    }
+
+    /* ── Comparison table ── */
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 16px 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .compare-table th, .compare-table td {
+      padding: 12px 14px;
       font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-
-    footer {
-      text-align: center;
-      color: var(--text-muted);
+    .compare-table th {
+      background: rgba(255,255,255,0.05);
+      font-weight: 700;
       font-size: 0.75rem;
-      padding: 40px 0 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
+    .compare-table td {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.015);
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .col-ventral { color: var(--ventral-color); font-weight: 600; }
+    .compare-table .col-dorsal { color: var(--dorsal-color); font-weight: 600; }
+    .compare-table .col-sub { color: var(--subcortical-color); font-weight: 600; }
 
+    /* ── Key concept callout ── */
+    .callout {
+      border-left: 3px solid var(--accent);
+      padding: 14px 18px;
+      margin: 16px 0;
+      background: rgba(var(--glow-rgb), 0.05);
+      border-radius: 0 10px 10px 0;
+    }
+    .callout p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Ball Demo ── */
+    .ball-demo-stage {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .ball-demo-stage .pathway-label {
+      position: absolute;
+      top: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+    .ball-demo-stage .dorsal-label { left: 16px; color: var(--dorsal-color); }
+    .ball-demo-stage .ventral-label { left: 16px; top: auto; bottom: 10px; color: var(--ventral-color); }
+    .ball-demo-stage .divider-line {
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      border: none;
+    }
+    .ball-demo-stage .divider-label {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.6);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .demo-ball {
+      position: absolute;
+      border-radius: 50%;
+      transition: none;
+    }
+    .demo-ball-dorsal {
+      top: 25%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(106,180,232,0.5);
+      border: 2px solid var(--dorsal-color);
+      box-shadow: 0 0 12px rgba(106,180,232,0.3);
+    }
+    .demo-ball-ventral {
+      top: 75%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .ball-time-marker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      opacity: 0.4;
+    }
+
+    /* ── Animations ── */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 8px rgba(var(--glow-rgb), 0.2); }
+      50% { box-shadow: 0 0 20px rgba(var(--glow-rgb), 0.5); }
+    }
+    @keyframes signalPulse {
+      0% { r: 4; opacity: 1; }
+      50% { r: 7; opacity: 0.8; }
+      100% { r: 4; opacity: 1; }
+    }
 
+    /* ── Responsive ── */
     @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
+      .hero { padding: 28px 18px 22px; }
+      .hero h1 { font-size: 1.35rem; }
+      .section { padding: 20px 16px; }
+      .section-nav a { font-size: 0.66rem; padding: 6px 10px; }
+      .lesion-grid { grid-template-columns: 1fr; }
+      .bs-scoreboard { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+      .compare-table th, .compare-table td { padding: 8px 10px; font-size: 0.75rem; }
+      .blindsight-arena { height: 240px; }
     }
-  
-    /* ── Extra-small phones ── */
     @media (max-width: 380px) {
-      .header-card { padding: 24px 14px 20px; }
-      .header-card h1 { font-size: 1.1rem; }
-      .header-card p { font-size: 0.8rem; }
-      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
-      .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
+      .hero h1 { font-size: 1.15rem; }
+      .section h2 { font-size: 1.05rem; }
+      .btn { font-size: 0.75rem; padding: 8px 14px; }
     }
-    /* ── Phone landscape ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .container { max-width: 90%; }
+    }
     @media (max-width: 812px) and (orientation: landscape) {
-      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
-      .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
+      .hero { padding: 24px 20px; margin-bottom: 24px; }
+      .blindsight-arena { height: 200px; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .btn { min-height: 44px; }
+      .quiz-option { min-height: 44px; }
+      .lesion-card { min-height: 44px; }
+      .section-nav a { min-height: 44px; display: inline-flex; align-items: center; }
     }
   </style>
 </head>
 <body>
-
   <div class="page-bg"></div>
-
   <div class="container">
 
-    <a class="back-link" href="../../../interactive-demos.html">&#8592; Back to Interactive Demos</a>
-
-    <div class="header-card">
-      <div class="header-icon">&#x1F441;</div>
-      <span class="arc-tag">Perception, Attention &amp; Control</span>
-      <h1>Two Visual Streams</h1>
-      <p>Experience how the ventral (&ldquo;what&rdquo;) and dorsal (&ldquo;where/how&rdquo;) pathways process visual information differently. Test yourself with classic visual illusions that reveal the dissociation between perception and action.</p>
+    <!-- Navigation -->
+    <div class="nav-row">
+      <a href="../../../interactive-demos.html" class="nav-link">&larr; Interactive Demos</a>
+      <a href="../../lecture-05/index.html" class="nav-link">&#127916; Lecture 5 Content</a>
+      <a href="../../../lectures/lecture-05.html" class="nav-link">&#128218; Lecture 5 Literature</a>
     </div>
 
-    <div class="quick-links">
-      <a class="quick-link" href="../../lecture-05/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 5 Content
-      </a>
-      <a class="quick-link" href="../../../lectures/lecture-05.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 5 Literature
-      </a>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-label">Interactive Demo &middot; Lecture 5</div>
+      <h1>Dual Visual Pathways Explorer</h1>
+      <p>Explore how your brain processes vision through parallel pathways that diverge in speed and function &mdash; and what happens when parts of this system are damaged.</p>
     </div>
 
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-          <li>Ventral (perception) vs. dorsal (action) visual streams</li>
-          <li>Size-contrast illusions and grip aperture</li>
-          <li>Feedforward vs. recurrent processing</li>
-          <li>Blindsight and the limits of visual awareness</li>
-      </ul>
+    <!-- Section Nav -->
+    <div class="section-nav">
+      <a href="#pathway-map">Pathway Map</a>
+      <a href="#speed-race">Speed Race</a>
+      <a href="#ball-demo">Ball Demo</a>
+      <a href="#signal-timeline">Signal Timeline</a>
+      <a href="#blindsight-sim">Blindsight Task</a>
+      <a href="#lesion-explorer">Lesion Explorer</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#quiz">Quiz</a>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F441;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
+    <!-- ═══════════════════════════════════
+         SECTION 1: PATHWAY MAP
+         ═══════════════════════════════════ -->
+    <div class="section" id="pathway-map">
+      <h2>1. The Three Visual Pathways</h2>
+      <p>Visual information leaving the retina doesn't travel a single route. It splits into at least three functionally distinct pathways, each optimized for different aspects of seeing.</p>
+
+      <div class="btn-row">
+        <button class="btn btn-ventral" onclick="showPathway('ventral')" id="btn-ventral">Ventral Stream</button>
+        <button class="btn btn-dorsal" onclick="showPathway('dorsal')" id="btn-dorsal">Dorsal Stream</button>
+        <button class="btn btn-subcortical" onclick="showPathway('subcortical')" id="btn-subcortical">Subcortical Route</button>
+        <button class="btn" onclick="showPathway('all')" id="btn-all">All Pathways</button>
+      </div>
+
+      <!-- SVG Pathway Diagram -->
+      <svg class="pathway-svg" viewBox="0 0 800 520" id="pathwaySvg">
+        <!-- Background grid -->
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <filter id="glowStrong">
+            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <marker id="arrowVentral" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#e8917a" stroke-width="1.5"/>
+          </marker>
+          <marker id="arrowDorsal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#6ab4e8" stroke-width="1.5"/>
+          </marker>
+          <marker id="arrowSub" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#c89af0" stroke-width="1.5"/>
+          </marker>
+          <marker id="arrowSubDorsal" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#a08de0" stroke-width="1.5"/>
+          </marker>
+        </defs>
+
+        <!-- Brain regions - always visible -->
+        <!-- Retina -->
+        <g class="node" id="node-retina">
+          <rect x="20" y="225" width="100" height="50" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="70" y="248" text-anchor="middle" fill="#f0e8e5" font-size="12" font-weight="700" font-family="Inter">RETINA</text>
+          <text x="70" y="264" text-anchor="middle" fill="#7a6a82" font-size="9" font-family="Inter">Light input</text>
+        </g>
+
+        <!-- LGN -->
+        <g class="node" id="node-lgn">
+          <rect x="180" y="175" width="90" height="50" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="225" y="198" text-anchor="middle" fill="#f0e8e5" font-size="11" font-weight="700" font-family="Inter">LGN</text>
+          <text x="225" y="214" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">Thalamic relay</text>
+        </g>
+
+        <!-- V1 -->
+        <g class="node" id="node-v1">
+          <rect x="330" y="175" width="90" height="50" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="375" y="198" text-anchor="middle" fill="#f0e8e5" font-size="11" font-weight="700" font-family="Inter">V1</text>
+          <text x="375" y="214" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">Primary visual</text>
+        </g>
+
+        <!-- Superior Colliculus -->
+        <g class="node" id="node-sc">
+          <rect x="180" y="355" width="110" height="50" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="235" y="377" text-anchor="middle" fill="#f0e8e5" font-size="10" font-weight="700" font-family="Inter">Sup. Colliculus</text>
+          <text x="235" y="393" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">Midbrain</text>
+        </g>
+
+        <!-- Pulvinar -->
+        <g class="node" id="node-pulvinar">
+          <rect x="340" y="355" width="90" height="50" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <text x="385" y="377" text-anchor="middle" fill="#f0e8e5" font-size="10" font-weight="700" font-family="Inter">Pulvinar</text>
+          <text x="385" y="393" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">Thalamus</text>
+        </g>
+
+        <!-- Ventral (IT) -->
+        <g class="node" id="node-ventral">
+          <rect x="540" y="100" width="130" height="55" rx="10" fill="rgba(232,145,122,0.08)" stroke="rgba(232,145,122,0.3)" stroke-width="1.5"/>
+          <text x="605" y="122" text-anchor="middle" fill="#e8917a" font-size="11" font-weight="700" font-family="Inter">VENTRAL</text>
+          <text x="605" y="136" text-anchor="middle" fill="#e8917a" font-size="10" font-family="Inter">"What" Pathway</text>
+          <text x="605" y="148" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">V2 &rarr; V4 &rarr; IT cortex</text>
+        </g>
+
+        <!-- Dorsal (PPC) -->
+        <g class="node" id="node-dorsal">
+          <rect x="540" y="210" width="130" height="55" rx="10" fill="rgba(106,180,232,0.08)" stroke="rgba(106,180,232,0.3)" stroke-width="1.5"/>
+          <text x="605" y="232" text-anchor="middle" fill="#6ab4e8" font-size="11" font-weight="700" font-family="Inter">DORSAL</text>
+          <text x="605" y="246" text-anchor="middle" fill="#6ab4e8" font-size="10" font-family="Inter">"Where/How" Path</text>
+          <text x="605" y="258" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">V2 &rarr; MT/V5 &rarr; PPC</text>
+        </g>
+
+        <!-- Amygdala -->
+        <g class="node" id="node-amygdala">
+          <rect x="540" y="340" width="130" height="55" rx="10" fill="rgba(200,154,240,0.08)" stroke="rgba(200,154,240,0.3)" stroke-width="1.5"/>
+          <text x="605" y="362" text-anchor="middle" fill="#c89af0" font-size="11" font-weight="700" font-family="Inter">AMYGDALA</text>
+          <text x="605" y="376" text-anchor="middle" fill="#c89af0" font-size="10" font-family="Inter">Threat Detection</text>
+          <text x="605" y="388" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">Fast emotional eval.</text>
+        </g>
+
+        <!-- Outputs -->
+        <g class="node" id="node-output-v">
+          <rect x="720" y="108" width="70" height="40" rx="8" fill="rgba(232,145,122,0.05)" stroke="rgba(232,145,122,0.2)" stroke-width="1"/>
+          <text x="755" y="128" text-anchor="middle" fill="#e8917a" font-size="9" font-weight="600" font-family="Inter">Recognize</text>
+          <text x="755" y="140" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">~150ms</text>
+        </g>
+        <g class="node" id="node-output-d">
+          <rect x="720" y="218" width="70" height="40" rx="8" fill="rgba(106,180,232,0.05)" stroke="rgba(106,180,232,0.2)" stroke-width="1"/>
+          <text x="755" y="238" text-anchor="middle" fill="#6ab4e8" font-size="9" font-weight="600" font-family="Inter">Act / Reach</text>
+          <text x="755" y="250" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">~80ms</text>
+        </g>
+        <g class="node" id="node-output-s">
+          <rect x="720" y="348" width="70" height="40" rx="8" fill="rgba(200,154,240,0.05)" stroke="rgba(200,154,240,0.2)" stroke-width="1"/>
+          <text x="755" y="368" text-anchor="middle" fill="#c89af0" font-size="9" font-weight="600" font-family="Inter">Fight/Flee</text>
+          <text x="755" y="380" text-anchor="middle" fill="#7a6a82" font-size="8" font-family="Inter">~50ms</text>
+        </g>
+
+        <!-- PATHWAYS (lines) -->
+        <!-- Shared: Retina → LGN -->
+        <path id="path-retina-lgn" d="M120,240 Q150,220 180,200" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="4,3"/>
+        <!-- Shared: LGN → V1 -->
+        <path id="path-lgn-v1" d="M270,200 L330,200" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="4,3"/>
+
+        <!-- Ventral: V1 → Ventral -->
+        <path id="path-v1-ventral" d="M420,190 Q480,150 540,128" fill="none" stroke="rgba(232,145,122,0.15)" stroke-width="2.5" marker-end="url(#arrowVentral)" class="pathway-line ventral-line"/>
+        <!-- Ventral: output -->
+        <path id="path-ventral-out" d="M670,128 L720,128" fill="none" stroke="rgba(232,145,122,0.15)" stroke-width="2" marker-end="url(#arrowVentral)" class="pathway-line ventral-line"/>
+
+        <!-- Dorsal: V1 → Dorsal -->
+        <path id="path-v1-dorsal" d="M420,205 Q480,220 540,237" fill="none" stroke="rgba(106,180,232,0.15)" stroke-width="2.5" marker-end="url(#arrowDorsal)" class="pathway-line dorsal-line"/>
+        <!-- Dorsal: output -->
+        <path id="path-dorsal-out" d="M670,237 L720,237" fill="none" stroke="rgba(106,180,232,0.15)" stroke-width="2" marker-end="url(#arrowDorsal)" class="pathway-line dorsal-line"/>
+
+        <!-- Subcortical: Retina → SC -->
+        <path id="path-retina-sc" d="M120,260 Q150,330 180,370" fill="none" stroke="rgba(200,154,240,0.15)" stroke-width="2.5" marker-end="url(#arrowSub)" class="pathway-line sub-line"/>
+        <!-- Subcortical: SC → Pulvinar -->
+        <path id="path-sc-pulvinar" d="M290,380 L340,380" fill="none" stroke="rgba(200,154,240,0.15)" stroke-width="2.5" marker-end="url(#arrowSub)" class="pathway-line sub-line"/>
+        <!-- Subcortical: Pulvinar → Amygdala -->
+        <path id="path-pulvinar-amygdala" d="M430,375 Q485,370 540,367" fill="none" stroke="rgba(200,154,240,0.15)" stroke-width="2.5" marker-end="url(#arrowSub)" class="pathway-line sub-line"/>
+        <!-- Subcortical: output -->
+        <path id="path-amygdala-out" d="M670,367 L720,367" fill="none" stroke="rgba(200,154,240,0.15)" stroke-width="2" marker-end="url(#arrowSub)" class="pathway-line sub-line"/>
+
+        <!-- Pulvinar → Dorsal (subcortical shortcut to dorsal stream) -->
+        <path id="path-pulvinar-dorsal" d="M400,355 Q440,310 480,280 Q510,265 540,250" fill="none" stroke="rgba(160,141,224,0.12)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowSubDorsal)" class="pathway-line pulvinar-dorsal-line"/>
+        <text id="pulvinar-dorsal-label" x="455" y="295" text-anchor="middle" fill="rgba(160,141,224,0.5)" font-size="8" font-style="italic" font-family="Inter" opacity="0">Pulvinar &rarr; Dorsal shortcut</text>
+
+        <!-- Signal dots (animated) -->
+        <circle id="signal-ventral" cx="0" cy="0" r="5" fill="#e8917a" filter="url(#glow)" opacity="0"/>
+        <circle id="signal-dorsal" cx="0" cy="0" r="5" fill="#6ab4e8" filter="url(#glow)" opacity="0"/>
+        <circle id="signal-sub" cx="0" cy="0" r="5" fill="#c89af0" filter="url(#glow)" opacity="0"/>
+
+        <!-- Labels for "bypasses V1" -->
+        <text id="bypass-label" x="235" y="315" text-anchor="middle" fill="rgba(200,154,240,0.5)" font-size="9" font-style="italic" font-family="Inter" opacity="0">Bypasses V1 entirely</text>
+      </svg>
+
+      <div class="info-panel" id="pathway-info">
+        <h4 style="color: var(--peak-gold);">Select a pathway above</h4>
+        <p>Click on any pathway button to see how visual signals travel through the brain. Each route serves a different function and operates at a different speed.</p>
+      </div>
     </div>
 
-    <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
-    </footer>
+    <!-- ═══════════════════════════════════
+         SECTION 2: SPEED RACE
+         ═══════════════════════════════════ -->
+    <div class="section" id="speed-race">
+      <h2>2. The Speed Race: How Fast Is Each Pathway?</h2>
+      <p>The three pathways operate at dramatically different speeds. The subcortical route is the fastest because it takes the shortest path and bypasses cortical processing entirely. The dorsal stream prioritizes speed for guiding actions. The ventral stream is slowest because it performs the deepest analysis.</p>
+
+      <div class="callout">
+        <p><strong>Why does speed matter?</strong> When a snake appears at your feet, your body jumps before you consciously see it. The subcortical route triggers your amygdala in ~50ms. Your dorsal stream guides the jump at ~80ms. Your ventral stream finally tells you "that's a snake" at ~150ms. Three pathways, three timescales, one survival response.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="runRace()" id="race-btn">&#9654; Run the Race</button>
+        <button class="btn" onclick="resetRace()">&#8635; Reset</button>
+      </div>
+
+      <div class="race-track">
+        <!-- Subcortical lane -->
+        <div class="race-lane">
+          <div class="race-lane-bg"></div>
+          <span class="race-label" style="color: var(--subcortical-color);">SUBCORTICAL</span>
+          <div class="race-signal" id="race-sub" style="background: linear-gradient(90deg, rgba(200,154,240,0.4), var(--subcortical-color));"></div>
+          <span class="race-time" id="race-sub-time" style="color: var(--subcortical-color);">~50ms</span>
+        </div>
+        <!-- Dorsal lane -->
+        <div class="race-lane">
+          <div class="race-lane-bg"></div>
+          <span class="race-label" style="color: var(--dorsal-color);">DORSAL</span>
+          <div class="race-signal" id="race-dorsal" style="background: linear-gradient(90deg, rgba(106,180,232,0.4), var(--dorsal-color));"></div>
+          <span class="race-time" id="race-dorsal-time" style="color: var(--dorsal-color);">~80ms</span>
+        </div>
+        <!-- Ventral lane -->
+        <div class="race-lane">
+          <div class="race-lane-bg"></div>
+          <span class="race-label" style="color: var(--ventral-color);">VENTRAL</span>
+          <div class="race-signal" id="race-ventral" style="background: linear-gradient(90deg, rgba(232,145,122,0.4), var(--ventral-color));"></div>
+          <span class="race-time" id="race-ventral-time" style="color: var(--ventral-color);">~150ms</span>
+        </div>
+      </div>
+
+      <div class="info-panel" id="race-info">
+        <p style="text-align:center; color: var(--text-muted);">Press "Run the Race" to see the speed differences between visual pathways.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 3: BALL DEMO
+         ═══════════════════════════════════ -->
+    <div class="section" id="ball-demo">
+      <h2>3. See the Difference: Dorsal vs. Ventral in Action</h2>
+      <p>Watch a ball fly across the screen. The <strong style="color:var(--dorsal-color);">dorsal stream</strong> immediately tracks its motion and location &mdash; you know <em>where</em> it is going. The <strong style="color:var(--ventral-color);">ventral stream</strong> takes longer but gradually resolves what the object <em>is</em>: its color, texture, pattern, and identity.</p>
+
+      <div class="callout">
+        <p><strong>The key insight:</strong> The dorsal stream extracts motion and spatial information almost instantly via fast feedforward processing. The ventral stream requires time-consuming recurrent processing to build a detailed representation. You can track and dodge a ball before you consciously recognize what it looks like.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="runBallDemo()" id="ball-btn">&#9654; Launch Ball</button>
+        <button class="btn" onclick="resetBallDemo()">&#8635; Reset</button>
+      </div>
+
+      <div class="ball-demo-stage" id="ball-stage">
+        <span class="pathway-label dorsal-label">Dorsal Stream (~80ms) &mdash; Motion &amp; Location</span>
+        <span class="pathway-label ventral-label">Ventral Stream (~150ms) &mdash; Identity &amp; Detail</span>
+        <div class="divider-line"></div>
+        <span class="divider-label">Same object, two representations</span>
+
+        <!-- Dorsal ball: simple, fast-moving outline -->
+        <div class="demo-ball demo-ball-dorsal" id="ball-dorsal" style="left: -50px;"></div>
+
+        <!-- Ventral ball: starts as a blurry blob, resolves into detailed ball -->
+        <div class="demo-ball demo-ball-ventral" id="ball-ventral" style="left: -50px; background: rgba(150,150,150,0.3); border: 2px solid rgba(150,150,150,0.3);"></div>
+      </div>
+
+      <div class="info-panel" id="ball-info">
+        <p style="text-align:center; color: var(--text-muted);">Press "Launch Ball" to see how the dorsal stream tracks motion immediately while the ventral stream slowly resolves object detail.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 4: SIGNAL TIMELINE
+         ═══════════════════════════════════ -->
+    <div class="section" id="signal-timeline">
+      <h2>4. Signal Timeline: What Happens When</h2>
+      <p>When light hits your retina, a cascade of processing unfolds over 200 milliseconds. Watch how the three pathways produce different outcomes at different times.</p>
+
+      <div class="btn-row">
+        <button class="btn" onclick="runTimeline()" id="timeline-btn">&#9654; Play Timeline</button>
+      </div>
+
+      <div class="timeline" id="timeline-container">
+        <div class="timeline-event" id="tl-0" style="border-left: 3px solid rgba(255,255,255,0.3);">
+          <div class="time-label" style="color: rgba(255,255,255,0.6);">0 ms &mdash; Light hits retina</div>
+          <p>Photoreceptors transduce light into electrical signals. The signal immediately splits: ~90% goes to the LGN, ~10% goes directly to the superior colliculus.</p>
+        </div>
+        <div class="timeline-event" id="tl-1" style="border-left: 3px solid var(--subcortical-color);">
+          <div class="time-label" style="color: var(--subcortical-color);">~20 ms &mdash; Superior colliculus activates</div>
+          <p>The subcortical route reaches the midbrain first. The superior colliculus begins processing spatial location and motion &mdash; no cortex needed.</p>
+        </div>
+        <div class="timeline-event" id="tl-2" style="border-left: 3px solid rgba(255,255,255,0.3);">
+          <div class="time-label" style="color: rgba(255,255,255,0.5);">~30 ms &mdash; LGN relays signal</div>
+          <p>The lateral geniculate nucleus passes the signal to primary visual cortex (V1). This is a relay station, not just a passive wire &mdash; it filters and gates information.</p>
+        </div>
+        <div class="timeline-event" id="tl-3" style="border-left: 3px solid var(--subcortical-color);">
+          <div class="time-label" style="color: var(--subcortical-color);">~50 ms &mdash; Amygdala fires (subcortical route)</div>
+          <p>Via the pulvinar, the amygdala receives a coarse but fast threat assessment. You flinch at a looming shape <em>before you know what it is.</em> This is the neural basis of "gut feelings" about danger.</p>
+        </div>
+        <div class="timeline-event" id="tl-4" style="border-left: 3px solid var(--dorsal-color);">
+          <div class="time-label" style="color: var(--dorsal-color);">~60 ms &mdash; V1 feedforward sweep</div>
+          <p>V1 completes its initial feedforward pass. Orientation, spatial frequency, and motion are extracted. The signal begins diverging into dorsal and ventral streams.</p>
+        </div>
+        <div class="timeline-event" id="tl-5" style="border-left: 3px solid var(--dorsal-color);">
+          <div class="time-label" style="color: var(--dorsal-color);">~80 ms &mdash; Dorsal stream: action guidance ready</div>
+          <p>MT/V5 and the posterior parietal cortex compute spatial location and motion direction. You can begin reaching for an object or dodging a threat &mdash; your hand "knows" the shape before you consciously identify it.</p>
+        </div>
+        <div class="timeline-event" id="tl-6" style="border-left: 3px solid var(--ventral-color);">
+          <div class="time-label" style="color: var(--ventral-color);">~100 ms &mdash; Recurrent processing begins</div>
+          <p>Feedback signals from higher areas re-enter V1 and V2. According to Lamme &amp; Roelfsema (2000), this recurrent processing is necessary for conscious visual experience &mdash; feedforward alone is not enough.</p>
+        </div>
+        <div class="timeline-event" id="tl-7" style="border-left: 3px solid var(--ventral-color);">
+          <div class="time-label" style="color: var(--ventral-color);">~150 ms &mdash; Ventral stream: object recognition</div>
+          <p>Inferotemporal (IT) cortex completes object identification. You now consciously know <em>what</em> you're looking at &mdash; a face, a snake, a coffee cup. This is the slow, detailed analysis that the ventral "what" pathway provides.</p>
+        </div>
+        <div class="timeline-event" id="tl-8" style="border-left: 3px solid rgba(255,255,255,0.3);">
+          <div class="time-label" style="color: rgba(255,255,255,0.5);">~200 ms &mdash; Unified percept</div>
+          <p>All pathways converge. You have a coherent, conscious experience combining identity (ventral), location and action plans (dorsal), and emotional valence (subcortical). But your body has already been acting for 150ms.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 5: BLINDSIGHT TASK
+         ═══════════════════════════════════ -->
+    <div class="section" id="blindsight-sim">
+      <h2>5. The Blindsight Task</h2>
+      <p>Patient D.B. (studied by Weiskrantz, 1996) had damage to V1 in one hemisphere, leaving him cortically blind in the opposite visual field. Yet when forced to guess, he could point to objects he insisted he could not see. This is <strong>blindsight</strong> &mdash; vision without visual awareness.</p>
+
+      <div class="callout">
+        <p><strong>How is this possible?</strong> The subcortical pathway (retina &rarr; superior colliculus &rarr; pulvinar) is intact. It provides enough spatial information for orienting and basic detection &mdash; but without V1 feeding the ventral stream, there is no conscious perception. The patient <em>responds</em> to stimuli they genuinely cannot <em>see</em>.</p>
+      </div>
+
+      <h3>Try the forced-choice task</h3>
+      <p><strong>Note:</strong> This is an example of the type of forced-choice detection task used by researchers to assess blindsight &mdash; it does not recreate the experience of blindsight itself (you still have an intact V1!). The dark "damaged" field simply makes stimuli harder to see, illustrating the kind of task where patients perform surprisingly well despite reporting no awareness.</p>
+      <p style="margin-top:8px;">Keep your eyes on the gold fixation dot. Stimuli will flash in both fields. When you detect something <em>anywhere</em>, press <strong>Space</strong> or click the arena.</p>
+
+      <div class="btn-row">
+        <button class="btn" onclick="startBlindsight()" id="bs-start-btn">&#9654; Start Simulation</button>
+        <button class="btn" onclick="stopBlindsight()">&#9632; Stop</button>
+      </div>
+
+      <div class="blindsight-arena" id="bs-arena" tabindex="0">
+        <div class="blind-field-overlay left" id="blind-field">
+          <span class="blind-field-label">V1 Damaged<br>No awareness</span>
+        </div>
+        <div class="blindsight-fixation"></div>
+        <div class="stimulus-dot" id="stim-dot"></div>
+      </div>
+
+      <div class="bs-scoreboard">
+        <div class="bs-stat">
+          <div class="bs-stat-num" id="bs-hits">0</div>
+          <div class="bs-stat-label">Hits (sighted field)</div>
+        </div>
+        <div class="bs-stat">
+          <div class="bs-stat-num" id="bs-blind-hits">0</div>
+          <div class="bs-stat-label">Hits (blind field)</div>
+        </div>
+        <div class="bs-stat">
+          <div class="bs-stat-num" id="bs-total">0</div>
+          <div class="bs-stat-label">Total stimuli</div>
+        </div>
+      </div>
+
+      <div class="info-panel" id="bs-info">
+        <p style="text-align:center; color: var(--text-muted);">This is a demonstration of the <em>forced-choice method</em> used in blindsight research. In actual patients with V1 damage, forced-choice accuracy in the blind field ranges from 60&ndash;90% &mdash; far above the 50% expected by chance &mdash; despite having no subjective visual experience.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 6: LESION EXPLORER
+         ═══════════════════════════════════ -->
+    <div class="section" id="lesion-explorer">
+      <h2>6. Lesion Explorer</h2>
+      <p>What happens when a specific part of the visual system is damaged? Select a lesion site to see the clinical consequences.</p>
+
+      <div class="lesion-grid">
+        <div class="lesion-card" onclick="showLesion('v1')">
+          <h4 style="color: var(--alpenglow);">V1 Damage</h4>
+          <p>Primary visual cortex destroyed (e.g., stroke in calcarine sulcus)</p>
+        </div>
+        <div class="lesion-card" onclick="showLesion('ventral')">
+          <h4 style="color: var(--ventral-color);">Ventral Stream Damage</h4>
+          <p>Inferotemporal cortex lesion (e.g., bilateral IT damage)</p>
+        </div>
+        <div class="lesion-card" onclick="showLesion('dorsal')">
+          <h4 style="color: var(--dorsal-color);">Dorsal Stream Damage</h4>
+          <p>Posterior parietal cortex lesion (e.g., Balint's syndrome)</p>
+        </div>
+        <div class="lesion-card" onclick="showLesion('sc')">
+          <h4 style="color: var(--subcortical-color);">Superior Colliculus Damage</h4>
+          <p>Midbrain lesion affecting subcortical visual pathway</p>
+        </div>
+      </div>
+
+      <div class="lesion-result" id="lesion-result">
+        <h4>Select a lesion site above</h4>
+        <p style="color: var(--text-muted);">Each region contributes something different to vision. Damage reveals what each pathway is for.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 7: COMPARISON TABLE
+         ═══════════════════════════════════ -->
+    <div class="section" id="comparison">
+      <h2>7. Pathway Comparison</h2>
+      <p>A side-by-side comparison of the three major visual routes, based on the work of Goodale &amp; Milner (1992), Lamme &amp; Roelfsema (2000), and Weiskrantz (1996).</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th class="col-ventral">Ventral</th>
+            <th class="col-dorsal">Dorsal</th>
+            <th class="col-sub">Subcortical</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Also called</strong></td>
+            <td>"What" pathway</td>
+            <td>"Where/How" pathway</td>
+            <td>"Low road"</td>
+          </tr>
+          <tr>
+            <td><strong>Main route</strong></td>
+            <td>V1 &rarr; V2 &rarr; V4 &rarr; IT</td>
+            <td>V1 &rarr; V2 &rarr; MT &rarr; PPC</td>
+            <td>SC &rarr; Pulvinar &rarr; Amygdala</td>
+          </tr>
+          <tr>
+            <td><strong>Speed</strong></td>
+            <td>Slowest (~150ms)</td>
+            <td>Medium (~80ms)</td>
+            <td>Fastest (~50ms)</td>
+          </tr>
+          <tr>
+            <td><strong>Processing type</strong></td>
+            <td>Recurrent / feedback</td>
+            <td>Feedforward-dominant</td>
+            <td>Feedforward only</td>
+          </tr>
+          <tr>
+            <td><strong>Primary function</strong></td>
+            <td>Object recognition, categorization</td>
+            <td>Spatial guidance, visuomotor control</td>
+            <td>Threat detection, orienting</td>
+          </tr>
+          <tr>
+            <td><strong>Conscious?</strong></td>
+            <td>Yes &mdash; detailed awareness</td>
+            <td>Partially &mdash; action can be implicit</td>
+            <td>No &mdash; operates below awareness</td>
+          </tr>
+          <tr>
+            <td><strong>Resolution</strong></td>
+            <td>High (fine detail)</td>
+            <td>Moderate (spatial/motion)</td>
+            <td>Low (coarse blobs)</td>
+          </tr>
+          <tr>
+            <td><strong>If damaged</strong></td>
+            <td>Visual agnosia</td>
+            <td>Optic ataxia, Balint's</td>
+            <td>Loss of reflexive orienting</td>
+          </tr>
+          <tr>
+            <td><strong>Key evidence</strong></td>
+            <td>Patient D.F. (Goodale &amp; Milner)</td>
+            <td>Patient A.T. (optic ataxia)</td>
+            <td>Patient D.B. (Weiskrantz)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 8: QUIZ
+         ═══════════════════════════════════ -->
+    <div class="section" id="quiz">
+      <h2>8. Check Your Understanding</h2>
+
+      <!-- Q1 -->
+      <div class="quiz-container" id="quiz-1">
+        <p class="quiz-question">1. Why can blindsight patient D.B. point to objects he reports not seeing?</p>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">A. His ventral stream is intact but his dorsal stream is damaged</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, true)">B. The subcortical pathway (retina &rarr; SC &rarr; pulvinar) bypasses V1 and provides spatial information without conscious awareness</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">C. His LGN can reconstruct full visual images without V1</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">D. Blindsight is a psychological coping mechanism, not a neural phenomenon</button>
+        <div class="quiz-feedback" id="quiz-1-fb"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-container" id="quiz-2" style="margin-top: 24px;">
+        <p class="quiz-question">2. Patient D.F. can accurately post a letter through an angled slot, but cannot verbally report the orientation of the slot. Which account best explains this?</p>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">A. Her subcortical pathway guides the hand movement</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">B. Her dorsal stream is damaged but ventral stream is intact</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, true)">C. Her dorsal stream ("how") guides action without conscious perception, while her damaged ventral stream ("what") cannot support explicit recognition</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">D. She is unconsciously memorizing the orientation before each trial</button>
+        <div class="quiz-feedback" id="quiz-2-fb"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-container" id="quiz-3" style="margin-top: 24px;">
+        <p class="quiz-question">3. According to Lamme &amp; Roelfsema (2000), what distinguishes conscious from unconscious visual processing?</p>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">A. Conscious processing is faster than unconscious processing</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">B. Conscious processing requires the subcortical pathway</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, true)">C. Conscious visual experience requires recurrent (feedback) processing, not just feedforward activation</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">D. Only the ventral stream is involved in any visual processing</button>
+        <div class="quiz-feedback" id="quiz-3-fb"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-container" id="quiz-4" style="margin-top: 24px;">
+        <p class="quiz-question">4. Why is the subcortical visual pathway faster than the cortical pathways?</p>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">A. The subcortical pathway uses thicker axons that conduct faster</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, true)">B. It takes a shorter anatomical route, bypasses V1 and cortex entirely, and uses only feedforward processing</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">C. The amygdala processes information faster than any cortical region</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">D. It has priority access to the optic nerve at the retinal level</button>
+        <div class="quiz-feedback" id="quiz-4-fb"></div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-container" id="quiz-5" style="margin-top: 24px;">
+        <p class="quiz-question">5. A person flinches at a fast-approaching object before consciously identifying what it is. Which pathway primarily drives the flinch?</p>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">A. Ventral stream via IT cortex</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">B. Dorsal stream via posterior parietal cortex</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, true)">C. Subcortical route via superior colliculus and amygdala</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">D. A combined ventral-dorsal cortical response</button>
+        <div class="quiz-feedback" id="quiz-5-fb"></div>
+      </div>
+    </div>
+
+    <!-- ── Footer ── -->
+    <div style="text-align: center; padding: 40px 0 60px; color: var(--text-muted); font-size: 0.75rem;">
+      PSYCH 302 &middot; Neuroscience of the Mind &middot; University of Washington
+    </div>
 
   </div>
 
+  <script>
+    // ═══════════════════════════════════
+    // PATHWAY MAP INTERACTIONS
+    // ═══════════════════════════════════
+    let activePathway = null;
+
+    const pathwayData = {
+      ventral: {
+        title: 'Ventral Stream &mdash; "What" Pathway',
+        color: '#e8917a',
+        speed: 'Slowest: ~150ms to object recognition',
+        speedBg: 'rgba(232,145,122,0.12)',
+        desc: 'The ventral stream flows from V1 through V2 and V4 to inferotemporal (IT) cortex. It performs increasingly complex feature analysis &mdash; from edges to textures to whole objects and faces. This pathway requires extensive <strong>recurrent processing</strong> (feedback loops between areas), which is why it is slow but thorough. Damage here causes <strong>visual agnosia</strong>: patients can see but cannot recognize what they see. Patient D.F. (Goodale &amp; Milner, 1992) had a ventral lesion and could not report an object\'s orientation, yet could still accurately reach for it using her intact dorsal stream.'
+      },
+      dorsal: {
+        title: 'Dorsal Stream &mdash; "Where/How" Pathway',
+        color: '#6ab4e8',
+        speed: 'Medium: ~80ms to action guidance',
+        speedBg: 'rgba(106,180,232,0.12)',
+        desc: 'The dorsal stream flows from V1 through V2 and MT/V5 to posterior parietal cortex (PPC). It is specialized for spatial location, motion processing, and visuomotor control &mdash; guiding your hand to grab a cup or your eyes to track a moving ball. It is faster than the ventral stream because it relies more on <strong>feedforward processing</strong>. Critically, dorsal processing can guide action without conscious awareness of the object\'s identity. Note the <strong>dashed purple line from the pulvinar</strong>: the dorsal stream also receives a fast subcortical input via the pulvinar nucleus of the thalamus, further enhancing its speed for spatial and motion processing. Damage causes <strong>optic ataxia</strong> (misreaching) or Balint\'s syndrome (inability to perceive multiple objects or their spatial relations).'
+      },
+      subcortical: {
+        title: 'Subcortical Route &mdash; "Low Road"',
+        color: '#c89af0',
+        speed: 'Fastest: ~50ms to threat response',
+        speedBg: 'rgba(200,154,240,0.12)',
+        desc: 'This pathway <strong>completely bypasses V1 and the cortex</strong>. From the retina, ~10% of fibers project directly to the superior colliculus in the midbrain. From there, signals reach the pulvinar (thalamus) and then the amygdala. The information is coarse &mdash; low resolution, no fine detail &mdash; but <em>fast</em>. This is why you can detect and react to threats before you consciously perceive them. It is the neural basis of <strong>blindsight</strong>: even with V1 destroyed, this pathway allows spatial orienting and basic threat detection. Patient D.B. (Weiskrantz, 1996) used this route to locate stimuli in his blind field.'
+      },
+      all: {
+        title: 'All Three Pathways',
+        color: '#f0c8a0',
+        speed: '50ms &rarr; 80ms &rarr; 150ms',
+        speedBg: 'rgba(240,200,160,0.1)',
+        desc: 'All three pathways fire simultaneously when light hits the retina, but they diverge in speed and function. The subcortical route provides the fastest, crudest response for survival. The dorsal stream enables fast, precise action guidance. The ventral stream delivers the richest, most detailed conscious perception &mdash; but takes the longest. This parallel architecture means your brain reacts to the world at multiple timescales, with your body often acting before your mind "knows" what\'s happening.'
+      }
+    };
+
+    function showPathway(type) {
+      activePathway = type;
+      // Update buttons
+      document.querySelectorAll('.btn-row .btn').forEach(b => b.classList.remove('active'));
+      const btnId = type === 'all' ? 'btn-all' : 'btn-' + type;
+      document.getElementById(btnId)?.classList.add('active');
+
+      // Update SVG paths
+      const ventralLines = document.querySelectorAll('.ventral-line');
+      const dorsalLines = document.querySelectorAll('.dorsal-line');
+      const subLines = document.querySelectorAll('.sub-line');
+      const pulvDorsalLines = document.querySelectorAll('.pulvinar-dorsal-line');
+      const shared = [document.getElementById('path-retina-lgn'), document.getElementById('path-lgn-v1')];
+      const bypassLabel = document.getElementById('bypass-label');
+      const pulvDorsalLabel = document.getElementById('pulvinar-dorsal-label');
+
+      // Reset all to dim
+      ventralLines.forEach(l => { l.style.stroke = 'rgba(232,145,122,0.08)'; l.style.strokeWidth = '1.5'; });
+      dorsalLines.forEach(l => { l.style.stroke = 'rgba(106,180,232,0.08)'; l.style.strokeWidth = '1.5'; });
+      subLines.forEach(l => { l.style.stroke = 'rgba(200,154,240,0.08)'; l.style.strokeWidth = '1.5'; });
+      pulvDorsalLines.forEach(l => { l.style.stroke = 'rgba(160,141,224,0.08)'; l.style.strokeWidth = '1.5'; });
+      shared.forEach(l => { l.style.stroke = 'rgba(255,255,255,0.1)'; l.style.strokeWidth = '1.5'; });
+      bypassLabel.style.opacity = '0';
+      pulvDorsalLabel.style.opacity = '0';
+
+      if (type === 'ventral' || type === 'all') {
+        ventralLines.forEach(l => { l.style.stroke = '#e8917a'; l.style.strokeWidth = '3'; });
+        shared.forEach(l => { l.style.stroke = 'rgba(255,255,255,0.35)'; l.style.strokeWidth = '2.5'; });
+      }
+      if (type === 'dorsal' || type === 'all') {
+        dorsalLines.forEach(l => { l.style.stroke = '#6ab4e8'; l.style.strokeWidth = '3'; });
+        shared.forEach(l => { l.style.stroke = 'rgba(255,255,255,0.35)'; l.style.strokeWidth = '2.5'; });
+        // Also show the pulvinar→dorsal shortcut
+        pulvDorsalLines.forEach(l => { l.style.stroke = '#a08de0'; l.style.strokeWidth = '2.5'; });
+        pulvDorsalLabel.style.opacity = '0.7';
+      }
+      if (type === 'subcortical' || type === 'all') {
+        subLines.forEach(l => { l.style.stroke = '#c89af0'; l.style.strokeWidth = '3'; });
+        bypassLabel.style.opacity = '0.7';
+        // Also show pulvinar→dorsal when showing subcortical or all
+        pulvDorsalLines.forEach(l => { l.style.stroke = '#a08de0'; l.style.strokeWidth = '2.5'; });
+        pulvDorsalLabel.style.opacity = '0.7';
+      }
+
+      // Update info panel
+      const data = pathwayData[type];
+      const panel = document.getElementById('pathway-info');
+      panel.innerHTML = `
+        <h4 style="color: ${data.color};">${data.title}</h4>
+        <p>${data.desc}</p>
+        <span class="speed-badge" style="background: ${data.speedBg}; color: ${data.color};">${data.speed}</span>
+      `;
+    }
+
+    // ═══════════════════════════════════
+    // SPEED RACE
+    // ═══════════════════════════════════
+    let raceRunning = false;
+
+    function runRace() {
+      if (raceRunning) return;
+      raceRunning = true;
+      document.getElementById('race-btn').textContent = 'Racing...';
+
+      // Reset bars
+      ['sub', 'dorsal', 'ventral'].forEach(id => {
+        document.getElementById('race-' + id).style.width = '0%';
+        document.getElementById('race-' + id).style.transition = 'none';
+        document.getElementById('race-' + id + '-time').style.opacity = '0';
+      });
+
+      // Timings: subcortical 50ms, dorsal 80ms, ventral 150ms
+      // Map to animation durations: sub=1s, dorsal=1.6s, ventral=3s
+      setTimeout(() => {
+        const subBar = document.getElementById('race-sub');
+        subBar.style.transition = 'width 1s ease-out';
+        subBar.style.width = '100%';
+        setTimeout(() => {
+          document.getElementById('race-sub-time').style.opacity = '1';
+          updateRaceInfo('sub');
+        }, 1000);
+
+        const dorsalBar = document.getElementById('race-dorsal');
+        dorsalBar.style.transition = 'width 1.6s ease-out';
+        dorsalBar.style.width = '100%';
+        setTimeout(() => {
+          document.getElementById('race-dorsal-time').style.opacity = '1';
+          updateRaceInfo('dorsal');
+        }, 1600);
+
+        const ventralBar = document.getElementById('race-ventral');
+        ventralBar.style.transition = 'width 3s ease-out';
+        ventralBar.style.width = '100%';
+        setTimeout(() => {
+          document.getElementById('race-ventral-time').style.opacity = '1';
+          updateRaceInfo('ventral');
+          raceRunning = false;
+          document.getElementById('race-btn').textContent = '\u25B6 Run the Race';
+        }, 3000);
+      }, 200);
+    }
+
+    function updateRaceInfo(stage) {
+      const panel = document.getElementById('race-info');
+      const messages = {
+        sub: '<span style="color:var(--subcortical-color);font-weight:700;">SUBCORTICAL ARRIVES FIRST (~50ms)</span> &mdash; The amygdala has already triggered a threat response. Your body begins to react before any cortical processing.',
+        dorsal: '<span style="color:var(--dorsal-color);font-weight:700;">DORSAL ARRIVES (~80ms)</span> &mdash; The parietal cortex now has spatial and motion information. Guided reaching and eye movements can begin. You still don\'t know <em>what</em> you\'re looking at.',
+        ventral: '<span style="color:var(--ventral-color);font-weight:700;">VENTRAL ARRIVES (~150ms)</span> &mdash; Object recognition is complete. You now consciously know what you see. But your brain has been acting on the visual information for 100ms already.'
+      };
+      panel.innerHTML = '<p>' + messages[stage] + '</p>';
+    }
+
+    function resetRace() {
+      raceRunning = false;
+      document.getElementById('race-btn').textContent = '\u25B6 Run the Race';
+      ['sub', 'dorsal', 'ventral'].forEach(id => {
+        const bar = document.getElementById('race-' + id);
+        bar.style.transition = 'width 0.3s';
+        bar.style.width = '0%';
+        document.getElementById('race-' + id + '-time').style.opacity = '0';
+      });
+      document.getElementById('race-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">Press "Run the Race" to see the speed differences between visual pathways.</p>';
+    }
+
+    // ═══════════════════════════════════
+    // BALL DEMO
+    // ═══════════════════════════════════
+    let ballRunning = false;
+    let ballAnimId = null;
+
+    function runBallDemo() {
+      if (ballRunning) return;
+      ballRunning = true;
+      document.getElementById('ball-btn').textContent = 'Flying...';
+
+      const stage = document.getElementById('ball-stage');
+      const dorsalBall = document.getElementById('ball-dorsal');
+      const ventralBall = document.getElementById('ball-ventral');
+      const info = document.getElementById('ball-info');
+
+      const stageW = stage.offsetWidth;
+      const endX = stageW + 60; // fly off right edge
+
+      // Reset positions
+      dorsalBall.style.left = '-50px';
+      ventralBall.style.left = '-50px';
+      ventralBall.style.background = 'rgba(150,150,150,0.3)';
+      ventralBall.style.border = '2px solid rgba(150,150,150,0.3)';
+      ventralBall.style.boxShadow = 'none';
+      ventralBall.innerHTML = '';
+
+      // Dorsal: fast, reaches end in ~2s (speed = stageW/2s)
+      // Ventral: slower, reaches end in ~4s
+      const dorsalDuration = 2000;
+      const ventralDuration = 4000;
+      const startTime = performance.now();
+
+      // Ventral detail stages (by progress 0-1)
+      // 0.0-0.15: gray blur
+      // 0.15-0.35: vague shape, warm tint
+      // 0.35-0.55: color emerges (orange), outline sharpens
+      // 0.55-0.75: pattern appears (stripes)
+      // 0.75-1.0: full detail, crisp edges
+
+      function getVentralStyle(p) {
+        if (p < 0.15) {
+          return {
+            bg: 'rgba(150,150,150,0.3)',
+            border: '2px solid rgba(150,150,150,0.3)',
+            shadow: '0 0 20px rgba(150,150,150,0.2)',
+            filter: 'blur(6px)',
+            inner: ''
+          };
+        } else if (p < 0.35) {
+          const t = (p - 0.15) / 0.2;
+          const r = Math.round(150 + t * 82);
+          const g = Math.round(150 - t * 5);
+          const b = Math.round(150 - t * 28);
+          return {
+            bg: `rgba(${r},${g},${b},${0.3 + t * 0.15})`,
+            border: `2px solid rgba(${r},${g},${b},${0.3 + t * 0.2})`,
+            shadow: `0 0 16px rgba(232,145,122,${t * 0.15})`,
+            filter: `blur(${6 - t * 3}px)`,
+            inner: ''
+          };
+        } else if (p < 0.55) {
+          const t = (p - 0.35) / 0.2;
+          return {
+            bg: `rgba(232,${Math.round(145 - t * 10)},${Math.round(122 - t * 10)},${0.45 + t * 0.25})`,
+            border: `2px solid rgba(232,145,122,${0.5 + t * 0.3})`,
+            shadow: `0 0 14px rgba(232,145,122,${0.15 + t * 0.15})`,
+            filter: `blur(${3 - t * 2}px)`,
+            inner: ''
+          };
+        } else if (p < 0.75) {
+          const t = (p - 0.55) / 0.2;
+          return {
+            bg: `rgba(232,135,112,${0.7 + t * 0.15})`,
+            border: `2px solid var(--ventral-color)`,
+            shadow: `0 0 12px rgba(232,145,122,${0.3 + t * 0.1})`,
+            filter: `blur(${1 - t}px)`,
+            inner: `<div style="position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(255,255,255,${0.08 * t}) 4px,rgba(255,255,255,${0.08 * t}) 6px);opacity:${t};"></div>`
+          };
+        } else {
+          return {
+            bg: 'rgba(232,135,112,0.85)',
+            border: '2px solid var(--ventral-color)',
+            shadow: '0 0 16px rgba(232,145,122,0.5), inset 0 -4px 8px rgba(0,0,0,0.2)',
+            filter: 'blur(0px)',
+            inner: '<div style="position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(255,255,255,0.08) 4px,rgba(255,255,255,0.08) 6px);"></div><div style="position:absolute;top:20%;left:25%;width:30%;height:20%;background:rgba(255,255,255,0.15);border-radius:50%;transform:rotate(-20deg);"></div>'
+          };
+        }
+      }
+
+      function animate(now) {
+        const elapsed = now - startTime;
+
+        // Dorsal ball: fast linear motion
+        const dorsalP = Math.min(elapsed / dorsalDuration, 1);
+        const dorsalX = -50 + (endX + 50) * dorsalP;
+        dorsalBall.style.left = dorsalX + 'px';
+
+        // Ventral ball: slower motion
+        const ventralP = Math.min(elapsed / ventralDuration, 1);
+        const ventralX = -50 + (endX + 50) * ventralP;
+        ventralBall.style.left = ventralX + 'px';
+
+        // Update ventral appearance based on progress
+        const vs = getVentralStyle(ventralP);
+        ventralBall.style.background = vs.bg;
+        ventralBall.style.border = vs.border;
+        ventralBall.style.boxShadow = vs.shadow;
+        ventralBall.style.filter = vs.filter;
+        ventralBall.innerHTML = vs.inner;
+
+        // Update info panel
+        if (dorsalP >= 1 && elapsed < dorsalDuration + 200) {
+          info.innerHTML = '<p><strong style="color:var(--dorsal-color);">Dorsal stream done!</strong> It already knows where the ball went. The ventral stream is still resolving what the ball looks like...</p>';
+        }
+
+        if (ventralP < 1) {
+          ballAnimId = requestAnimationFrame(animate);
+        } else {
+          // Done
+          info.innerHTML = '<p><strong style="color:var(--ventral-color);">Ventral stream complete.</strong> Now you know both <em>where</em> the ball went (dorsal, fast) and <em>what</em> it looked like (ventral, slow). In real vision, you can catch a ball before you consciously register its color or pattern.</p>';
+          document.getElementById('ball-btn').textContent = '\u25B6 Launch Ball';
+          ballRunning = false;
+        }
+      }
+
+      ballAnimId = requestAnimationFrame(animate);
+    }
+
+    function resetBallDemo() {
+      if (ballAnimId) cancelAnimationFrame(ballAnimId);
+      ballRunning = false;
+      document.getElementById('ball-btn').textContent = '\u25B6 Launch Ball';
+      const dorsalBall = document.getElementById('ball-dorsal');
+      const ventralBall = document.getElementById('ball-ventral');
+      dorsalBall.style.left = '-50px';
+      ventralBall.style.left = '-50px';
+      ventralBall.style.background = 'rgba(150,150,150,0.3)';
+      ventralBall.style.border = '2px solid rgba(150,150,150,0.3)';
+      ventralBall.style.boxShadow = 'none';
+      ventralBall.style.filter = 'none';
+      ventralBall.innerHTML = '';
+      document.getElementById('ball-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">Press "Launch Ball" to see how the dorsal stream tracks motion immediately while the ventral stream slowly resolves object detail.</p>';
+    }
+
+    // ═══════════════════════════════════
+    // SIGNAL TIMELINE
+    // ═══════════════════════════════════
+    function runTimeline() {
+      const events = document.querySelectorAll('.timeline-event');
+      events.forEach(e => e.classList.remove('visible'));
+
+      const delays = [0, 400, 600, 1000, 1200, 1600, 2000, 2400, 3200];
+      events.forEach((e, i) => {
+        setTimeout(() => e.classList.add('visible'), delays[i] || i * 400);
+      });
+    }
+
+    // ═══════════════════════════════════
+    // BLINDSIGHT SIMULATION
+    // ═══════════════════════════════════
+    let bsRunning = false;
+    let bsTimer = null;
+    let bsHits = 0;
+    let bsBlindHits = 0;
+    let bsTotal = 0;
+    let bsSightedTotal = 0;
+    let bsBlindTotal = 0;
+    let bsCurrentStim = null;
+    let bsResponseWindow = false;
+
+    function startBlindsight() {
+      if (bsRunning) return;
+      bsRunning = true;
+      bsHits = 0; bsBlindHits = 0; bsTotal = 0; bsSightedTotal = 0; bsBlindTotal = 0;
+      updateBsScore();
+      document.getElementById('bs-start-btn').textContent = 'Running...';
+      document.getElementById('bs-arena').focus();
+      runBsTrial();
+    }
+
+    function stopBlindsight() {
+      bsRunning = false;
+      clearTimeout(bsTimer);
+      document.getElementById('bs-start-btn').textContent = '\u25B6 Start Simulation';
+      const dot = document.getElementById('stim-dot');
+      dot.style.opacity = '0';
+      bsResponseWindow = false;
+
+      if (bsTotal > 0) {
+        const sightedRate = bsSightedTotal > 0 ? Math.round((bsHits / bsSightedTotal) * 100) : 0;
+        const blindRate = bsBlindTotal > 0 ? Math.round((bsBlindHits / bsBlindTotal) * 100) : 0;
+        document.getElementById('bs-info').innerHTML = `<p><strong>Results:</strong> You detected <strong>${sightedRate}%</strong> of ${bsSightedTotal} stimuli in the sighted field and <strong>${blindRate}%</strong> of ${bsBlindTotal} stimuli in the blind field. In real blindsight research, patients achieve 60&ndash;90% accuracy in their blind field on forced-choice tasks, despite reporting no visual experience &mdash; because the subcortical pathway still carries spatial information.</p>`;
+      }
+    }
+
+    function runBsTrial() {
+      if (!bsRunning) return;
+      const dot = document.getElementById('stim-dot');
+      const arena = document.getElementById('bs-arena');
+      const arenaRect = arena.getBoundingClientRect();
+
+      // Random delay 800-2000ms
+      const delay = 800 + Math.random() * 1200;
+
+      bsTimer = setTimeout(() => {
+        if (!bsRunning) return;
+        bsTotal++;
+        // 50% chance in blind field, 50% in sighted field
+        const inBlind = Math.random() < 0.5;
+        if (inBlind) { bsBlindTotal++; } else { bsSightedTotal++; }
+        updateBsScore();
+        const arenaW = arena.offsetWidth;
+        const arenaH = arena.offsetHeight;
+
+        let x, y;
+        if (inBlind) {
+          x = 30 + Math.random() * (arenaW * 0.4 - 60); // left half
+        } else {
+          x = arenaW * 0.55 + Math.random() * (arenaW * 0.4 - 30); // right half
+        }
+        y = 40 + Math.random() * (arenaH - 80);
+
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.className = 'stimulus-dot' + (inBlind ? ' in-blind-field' : '');
+        dot.style.opacity = '1';
+
+        bsCurrentStim = { inBlind, responded: false };
+        bsResponseWindow = true;
+
+        // Stimulus visible for 200ms
+        setTimeout(() => {
+          dot.style.opacity = '0';
+          // Response window continues for 500ms after stimulus disappears
+          setTimeout(() => {
+            bsResponseWindow = false;
+            if (bsCurrentStim && !bsCurrentStim.responded) {
+              // Missed
+            }
+            bsCurrentStim = null;
+            runBsTrial();
+          }, 500);
+        }, 200);
+      }, delay);
+    }
+
+    function bsRespond() {
+      if (!bsResponseWindow || !bsCurrentStim || bsCurrentStim.responded) return;
+      bsCurrentStim.responded = true;
+      if (bsCurrentStim.inBlind) {
+        bsBlindHits++;
+      } else {
+        bsHits++;
+      }
+      updateBsScore();
+    }
+
+    function updateBsScore() {
+      document.getElementById('bs-hits').textContent = bsHits;
+      document.getElementById('bs-blind-hits').textContent = bsBlindHits;
+      document.getElementById('bs-total').textContent = bsTotal;
+    }
+
+    // Event listeners for blindsight
+    document.getElementById('bs-arena').addEventListener('click', bsRespond);
+    document.getElementById('bs-arena').addEventListener('keydown', function(e) {
+      if (e.code === 'Space') { e.preventDefault(); bsRespond(); }
+    });
+
+    // ═══════════════════════════════════
+    // LESION EXPLORER
+    // ═══════════════════════════════════
+    const lesionData = {
+      v1: {
+        title: 'V1 (Primary Visual Cortex) Damage',
+        desc: 'Destruction of V1 eliminates conscious vision in the corresponding visual field (cortical blindness). The patient reports seeing nothing. However, the subcortical pathway remains intact, enabling <strong>blindsight</strong> &mdash; the ability to respond to stimuli without awareness.',
+        preserved: ['Subcortical threat detection', 'Reflexive orienting (via SC)', 'Basic spatial localization (forced-choice)', 'Pupillary light reflex'],
+        impaired: ['Conscious visual perception', 'Object recognition (ventral stream cut off)', 'Detailed spatial analysis', 'Visual imagery in affected field']
+      },
+      ventral: {
+        title: 'Ventral Stream (IT Cortex) Damage',
+        desc: 'Bilateral damage to inferotemporal cortex produces <strong>visual agnosia</strong> &mdash; the inability to recognize objects by sight despite intact basic vision. Patient D.F. (Goodale &amp; Milner, 1992) could not identify objects or report their orientation, yet could accurately reach for and grasp them because her dorsal stream was intact.',
+        preserved: ['Basic vision (V1 intact)', 'Visuomotor guidance (dorsal stream)', 'Accurate reaching and grasping', 'Motion perception', 'Spatial awareness'],
+        impaired: ['Object recognition', 'Face recognition (prosopagnosia)', 'Color perception (achromatopsia)', 'Reading (alexia)', 'Conscious shape perception']
+      },
+      dorsal: {
+        title: 'Dorsal Stream (PPC) Damage',
+        desc: 'Damage to posterior parietal cortex can produce <strong>optic ataxia</strong> (misreaching for objects under visual guidance) or, if bilateral, <strong>Balint\'s syndrome</strong> &mdash; inability to perceive more than one object at a time (simultagnosia), difficulty fixating (oculomotor apraxia), and misreaching (optic ataxia).',
+        preserved: ['Object recognition (ventral stream)', 'Conscious perception of individual objects', 'Color and detail perception', 'Subcortical threat detection'],
+        impaired: ['Accurate reaching under visual guidance', 'Perceiving spatial relationships between objects', 'Visual attention across space', 'Eye movement control', 'Perceiving motion trajectories']
+      },
+      sc: {
+        title: 'Superior Colliculus Damage',
+        desc: 'Damage to the superior colliculus disrupts the subcortical "low road." While cortical vision via V1 remains intact and the patient can consciously see, they lose the fastest threat-detection system and reflexive visual orienting. Response to sudden looming stimuli is significantly delayed.',
+        preserved: ['Conscious visual perception', 'Object recognition', 'Visuomotor guidance (dorsal stream)', 'Voluntary eye movements (frontal eye fields)'],
+        impaired: ['Reflexive orienting to sudden stimuli', 'Fast subcortical threat detection', 'Automatic saccades to visual events', 'Rapid attention shifts', 'Pre-conscious danger avoidance']
+      }
+    };
+
+    function showLesion(type) {
+      // Update card selection
+      document.querySelectorAll('.lesion-card').forEach(c => c.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+
+      const data = lesionData[type];
+      const panel = document.getElementById('lesion-result');
+      const preservedHtml = data.preserved.map(p => `<span class="preserved">${p}</span>`).join(' ');
+      const impairedHtml = data.impaired.map(p => `<span class="impaired">${p}</span>`).join(' ');
+
+      panel.innerHTML = `
+        <h4>${data.title}</h4>
+        <p>${data.desc}</p>
+        <h4 style="color: #7ae0a0; margin-top: 14px; font-size: 0.78rem;">Preserved Functions</h4>
+        <div style="margin: 6px 0;">${preservedHtml}</div>
+        <h4 style="color: var(--alpenglow); margin-top: 10px; font-size: 0.78rem;">Impaired Functions</h4>
+        <div style="margin: 6px 0;">${impairedHtml}</div>
+      `;
+    }
+
+    // ═══════════════════════════════════
+    // QUIZ
+    // ═══════════════════════════════════
+    const quizFeedback = {
+      1: {
+        correct: 'Correct! The subcortical pathway from retina to superior colliculus to pulvinar provides spatial information that bypasses V1 entirely. Without V1, there is no cortical visual processing and therefore no conscious vision &mdash; but the subcortical route can still guide behavior.',
+        incorrect: 'Not quite. Blindsight occurs because the subcortical pathway (retina &rarr; superior colliculus &rarr; pulvinar) bypasses V1 entirely. It provides spatial information without conscious awareness because V1 is needed for cortical processing and conscious vision.'
+      },
+      2: {
+        correct: 'Correct! Patient D.F. is the classic double dissociation case from Goodale &amp; Milner (1992). Her ventral stream damage prevents conscious shape recognition, but her intact dorsal stream still guides accurate motor actions like posting a letter through a slot.',
+        incorrect: 'Not quite. D.F.\'s case demonstrates the dissociation between the ventral and dorsal streams described by Goodale &amp; Milner (1992). Her damaged ventral stream cannot support conscious recognition, but her intact dorsal stream guides accurate reaching and grasping.'
+      },
+      3: {
+        correct: 'Correct! Lamme &amp; Roelfsema (2000) argued that the initial feedforward sweep through visual cortex is unconscious. Conscious visual experience requires recurrent (feedback) processing &mdash; signals traveling back from higher to lower areas. This is why the ventral stream, which uses extensive recurrent processing, supports conscious perception.',
+        incorrect: 'Not quite. Lamme &amp; Roelfsema (2000) proposed that conscious vision requires recurrent (feedback) processing between cortical areas. The initial feedforward sweep is fast but unconscious. Recurrent processing takes longer but is what enables visual awareness.'
+      },
+      4: {
+        correct: 'Correct! The subcortical pathway is fastest because it takes the shortest anatomical route (retina &rarr; SC &rarr; pulvinar &rarr; amygdala), bypasses the cortex entirely, and relies only on feedforward processing without the time-consuming recurrent loops that cortical pathways use.',
+        incorrect: 'Not quite. The subcortical pathway is fastest because of its shorter route, its bypass of cortical processing, and its exclusive use of feedforward processing. The cortical pathways are slower because they involve more synapses and, especially for the ventral stream, time-consuming recurrent processing.'
+      },
+      5: {
+        correct: 'Correct! The flinch response to a fast-approaching object is driven by the subcortical route through the superior colliculus and amygdala. This is the fastest visual pathway (~50ms), triggering defensive reflexes before the cortex has finished processing what the object is.',
+        incorrect: 'Not quite. A flinch before conscious identification is the hallmark of the subcortical route (retina &rarr; superior colliculus &rarr; pulvinar &rarr; amygdala). At ~50ms, it triggers defensive responses before the dorsal stream (~80ms) guides precise action or the ventral stream (~150ms) identifies the object.'
+      }
+    };
+
+    function checkQuiz(qNum, btn, isCorrect) {
+      const container = document.getElementById('quiz-' + qNum);
+      const options = container.querySelectorAll('.quiz-option');
+      const fb = document.getElementById('quiz-' + qNum + '-fb');
+
+      // Prevent re-answering
+      if (fb.classList.contains('correct-fb') || fb.classList.contains('incorrect-fb')) return;
+
+      options.forEach(o => o.classList.add('answered'));
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        fb.className = 'quiz-feedback correct-fb';
+        fb.textContent = quizFeedback[qNum].correct;
+      } else {
+        btn.classList.add('incorrect');
+        // Highlight correct answer
+        options.forEach(o => {
+          if (!o.classList.contains('incorrect')) {
+            // Find the correct one by checking its onclick
+            const handler = o.getAttribute('onclick');
+            if (handler && handler.includes('true')) {
+              o.classList.add('correct');
+            }
+          }
+        });
+        fb.className = 'quiz-feedback incorrect-fb';
+        fb.textContent = quizFeedback[qNum].incorrect;
+      }
+    }
+
+    // ═══════════════════════════════════
+    // INIT: Show timeline on load
+    // ═══════════════════════════════════
+    document.addEventListener('DOMContentLoaded', function() {
+      // Start with all timeline events hidden
+      document.querySelectorAll('.timeline-event').forEach(e => e.classList.remove('visible'));
+    });
+  </script>
 </body>
 </html>
