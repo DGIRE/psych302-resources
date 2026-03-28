@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>This Week — PSYCH 302: Neuroscience of the Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+      --quiz-color: #5a9ad4;
+      --midterm-color: #d4727a;
+      --lecture-color: #f0c8a0;
+      --section-color: #5abb7a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 100% 40% at 50% 0%, rgba(160,120,136,0.07) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--alpenglow); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 44px 28px 36px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      animation: fadeIn 0.6s ease-out;
+    }
+    .hero .overline {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
+    }
+    .hero h1 {
+      font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 8px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero .week-range {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .hero .week-num {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Day cards */
+    .day-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      animation: fadeIn 0.5s ease-out both;
+    }
+    .day-card.is-today {
+      border-color: rgba(212,114,122,0.3);
+      background: rgba(212,114,122,0.04);
+    }
+    .day-card.is-past {
+      opacity: 0.5;
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .day-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .day-date {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .today-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--alpenglow);
+      background: rgba(212,114,122,0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(212,114,122,0.3);
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .event-item:hover {
+      background: rgba(255,255,255,0.04);
+      transform: translateX(4px);
+    }
+    .event-item:last-child { margin-bottom: 0; }
+
+    .event-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .event-dot.lecture { background: var(--lecture-color); }
+    .event-dot.quiz { background: var(--quiz-color); }
+    .event-dot.midterm { background: var(--midterm-color); }
+    .event-dot.section { background: var(--section-color); }
+
+    .event-info { flex: 1; }
+    .event-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .event-meta {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .event-pts {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .event-pts.quiz { background: rgba(90,154,212,0.2); color: var(--quiz-color); }
+    .event-pts.midterm { background: rgba(212,114,122,0.2); color: var(--midterm-color); }
+
+    .no-events {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 8px 14px;
+    }
+
+    /* Before / after quarter message */
+    .off-quarter {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+    }
+    .off-quarter h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .off-quarter p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 20px 0 20px;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.4rem; }
+      .day-card { padding: 16px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-bg"></div>
+
+  <div class="container">
+
+    <a class="back-link" href="course-navigation.html">&#8592; Back to Course Navigation</a>
+
+    <div class="hero">
+      <div class="overline">PSYCH 302 &mdash; Spring 2026</div>
+      <h1>This Week</h1>
+      <div class="week-range" id="weekRange"></div>
+      <div class="week-num" id="weekNum"></div>
+    </div>
+
+    <div id="weekContent"></div>
+
+    <footer>
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </footer>
+
+  </div>
+
+<script>
+(function() {
+  // ── Course data ──
+  const lectures = [
+    { num: 1,  date: '2026-03-30', title: 'Toward an Interdisciplinary Science of the Mind', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 2,  date: '2026-04-01', title: 'Neurons, Circuits & the Cellular Basis of Computation', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 3,  date: '2026-04-06', title: 'From Sensation to Cognition', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 4,  date: '2026-04-08', title: 'The Organization of Language and the Brain', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 5,  date: '2026-04-13', title: 'Separate Visual Pathways for Perception and Action', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 6,  date: '2026-04-15', title: 'Conscious, Preconscious, and Subliminal Processing', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 7,  date: '2026-04-20', title: 'The Neuroscience of Emotion', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 8,  date: '2026-04-22', title: 'Memory, Organization, and Control', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 9,  date: '2026-04-27', title: 'The Multiple-Demand System and Cognitive Control', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 10, date: '2026-04-29', title: 'Consciousness and the Damaged Brain', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 11, date: '2026-05-06', title: 'Voluntary Action and the Sense of Agency', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 12, date: '2026-05-11', title: 'Experimental and Theoretical Approaches to Consciousness', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 13, date: '2026-05-13', title: 'Dynamic Models of Large-Scale Brain Activity', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 14, date: '2026-05-18', title: 'Whatever Next? Predictive Brains and Situated Agents', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 15, date: '2026-05-20', title: 'The Social Brain', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 16, date: '2026-05-27', title: 'Cerebral Specialization and the Split Brain', time: 'Wed 3:30–5:20 PM', loc: 'ECE 105' },
+    { num: 17, date: '2026-06-01', title: 'Psychedelics and the Entropic Brain', time: 'Mon 3:30–5:20 PM', loc: 'ECE 105' },
+  ];
+
+  const quizzes = [
+    { num: 1, date: '2026-04-02', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888570' },
+    { num: 2, date: '2026-04-09', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888568' },
+    { num: 3, date: '2026-04-16', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888586' },
+    { num: 4, date: '2026-04-23', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888591' },
+    { num: 5, date: '2026-04-30', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888599' },
+    { num: 6, date: '2026-05-07', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888624' },
+    { num: 7, date: '2026-05-14', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888676' },
+    { num: 8, date: '2026-05-21', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888680' },
+    { num: 9, date: '2026-05-28', pts: 2, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888687' },
+  ];
+
+  const midterms = [
+    { num: 1, date: '2026-05-04', pts: 34, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888622', time: 'Mon 3:30 PM', loc: 'ECE 105' },
+    { num: 2, date: '2026-06-03', pts: 34, canvas: 'https://canvas.uw.edu/courses/1888912/assignments/10888688', time: 'Wed 3:30 PM', loc: 'ECE 105' },
+  ];
+
+  const sections = [
+    { date: '2026-04-03', label: 'Section 1', time: 'Friday' },
+    { date: '2026-04-10', label: 'Section 2', time: 'Friday' },
+    { date: '2026-04-17', label: 'Section 3', time: 'Friday' },
+    { date: '2026-04-24', label: 'Section 4', time: 'Friday' },
+    { date: '2026-05-01', label: 'Section 5', time: 'Friday' },
+    { date: '2026-05-08', label: 'Section 6', time: 'Friday' },
+    { date: '2026-05-15', label: 'Section 7', time: 'Friday' },
+    { date: '2026-05-22', label: 'Section 8', time: 'Friday' },
+    { date: '2026-05-29', label: 'Section 9', time: 'Friday' },
+  ];
+
+  // Build date -> events map
+  const events = {};
+  function addEv(dateStr, ev) {
+    if (!events[dateStr]) events[dateStr] = [];
+    events[dateStr].push(ev);
+  }
+
+  lectures.forEach(l => addEv(l.date, {
+    type: 'lecture',
+    title: `Lecture ${l.num}: ${l.title}`,
+    meta: `${l.time} · ${l.loc}`,
+    href: `lectures/lecture-${String(l.num).padStart(2,'0')}.html`,
+    pts: null
+  }));
+
+  quizzes.forEach(q => addEv(q.date, {
+    type: 'quiz',
+    title: `Quiz ${q.num}`,
+    meta: 'Thu 12:00 AM – 11:59 PM · Canvas · 10 min limit',
+    href: q.canvas,
+    pts: q.pts
+  }));
+
+  midterms.forEach(m => addEv(m.date, {
+    type: 'midterm',
+    title: `Midterm ${m.num}`,
+    meta: `${m.time} · ${m.loc}`,
+    href: m.canvas,
+    pts: m.pts
+  }));
+
+  sections.forEach(s => addEv(s.date, {
+    type: 'section',
+    title: s.label,
+    meta: `${s.time} · Check Canvas for your section time`,
+    href: null,
+    pts: null
+  }));
+
+  // ── Render ──
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const todayStr = fmt(today);
+
+  function fmt(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  // Find the Monday of the current week
+  const dayOfWeek = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Quarter boundaries
+  const quarterStart = new Date(2026, 2, 30); // March 30
+  const quarterEnd = new Date(2026, 5, 5);    // June 5
+
+  // Week number
+  const weekStartDiff = Math.floor((monday - quarterStart) / (7 * 24 * 60 * 60 * 1000));
+  const weekNumber = weekStartDiff + 1;
+
+  // Render header
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+  document.getElementById('weekRange').textContent =
+    `${monthNames[monday.getMonth()]} ${monday.getDate()} – ${monthNames[friday.getMonth()]} ${friday.getDate()}, ${monday.getFullYear()}`;
+
+  if (weekNumber >= 1 && weekNumber <= 10) {
+    document.getElementById('weekNum').textContent = `Week ${weekNumber} of 10`;
+  } else if (today < quarterStart) {
+    document.getElementById('weekNum').textContent = 'Quarter begins March 30';
+  } else {
+    document.getElementById('weekNum').textContent = 'Quarter has ended';
+  }
+
+  const content = document.getElementById('weekContent');
+
+  // Check if we're within or near the quarter
+  if (today < new Date(2026, 2, 23) || today > new Date(2026, 5, 7)) {
+    // Well outside the quarter — show message
+    const div = document.createElement('div');
+    div.className = 'off-quarter';
+    if (today < quarterStart) {
+      div.innerHTML = '<h2>The quarter hasn\'t started yet</h2><p>Spring 2026 begins on Monday, March 30. Check back then for your weekly schedule.</p>';
+    } else {
+      div.innerHTML = '<h2>The quarter has ended</h2><p>Congratulations on completing PSYCH 302! Final grades will be available on Canvas.</p>';
+    }
+    content.appendChild(div);
+  } else {
+    // Show Mon–Fri of current week
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const dateStr = fmt(d);
+      const isToday = dateStr === todayStr;
+      const isPast = d < today;
+
+      const card = document.createElement('div');
+      card.className = 'day-card';
+      if (isToday) card.classList.add('is-today');
+      if (isPast && !isToday) card.classList.add('is-past');
+      card.style.animationDelay = `${i * 0.06}s`;
+
+      const header = document.createElement('div');
+      header.className = 'day-header';
+      header.innerHTML = `
+        <span class="day-name">${dayNames[i]}</span>
+        <span class="day-date">${monthNames[d.getMonth()]} ${d.getDate()}</span>
+        ${isToday ? '<span class="today-badge">Today</span>' : ''}
+      `;
+      card.appendChild(header);
+
+      const dayEvents = events[dateStr] || [];
+      if (dayEvents.length === 0) {
+        const noEv = document.createElement('div');
+        noEv.className = 'no-events';
+        noEv.textContent = 'No scheduled events';
+        card.appendChild(noEv);
+      } else {
+        dayEvents.forEach(ev => {
+          const item = document.createElement(ev.href ? 'a' : 'div');
+          item.className = 'event-item';
+          if (ev.href) {
+            item.href = ev.href;
+            if (ev.href.startsWith('http')) item.target = '_blank';
+          }
+
+          let ptsHTML = '';
+          if (ev.pts) {
+            ptsHTML = `<span class="event-pts ${ev.type}">${ev.pts} pts</span>`;
+          }
+
+          item.innerHTML = `
+            <div class="event-dot ${ev.type}"></div>
+            <div class="event-info">
+              <div class="event-title">${ev.title}</div>
+              <div class="event-meta">${ev.meta}</div>
+            </div>
+            ${ptsHTML}
+          `;
+          card.appendChild(item);
+        });
+      }
+
+      content.appendChild(card);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

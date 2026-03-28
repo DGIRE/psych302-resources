@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignments — PSYCH 302: Neuroscience of the Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --twilight-deep: #0c1525; --twilight-mid: #1a2744; --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b; --alpenglow: #d4727a; --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0; --snow-pink: #f2d4d0; --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5; --text-secondary: #b8a8b8; --text-muted: #7a6a82;
+      --quiz-color: #5a9ad4; --midterm-color: #d4727a;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--twilight-deep); color: var(--text-primary); min-height: 100vh; }
+    .page-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.05) 0%, transparent 60%), linear-gradient(180deg, #10182a, #0c1525); }
+    .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; margin-bottom: 32px; transition: color 0.2s; }
+    .back-link:hover { color: var(--alpenglow); }
+    .hero { text-align: center; margin-bottom: 40px; padding: 44px 28px 36px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; animation: fadeIn 0.6s ease-out; }
+    .hero .overline { font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px; text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px; }
+    .hero h1 { font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 8px; background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 0.92rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto; }
+
+    .section { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; animation: fadeIn 0.4s ease-out; }
+    .section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+
+    .assignment-list { list-style: none; }
+    .assignment-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .assignment-item:last-child { border-bottom: none; }
+
+    .assignment-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.7rem; font-weight: 700; }
+    .icon-quiz { background: rgba(90,154,212,0.12); color: var(--quiz-color); border: 1px solid rgba(90,154,212,0.2); }
+    .icon-midterm { background: rgba(212,114,122,0.12); color: var(--midterm-color); border: 1px solid rgba(212,114,122,0.2); }
+
+    .assignment-info { flex: 1; min-width: 0; }
+    .assignment-name { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+    .assignment-meta { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
+
+    .assignment-pts { flex-shrink: 0; font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 4px; }
+    .pts-quiz { background: rgba(90,154,212,0.1); color: var(--quiz-color); }
+    .pts-midterm { background: rgba(212,114,122,0.1); color: var(--midterm-color); }
+
+    .assignment-link { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 6px; font-size: 0.74rem; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: all 0.25s; }
+    .assignment-link:hover { border-color: var(--alpenglow); background: rgba(212,114,122,0.08); color: var(--alpenglow); }
+    .assignment-link svg { width: 12px; height: 12px; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
+    .summary-card { padding: 16px; border-radius: 10px; text-align: center; }
+    .summary-card .num { font-size: 1.4rem; font-weight: 800; }
+    .summary-card .label { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .sum-quiz { background: rgba(90,154,212,0.06); border: 1px solid rgba(90,154,212,0.12); }
+    .sum-quiz .num { color: var(--quiz-color); }
+    .sum-mid { background: rgba(212,114,122,0.06); border: 1px solid rgba(212,114,122,0.12); }
+    .sum-mid .num { color: var(--midterm-color); }
+    .sum-total { background: rgba(240,200,160,0.06); border: 1px solid rgba(240,200,160,0.12); }
+    .sum-total .num { color: var(--peak-gold); }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 20px 0; }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .hero h1 { font-size: 1.4rem; } .assignment-item { flex-wrap: wrap; } .summary-grid { grid-template-columns: 1fr; } .section { padding: 18px 16px; } }
+  </style>
+</head>
+<body>
+  <div class="page-bg"></div>
+  <div class="container">
+    <a class="back-link" href="course-navigation.html">&#8592; Back to Course Navigation</a>
+
+    <div class="hero">
+      <div class="overline">PSYCH 302 &mdash; Spring 2026</div>
+      <h1>Assignments</h1>
+      <p>Weekly quizzes, midterms, and section participation. All quizzes are open-note with a 10-minute time limit.</p>
+    </div>
+
+    <!-- Summary -->
+    <div class="section">
+      <div class="summary-grid">
+        <div class="summary-card sum-quiz"><div class="num">16</div><div class="label">Quiz Points</div></div>
+        <div class="summary-card sum-mid"><div class="num">68</div><div class="label">Midterm Points</div></div>
+        <div class="summary-card sum-total"><div class="num">100</div><div class="label">Total + EC</div></div>
+      </div>
+    </div>
+
+    <!-- Quizzes -->
+    <div class="section">
+      <div class="section-label">Weekly Quizzes &mdash; 16 pts (lowest dropped)</div>
+      <ul class="assignment-list">
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q1</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 1</div><div class="assignment-meta">Due Thu Apr 2, 11:59 PM &middot; Covers Week 1</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888570" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q2</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 2</div><div class="assignment-meta">Due Thu Apr 9, 11:59 PM &middot; Covers Week 2</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888568" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q3</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 3</div><div class="assignment-meta">Due Thu Apr 16, 11:59 PM &middot; Covers Week 3</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888586" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q4</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 4</div><div class="assignment-meta">Due Thu Apr 23, 11:59 PM &middot; Covers Week 4</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888591" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q5</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 5</div><div class="assignment-meta">Due Thu Apr 30, 11:59 PM &middot; Covers Week 5</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888599" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q6</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 6</div><div class="assignment-meta">Due Thu May 7, 11:59 PM &middot; Covers Week 6</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888624" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q7</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 7</div><div class="assignment-meta">Due Thu May 14, 11:59 PM &middot; Covers Week 7</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888676" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q8</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 8</div><div class="assignment-meta">Due Thu May 21, 11:59 PM &middot; Covers Week 8</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888680" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-quiz">Q9</div>
+          <div class="assignment-info"><div class="assignment-name">Quiz 9</div><div class="assignment-meta">Due Thu May 28, 11:59 PM &middot; Covers Week 9</div></div>
+          <span class="assignment-pts pts-quiz">2 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888687" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Midterms -->
+    <div class="section">
+      <div class="section-label">Midterm Exams &mdash; 68 pts total (not cumulative)</div>
+      <ul class="assignment-list">
+        <li class="assignment-item">
+          <div class="assignment-icon icon-midterm">M1</div>
+          <div class="assignment-info"><div class="assignment-name">Midterm I</div><div class="assignment-meta">Mon May 4, 3:30 PM &middot; ECE 105 &middot; Covers Part 1</div></div>
+          <span class="assignment-pts pts-midterm">34 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888622" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon icon-midterm">M2</div>
+          <div class="assignment-info"><div class="assignment-name">Midterm II</div><div class="assignment-meta">Wed Jun 3, 3:30 PM &middot; ECE 105 &middot; Covers Part 2</div></div>
+          <span class="assignment-pts pts-midterm">34 pts</span>
+          <a class="assignment-link" href="https://canvas.uw.edu/courses/1888912/assignments/10888688" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Canvas</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Participation & EC -->
+    <div class="section">
+      <div class="section-label">Section Participation &amp; Extra Credit</div>
+      <ul class="assignment-list">
+        <li class="assignment-item">
+          <div class="assignment-icon" style="background:rgba(90,187,122,0.12);color:#5abb7a;border:1px solid rgba(90,187,122,0.2);">SP</div>
+          <div class="assignment-info"><div class="assignment-name">Section Participation</div><div class="assignment-meta">9 group responses (2 pts each, lowest dropped) &middot; 16 pts total</div></div>
+          <span class="assignment-pts" style="background:rgba(90,187,122,0.1);color:#5abb7a;">16 pts</span>
+        </li>
+        <li class="assignment-item">
+          <div class="assignment-icon" style="background:rgba(240,200,160,0.12);color:var(--peak-gold);border:1px solid rgba(240,200,160,0.2);">EC</div>
+          <div class="assignment-info"><div class="assignment-name">Extra Credit &mdash; Lecture Attendance</div><div class="assignment-meta">Via Poll Everywhere &middot; 5 pts for 17+ sessions, 4 pts for 12&ndash;16, 3 pts for 7&ndash;11</div></div>
+          <span class="assignment-pts" style="background:rgba(240,200,160,0.1);color:var(--peak-gold);">&le; 5 pts</span>
+        </li>
+      </ul>
+    </div>
+
+    <footer>PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington</footer>
+  </div>
+</body>
+</html>
