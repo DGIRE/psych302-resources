@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture 16 Content &mdash; PSYCH 302</title>
+  <title>Attention &amp; Awareness &mdash; Interactive Demo &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,8 +21,8 @@
       --text-primary: #f0e8e5;
       --text-secondary: #b8a8b8;
       --text-muted: #7a6a82;
-      --accent: #2d8b4e;
-      --glow-rgb: 45,139,78;
+      --accent: #2e6da4;
+      --glow-rgb: 46,109,164;
     }
 
     html { scroll-behavior: smooth; }
@@ -40,7 +40,7 @@
       inset: 0;
       z-index: 0;
       background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.08) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
 
@@ -67,40 +67,44 @@
     .back-link:hover { color: var(--alpenglow); }
 
     .header-card {
-      padding: 36px 28px 28px;
+      padding: 40px 28px 32px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 16px;
       margin-bottom: 24px;
+      text-align: center;
       animation: fadeIn 0.6s ease-out;
     }
-    .lecture-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .header-icon {
+      font-size: 2.5rem;
       margin-bottom: 12px;
     }
-    .lecture-num {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent);
-    }
-    .arc-tag {
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 4px;
-    }
     .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25;
+      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
       background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
+    .header-card .arc-tag {
+      display: inline-block;
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-muted);
+      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
+      margin-bottom: 14px;
+    }
+    .header-card p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 540px;
+      margin: 0 auto;
+    }
 
-    /* Quick links row */
     .quick-links {
       display: flex;
       gap: 10px;
       margin-bottom: 24px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     .quick-link {
       display: inline-flex;
@@ -122,17 +126,7 @@
       color: var(--accent);
     }
     .quick-link svg { width: 14px; height: 14px; }
-    .demo-link {
-      border-color: rgba(212,114,122,0.2);
-      color: var(--alpenglow);
-    }
-    .demo-link:hover {
-      border-color: var(--alpenglow);
-      background: rgba(212,114,122,0.08);
-      color: var(--alpenglow-warm);
-    }
 
-    /* Section card */
     .section-card {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
@@ -141,90 +135,54 @@
       margin-bottom: 20px;
     }
     .section-card h2 {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
-
-    /* Media items */
-    .media-item {
-      margin-bottom: 24px;
+    .concept-list {
+      list-style: none;
     }
-    .media-item:last-child { margin-bottom: 0; }
-    .media-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-    .media-title svg { color: var(--accent); }
-    .media-desc {
-      font-size: 0.82rem;
+    .concept-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.85rem;
       color: var(--text-secondary);
-      line-height: 1.55;
-      margin-bottom: 12px;
-      font-style: italic;
+      line-height: 1.5;
     }
-    .media-embed {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      border-radius: 10px;
-      overflow: hidden;
-      background: rgba(0,0,0,0.3);
-      margin-bottom: 8px;
+    .concept-list li:last-child { border-bottom: none; }
+    .concept-list li::before {
+      content: '\2022';
+      color: var(--accent);
+      font-weight: 700;
+      margin-right: 10px;
     }
-    .media-embed iframe,
-    .media-embed video {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 10px;
-    }
-    .media-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.76rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .media-link:hover { color: var(--accent); }
 
-    /* Placeholder */
-    .placeholder-section {
+    .demo-area {
       text-align: center;
-      padding: 60px 28px;
-      background: rgba(255,255,255,0.02);
-      border: 1px dashed rgba(255,255,255,0.1);
+      padding: 80px 28px;
+      background: rgba(var(--glow-rgb), 0.02);
+      border: 2px dashed rgba(var(--glow-rgb), 0.15);
       border-radius: 16px;
       margin-bottom: 24px;
     }
-    .placeholder-icon {
-      font-size: 2rem;
-      margin-bottom: 14px;
-      opacity: 0.4;
+    .demo-area .demo-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      opacity: 0.3;
     }
-    .placeholder-section h2 {
-      font-size: 1rem;
+    .demo-area h2 {
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--text-secondary);
       margin-bottom: 8px;
     }
-    .placeholder-section p {
+    .demo-area p {
       font-size: 0.82rem;
       color: var(--text-muted);
-      max-width: 380px;
+      max-width: 360px;
       margin: 0 auto;
       line-height: 1.55;
     }
@@ -244,7 +202,6 @@
     }
 
     @media (max-width: 600px) {
-      .header-card { padding: 24px 18px 20px; }
       .header-card h1 { font-size: 1.25rem; }
       .quick-links { flex-direction: column; }
     }
@@ -256,31 +213,40 @@
 
   <div class="container">
 
-    <a class="back-link" href="../course-literature.html">&#8592; Back to Course Literature</a>
+    <a class="back-link" href="../../interactive-demos.html">&#8592; Back to Interactive Demos</a>
 
     <div class="header-card">
-      <div class="lecture-label">
-        <span class="lecture-num">Lecture 16</span>
-        <span class="arc-tag">Social Brain &amp; Self</span>
-      </div>
-      <h1>Split Brain, Unified Mind? — Hemispheric Specialization</h1>
+      <div class="header-icon">&#x1F50D;</div>
+      <span class="arc-tag">Perception, Attention &amp; Control</span>
+      <h1>Attention &amp; Awareness</h1>
+      <p>Test your own attentional limits with change blindness and inattentional blindness paradigms. Explore the three levels of processing &mdash; subliminal, preconscious, and conscious &mdash; and see how attention gates access to awareness.</p>
     </div>
 
     <div class="quick-links">
-      <a class="quick-link" href="../lectures/lecture-16.html">
+      <a class="quick-link" href="../lecture-06/index.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 16 Literature
+        Lecture 6 Content
       </a>
-      <a class="quick-link demo-link" href="interactive-demos/split-brain/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Split Brain Experiment
+      <a class="quick-link" href="../../lectures/lecture-06.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Lecture 6 Literature
       </a>
     </div>
 
-    <div class="placeholder-section">
-      <div class="placeholder-icon">&#x1F3A8;</div>
-      <h2>Lecture Content Coming Soon</h2>
-      <p>Slides, diagrams, in-class activities, and supporting media for this lecture will appear here as the course progresses.</p>
+    <div class="section-card">
+      <h2>Concepts Explored</h2>
+      <ul class="concept-list">
+          <li>Inattentional blindness (Simons &amp; Chabris)</li>
+          <li>Change blindness and flicker paradigms</li>
+          <li>Subliminal, preconscious, and conscious processing</li>
+          <li>Attentional blink and the Global Neuronal Workspace</li>
+      </ul>
+    </div>
+
+    <div class="demo-area">
+      <div class="demo-icon">&#x1F50D;</div>
+      <h2>Interactive Demo Loading Area</h2>
+      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
     </div>
 
     <footer>
