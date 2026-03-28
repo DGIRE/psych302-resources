@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syllabus — PSYCH 302: Neuroscience of the Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+
+      --arc-foundations: #2e8b8b;
+      --arc-brain-org: #4a7aac;
+      --arc-perception: #5a9ad4;
+      --arc-agency: #a06ad0;
+      --arc-prediction: #d06050;
+      --arc-social: #5abb7a;
+      --arc-capstone: #9a5a92;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 100% 40% at 50% 0%, rgba(240,200,160,0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* ── Back nav ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--alpenglow); }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 44px 28px 36px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      animation: fadeIn 0.6s ease-out;
+    }
+    .hero .overline {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
+    }
+    .hero h1 {
+      font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 8px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: 0.92rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto;
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 28px 28px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* ── Epigraph ── */
+    .epigraph {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding: 0 8px;
+      border-left: 2px solid rgba(212,114,122,0.3);
+      margin-left: 4px;
+      padding-left: 20px;
+    }
+
+    /* ── Prose ── */
+    .prose {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .prose p { margin-bottom: 12px; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ── Info grid ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .info-item {
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .info-item.full-width {
+      grid-column: 1 / -1;
+    }
+    .info-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .info-value {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .info-value a {
+      color: var(--alpenglow);
+      text-decoration: none;
+    }
+    .info-value a:hover { color: var(--alpenglow-warm); }
+    .info-value .sub {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ── Architecture diagram ── */
+    .arch-flow {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .arch-block {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: 1px solid;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .arch-block .arch-lectures {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-top: 1px;
+    }
+    .arch-arrow {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      opacity: 0.4;
+    }
+
+    /* ── Grading table ── */
+    .grade-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .grade-table th,
+    .grade-table td {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.84rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .grade-table th {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .grade-table td { color: var(--text-secondary); }
+    .grade-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: var(--peak-gold);
+      white-space: nowrap;
+    }
+    .grade-table tr:last-child td {
+      border-bottom: none;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .grade-table tr:last-child td:last-child {
+      color: var(--alpenglow);
+    }
+
+    /* ── Details items ── */
+    .detail-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .detail-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── Study tips ── */
+    .tip-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .tip-item:last-child { border-bottom: none; }
+    .tip-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(240,200,160,0.08);
+      color: var(--peak-gold);
+      border: 1px solid rgba(240,200,160,0.15);
+      margin-top: 2px;
+    }
+    .tip-text {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .tip-text strong { color: var(--text-primary); }
+
+    /* ── Schedule mini table ── */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .schedule-table th {
+      padding: 8px 10px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .schedule-table td {
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    .schedule-table tr:last-child td { border-bottom: none; }
+    .sched-date { white-space: nowrap; font-weight: 500; color: var(--text-primary); }
+    .sched-type {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 3px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .sched-quiz { background: rgba(90,154,212,0.12); color: #5a9ad4; }
+    .sched-midterm { background: rgba(212,114,122,0.12); color: #d4727a; }
+
+    /* ── Policies ── */
+    .policy-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .policy-item:last-child { border-bottom: none; }
+    .policy-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+    .policy-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Closing quote ── */
+    .closing {
+      text-align: center;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+    }
+    .closing blockquote {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 20px 0;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.4rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      .section { padding: 20px 18px; }
+      .arch-flow { gap: 4px; }
+      .arch-block { padding: 4px 8px; font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-bg"></div>
+
+  <div class="container">
+
+    <a class="back-link" href="course-navigation.html">&#8592; Back to Course Navigation</a>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="overline">PSYCH 302 &mdash; Spring 2026</div>
+      <h1>Course Syllabus</h1>
+      <p class="subtitle">Neuroscience of the Mind &mdash; University of Washington, Department of Psychology</p>
+    </div>
+
+    <!-- Opening message -->
+    <div class="section">
+      <div class="section-label">A Message to You, Before We Begin</div>
+      <div class="prose">
+        <p>This course has an unusual opening promise: when you finish it, you will not understand how the brain works. Nobody does. After more than a century of modern neuroscience we still have no complete account of how physical brain activity produces thoughts, experiences, intentions, memories, or the feeling of being a self. I will not pretend otherwise.</p>
+        <p>What this course <strong>will</strong> do is give you a genuinely new and more accurate way of thinking about the brain. The core idea: the brain does not passively receive information from the world &mdash; it actively predicts what it expects to encounter, and updates those predictions when it is wrong.</p>
+        <p>This is not easy material. The course spans philosophy of mind, brain systems, and computational modeling rarely encountered in a psychology curriculum. I will give you the scaffolding you need and meet you where you are. But I will not water it down, because the ideas are too important.</p>
+      </div>
+      <div style="margin-top: 18px;">
+        <div class="epigraph">&ldquo;The aspects of the mind that feel most fundamental &mdash; the sense of self, the experience of choosing, what you believe, what you feel, your moral intuitions &mdash; are not fixed structures in the brain. They are patterns of prediction and habit that evolved to make a staggeringly complex world navigable.&rdquo;</div>
+      </div>
+    </div>
+
+    <!-- Course information -->
+    <div class="section">
+      <div class="section-label">Course Information</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Instructor</div>
+          <div class="info-value">David H. Gire, Ph.D.<span class="sub"><a href="mailto:dhgire@uw.edu">dhgire@uw.edu</a> &middot; Guthrie Hall 325</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Lectures</div>
+          <div class="info-value">Mon &amp; Wed, 3:30 &ndash; 5:20 PM<span class="sub">ECE Building, Room 105</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Office Hours</div>
+          <div class="info-value">Mondays 1:30 &ndash; 2:30 PM<span class="sub">Guthrie Hall 325 &middot; Zoom available</span></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Prerequisites</div>
+          <div class="info-value">PSYCH 101, 202, 209</div>
+        </div>
+        <div class="info-item full-width">
+          <div class="info-label">Teaching Assistants</div>
+          <div class="info-value">Martha-Root Mbah (<a href="mailto:mrmbah@uw.edu">mrmbah@uw.edu</a>) &middot; Tina Zhao (<a href="mailto:jtzhao@uw.edu">jtzhao@uw.edu</a>)</div>
+        </div>
+        <div class="info-item full-width">
+          <div class="info-label">Materials</div>
+          <div class="info-value">No required textbook. All readings are provided as PDFs on Canvas at no cost.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course architecture -->
+    <div class="section">
+      <div class="section-label">Course Architecture</div>
+      <div class="prose">
+        <p>PSYCH 302 is a structured argument about how the brain produces the mind &mdash; not a collection of independent topics. The lectures are organized into two main parts, bookended by Foundations at the start.</p>
+        <p><strong>Part 1 &mdash; The Systems</strong> (L3&ndash;10): we examine the inner workings of neural systems &mdash; language, sensation, attention, emotion, memory, and cognitive control.</p>
+        <p><strong>Part 2 &mdash; The Whole</strong> (L11&ndash;17): we establish how these systems interact to create a unified whole. The arc moves through agency, Global Workspace Theory, the predictive and dynamic brain, the prosocial brain, the constructed self, and culminates with altered states of consciousness.</p>
+      </div>
+      <div class="arch-flow">
+        <div class="arch-block" style="background: rgba(46,139,139,0.1); border-color: rgba(46,139,139,0.3); color: var(--arc-foundations);">Foundations<span class="arch-lectures">L1&ndash;2</span></div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-block" style="background: rgba(74,122,172,0.1); border-color: rgba(74,122,172,0.3); color: var(--arc-brain-org);">Brain Org.<span class="arch-lectures">L3&ndash;4</span></div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-block" style="background: rgba(90,154,212,0.1); border-color: rgba(90,154,212,0.3); color: var(--arc-perception);">Perception, Attention &amp; Control<span class="arch-lectures">L5&ndash;10</span></div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-block" style="background: rgba(160,106,208,0.1); border-color: rgba(160,106,208,0.3); color: var(--arc-agency);">Agency, Theories &amp; Prediction<span class="arch-lectures">L11&ndash;14</span></div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-block" style="background: rgba(90,187,122,0.1); border-color: rgba(90,187,122,0.3); color: var(--arc-social);">Social Brain &amp; Self<span class="arch-lectures">L15&ndash;16</span></div>
+        <span class="arch-arrow">&rarr;</span>
+        <div class="arch-block" style="background: rgba(154,90,146,0.1); border-color: rgba(154,90,146,0.3); color: var(--arc-capstone);">Capstone<span class="arch-lectures">L17</span></div>
+      </div>
+    </div>
+
+    <!-- Grading -->
+    <div class="section">
+      <div class="section-label">Grading &amp; Evaluation</div>
+      <table class="grade-table">
+        <thead>
+          <tr><th>Component</th><th style="text-align: right;">Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Weekly Quizzes (9 quizzes, lowest dropped)</td><td>16 pts</td></tr>
+          <tr><td>Midterm I &mdash; May 4</td><td>34 pts</td></tr>
+          <tr><td>Midterm II &mdash; June 3</td><td>34 pts</td></tr>
+          <tr><td>Section Participation (9 sessions, lowest dropped)</td><td>16 pts</td></tr>
+          <tr><td>Extra Credit (lecture attendance via Poll Everywhere)</td><td>&le; 5 pts</td></tr>
+          <tr><td>Total</td><td>100 + EC</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Grading details -->
+    <div class="section">
+      <div class="section-label">Assessment Details</div>
+
+      <div class="detail-item">
+        <div class="detail-title">Weekly Quizzes &mdash; 16 points</div>
+        <div class="detail-desc">Nine open-note quizzes on Canvas (2 pts each; lowest dropped). Available Thursdays 12:00 AM &ndash; 11:59 PM with a 10-minute time limit.</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-title">Midterms &mdash; 68 points total (not cumulative)</div>
+        <div class="detail-desc">Midterm I: May 4 (Mon) 3:30 PM in ECE 105 (34 pts). Midterm II: June 3 (Wed) 3:30 PM in ECE 105 (34 pts). Format covers lectures, video content, and assigned readings.</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-title">Section Participation &mdash; 16 points</div>
+        <div class="detail-desc">Nine group responses (2 pts each; lowest dropped).</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-title">Extra Credit &mdash; up to 5 points</div>
+        <div class="detail-desc">Based on lecture attendance via Poll Everywhere. 5 pts for 17+ sessions, 4 pts for 12&ndash;16, 3 pts for 7&ndash;11, 2 pts for 3&ndash;6, 1 pt for 1&ndash;2.</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-title">Final Grade Calculation</div>
+        <div class="detail-desc">Total = (Midterm I + Midterm II + Quizzes + EC) &divide; 100. Fixed scale; no rounding.</div>
+      </div>
+    </div>
+
+    <!-- Key dates -->
+    <div class="section">
+      <div class="section-label">Key Dates</div>
+      <table class="schedule-table">
+        <thead>
+          <tr><th>Date</th><th>Item</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="sched-date">Thu Apr 2</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 1</td></tr>
+          <tr><td class="sched-date">Thu Apr 9</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 2</td></tr>
+          <tr><td class="sched-date">Thu Apr 16</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 3</td></tr>
+          <tr><td class="sched-date">Thu Apr 23</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 4</td></tr>
+          <tr><td class="sched-date">Thu Apr 30</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 5</td></tr>
+          <tr><td class="sched-date">Mon May 4</td><td><span class="sched-type sched-midterm">Midterm</span> Midterm I &mdash; 3:30 PM, ECE 105</td></tr>
+          <tr><td class="sched-date">Thu May 7</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 6</td></tr>
+          <tr><td class="sched-date">Thu May 14</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 7</td></tr>
+          <tr><td class="sched-date">Thu May 21</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 8</td></tr>
+          <tr><td class="sched-date">Thu May 28</td><td><span class="sched-type sched-quiz">Quiz</span> Quiz 9</td></tr>
+          <tr><td class="sched-date">Wed Jun 3</td><td><span class="sched-type sched-midterm">Midterm</span> Midterm II &mdash; 3:30 PM, ECE 105</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Study strategy -->
+    <div class="section">
+      <div class="section-label">Your Study Strategy</div>
+      <div class="tip-item">
+        <div class="tip-num">1</div>
+        <div class="tip-text"><strong>Front-load Weeks 1&ndash;3.</strong> Lectures 3&ndash;5 introduce the anatomical vocabulary the entire course depends on. Draw brain networks by hand. Make flashcards. Spend more time here than you think you need.</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">2</div>
+        <div class="tip-text"><strong>Use Lecture 6 as a running anchor.</strong> After each subsequent lecture, ask: where does today&rsquo;s topic sit relative to the three levels of processing (subliminal / preconscious / conscious)?</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">3</div>
+        <div class="tip-text"><strong>Prepare early for Lectures 12&ndash;14.</strong> These are the steepest three lectures. Watch short videos on Bayesian inference and dynamical systems before L13&ndash;14. Use office hours.</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">4</div>
+        <div class="tip-text"><strong>After every lecture, update your mental map.</strong> Take 5 minutes to write what new concept was introduced, which earlier lecture it connects to, and what it prepares you for next.</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">5</div>
+        <div class="tip-text"><strong>Track the five concept threads:</strong> Distributed vs. localized; consciousness signatures; top-down vs. bottom-up; clinical applications; the nature of the self.</div>
+      </div>
+    </div>
+
+    <!-- University policies -->
+    <div class="section">
+      <div class="section-label">University Policies</div>
+      <div class="policy-item">
+        <div class="policy-title">Religious Accommodations</div>
+        <div class="policy-desc">Accommodations must be requested within the first two weeks using the Religious Accommodations Request form.</div>
+      </div>
+      <div class="policy-item">
+        <div class="policy-title">Access and Accommodations</div>
+        <div class="policy-desc">If you have established accommodations with Disability Resources for Students (DRS), please activate them via myDRS.</div>
+      </div>
+      <div class="policy-item">
+        <div class="policy-title">Academic Integrity</div>
+        <div class="policy-desc">Undisclosed use of AI writing tools to complete graded assignments is a violation of this policy; guidelines for permissible use are posted on Canvas.</div>
+      </div>
+    </div>
+
+    <!-- Closing -->
+    <div class="closing">
+      <blockquote>&ldquo;Our real causal power lies not in choosing each action, but in shaping the stable patterns that determine what our predictive brain will generate. That is what this course is &mdash; ten weeks of reshaping how you think about thinking.&rdquo;</blockquote>
+    </div>
+
+    <footer>
+      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    </footer>
+
+  </div>
+
+</body>
+</html>
