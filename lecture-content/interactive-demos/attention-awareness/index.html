@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attention &amp; Awareness &mdash; Interactive Demo &mdash; PSYCH 302</title>
+  <title>Attention &amp; Consciousness Explorer &mdash; Interactive Demo &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,6 +23,10 @@
       --text-muted: #7a6a82;
       --accent: #2e6da4;
       --glow-rgb: 46,109,164;
+      --subliminal-color: #6a7a9a;
+      --preconscious-color: #c89af0;
+      --conscious-color: #f0c8a0;
+      --ignition-color: #e8917a;
     }
 
     html { scroll-behavior: smooth; }
@@ -47,229 +51,1616 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 780px;
+      max-width: 860px;
       width: 100%;
       margin: 0 auto;
       padding: 20px;
     }
 
-    .back-link {
+    /* ── Navigation ── */
+    .nav-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .nav-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--alpenglow); }
-
-    .header-card {
-      padding: 40px 28px 32px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      text-align: center;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .header-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-    .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .header-card .arc-tag {
-      display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
-    }
-    .header-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 540px;
-      margin: 0 auto;
-    }
-
-    .quick-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
+      padding: 6px 12px;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
       transition: all 0.25s;
     }
-    .quick-link:hover {
-      border-color: var(--accent);
-      background: rgba(var(--glow-rgb), 0.08);
-      color: var(--accent);
+    .nav-link:hover {
+      color: var(--alpenglow);
+      border-color: rgba(212,114,122,0.3);
+      background: rgba(212,114,122,0.06);
     }
-    .quick-link svg { width: 14px; height: 14px; }
 
-    .section-card {
+    /* ── Header ── */
+    .hero {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 16px;
+      padding: 40px 32px 32px;
+      margin-bottom: 32px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
     }
-    .section-card h2 {
-      font-size: 0.85rem;
+    .hero-label {
+      font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .concept-list {
-      list-style: none;
-    }
-    .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .concept-list li:last-child { border-bottom: none; }
-    .concept-list li::before {
-      content: '\2022';
       color: var(--accent);
-      font-weight: 700;
-      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #c89af0 50%, #f0c8a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .hero .reading-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .reading-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(200,154,240,0.1);
+      color: var(--preconscious-color);
+      border: 1px solid rgba(200,154,240,0.2);
     }
 
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Section Nav ── */
+    .section-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 28px;
+      justify-content: center;
+    }
+    .section-nav a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.25s;
+    }
+    .section-nav a:hover {
+      color: var(--preconscious-color);
+      border-color: rgba(200,154,240,0.3);
+      background: rgba(200,154,240,0.06);
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
+      padding: 32px 28px;
       margin-bottom: 24px;
     }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
+    .section h2 {
+      font-size: 1.25rem;
       font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 16px 0 8px;
       color: var(--text-secondary);
-      margin-bottom: 8px;
     }
-    .demo-area p {
+    .section p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(200,154,240,0.06);
+      border-left: 3px solid var(--preconscious-color);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+    }
+    .callout p { color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .btn {
+      padding: 9px 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
       font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+    .btn.active, .btn:active { background: rgba(var(--glow-rgb), 0.15); border-color: rgba(var(--glow-rgb), 0.4); color: #8ac4f0; }
+    .btn-subliminal.active { background: rgba(106,122,154,0.2); border-color: rgba(106,122,154,0.5); color: var(--subliminal-color); }
+    .btn-preconscious.active { background: rgba(200,154,240,0.15); border-color: rgba(200,154,240,0.4); color: var(--preconscious-color); }
+    .btn-conscious.active { background: rgba(240,200,160,0.15); border-color: rgba(240,200,160,0.4); color: var(--conscious-color); }
+
+    /* ── Info panel ── */
+    .info-panel {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 14px;
+      min-height: 48px;
+    }
+    .info-panel h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+    .info-panel p { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 4px; }
+
+    /* ── Speed badge ── */
+    .speed-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-top: 6px;
     }
 
-    footer {
+    /* ═══════════════════════
+       SECTION 1: LEVELS
+       ═══════════════════════ */
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .level-card {
+      background: rgba(0,0,0,0.25);
+      border: 2px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 20px 16px;
       text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .level-card:hover { border-color: rgba(255,255,255,0.15); }
+    .level-card.selected { transform: scale(1.02); }
+    .level-card.sel-subliminal { border-color: var(--subliminal-color); box-shadow: 0 0 20px rgba(106,122,154,0.2); }
+    .level-card.sel-preconscious { border-color: var(--preconscious-color); box-shadow: 0 0 20px rgba(200,154,240,0.2); }
+    .level-card.sel-conscious { border-color: var(--conscious-color); box-shadow: 0 0 20px rgba(240,200,160,0.2); }
+    .level-icon { font-size: 2rem; margin-bottom: 8px; }
+    .level-card h3 { font-size: 0.85rem; font-weight: 700; margin: 0 0 6px; }
+    .level-card .level-subtitle { font-size: 0.72rem; color: var(--text-muted); margin: 0; }
+    .level-conditions {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .condition-chip {
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
       color: var(--text-muted);
+    }
+    .condition-chip.met { background: rgba(100,200,100,0.15); color: #7ce07c; }
+    .condition-chip.unmet { background: rgba(200,80,80,0.15); color: #e07c7c; }
+
+    /* ═══════════════════════
+       SECTION 2: IGNITION
+       ═══════════════════════ */
+    .ignition-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+    .slider-group {
+      background: rgba(0,0,0,0.25);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .slider-group label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .slider-group input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .slider-value {
       font-size: 0.75rem;
-      padding: 40px 0 20px;
-    }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      color: var(--text-muted);
+      margin-top: 6px;
+      text-align: center;
     }
 
-    @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
+    .ignition-viz {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      margin: 16px 0;
+      overflow: hidden;
     }
-  
-    /* ── Extra-small phones ── */
-    @media (max-width: 380px) {
-      .header-card { padding: 24px 14px 20px; }
-      .header-card h1 { font-size: 1.1rem; }
-      .header-card p { font-size: 0.8rem; }
-      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
-      .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
+    .brain-region {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.5s;
+      border: 2px solid rgba(255,255,255,0.1);
     }
-    /* ── Phone landscape ── */
-    @media (max-width: 812px) and (orientation: landscape) {
-      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
-      .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
+    .brain-region.active {
+      border-color: var(--ignition-color);
+      box-shadow: 0 0 20px rgba(232,145,122,0.4);
+    }
+    .brain-region.ignited {
+      border-color: var(--conscious-color);
+      box-shadow: 0 0 30px rgba(240,200,160,0.5), 0 0 60px rgba(240,200,160,0.2);
+    }
+    .ignition-connection {
+      position: absolute;
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+      transform-origin: left center;
+      transition: all 0.5s;
+    }
+    .ignition-connection.active {
+      background: rgba(232,145,122,0.4);
+      box-shadow: 0 0 8px rgba(232,145,122,0.3);
+    }
+    .ignition-connection.ignited {
+      background: rgba(240,200,160,0.6);
+      height: 3px;
+      box-shadow: 0 0 12px rgba(240,200,160,0.4);
+    }
+    .ignition-label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 8px;
+      transition: all 0.5s;
+    }
+    .ignition-label.subliminal { background: rgba(106,122,154,0.25); color: var(--subliminal-color); }
+    .ignition-label.preconscious { background: rgba(200,154,240,0.25); color: var(--preconscious-color); }
+    .ignition-label.conscious { background: rgba(240,200,160,0.3); color: var(--conscious-color); }
+
+    .threshold-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 2px dashed rgba(240,200,160,0.3);
+      transition: all 0.3s;
+    }
+    .threshold-label {
+      position: absolute;
+      right: 10px;
+      font-size: 0.6rem;
+      color: rgba(240,200,160,0.5);
+      transform: translateY(-50%);
+    }
+
+    /* ═══════════════════════
+       SECTION 3: INATTENTIONAL BLINDNESS
+       ═══════════════════════ */
+    .ib-stage {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      background: #111;
+      border-radius: 14px;
+      margin: 16px 0;
+      overflow: hidden;
+      cursor: default;
+      user-select: none;
+    }
+    .ib-ball {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transition: none;
+    }
+    .ib-ball.white { background: #e8e8e8; }
+    .ib-ball.black { background: #444; }
+    .ib-gorilla {
+      position: absolute;
+      width: 36px;
+      height: 44px;
+      background: rgba(80,75,70,0.7);
+      border-radius: 10px 10px 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: rgba(120,110,100,0.6);
+      font-weight: 800;
+      transition: none;
+      z-index: 2;
+    }
+    .ib-counter {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.5);
+      padding: 4px 14px;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    .ib-instruction {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    .ib-instruction h3 {
+      color: #fff;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .ib-instruction p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+    }
+
+    /* ═══════════════════════
+       SECTION 4: CHANGE BLINDNESS
+       ═══════════════════════ */
+    .cb-stage {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .cb-shape {
+      position: absolute;
+      transition: none;
+    }
+    .cb-blank {
+      position: absolute;
+      inset: 0;
+      background: #888;
+      z-index: 20;
+      opacity: 0;
+      transition: opacity 0.05s;
+    }
+    .cb-timer {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      z-index: 25;
+    }
+
+    /* ═══════════════════════
+       SECTION 5: ATTENTIONAL BLINK
+       ═══════════════════════ */
+    .ab-stream {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ab-letter {
+      position: absolute;
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      opacity: 0;
+      transition: none;
+    }
+    .ab-timeline {
+      display: flex;
+      gap: 2px;
+      margin: 12px 0;
+      align-items: flex-end;
+      height: 120px;
+      padding: 0 8px;
+    }
+    .ab-bar {
+      flex: 1;
+      min-width: 0;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.4s, background 0.4s;
+      position: relative;
+    }
+    .ab-bar-label {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════
+       SECTION 6: COMPARISON
+       ═══════════════════════ */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.78rem;
+    }
+    .comparison-table th {
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+    }
+    .comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ═══════════════════════
+       SECTION 7: QUIZ
+       ═══════════════════════ */
+    .quiz-q {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+    }
+    .quiz-q p { font-weight: 600; margin-bottom: 10px; font-size: 0.86rem; color: var(--text-primary); }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.45;
+    }
+    .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+    .quiz-option.correct { background: rgba(80,180,80,0.15); border-color: rgba(80,180,80,0.4); color: #8ee08e; }
+    .quiz-option.wrong { background: rgba(200,60,60,0.12); border-color: rgba(200,60,60,0.3); color: #e08888; }
+    .quiz-explanation {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: rgba(200,154,240,0.06);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      display: none;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .levels-grid { grid-template-columns: 1fr; }
+      .ignition-panel { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.3rem; }
+      .section { padding: 24px 18px; }
     }
   </style>
 </head>
 <body>
-
   <div class="page-bg"></div>
-
   <div class="container">
 
-    <a class="back-link" href="../../../interactive-demos.html">&#8592; Back to Interactive Demos</a>
-
-    <div class="header-card">
-      <div class="header-icon">&#x1F50D;</div>
-      <span class="arc-tag">Perception, Attention &amp; Control</span>
-      <h1>Attention &amp; Awareness</h1>
-      <p>Test your own attentional limits with change blindness and inattentional blindness paradigms. Explore the three levels of processing &mdash; subliminal, preconscious, and conscious &mdash; and see how attention gates access to awareness.</p>
+    <div class="nav-row">
+      <a href="../../../interactive-demos.html" class="nav-link">&larr; Interactive Demos</a>
+      <a href="../../lecture-06/index.html" class="nav-link">&#127916; Lecture 6 Content</a>
+      <a href="../../../lectures/lecture-06.html" class="nav-link">&#128218; Lecture 6 Literature</a>
     </div>
 
-    <div class="quick-links">
-      <a class="quick-link" href="../../lecture-06/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 6 Content
-      </a>
-      <a class="quick-link" href="../../../lectures/lecture-06.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 6 Literature
-      </a>
+    <div class="hero">
+      <div class="hero-label">Lecture 6 &bull; Interactive Demo</div>
+      <h1>Attention &amp; Consciousness Explorer</h1>
+      <p>Why do we miss a gorilla standing in plain sight? How does a stimulus cross the threshold from invisible to conscious? Explore Dehaene's taxonomy of subliminal, preconscious, and conscious processing, and experience the surprising limits of attention firsthand.</p>
+      <div class="reading-tags">
+        <span class="reading-tag">Dehaene et al. 2006</span>
+        <span class="reading-tag">Simons 2000</span>
+        <span class="reading-tag">Freiberger &amp; Cerf 2022</span>
+      </div>
     </div>
 
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-          <li>Inattentional blindness (Simons &amp; Chabris)</li>
-          <li>Change blindness and flicker paradigms</li>
-          <li>Subliminal, preconscious, and conscious processing</li>
-          <li>Attentional blink and the Global Neuronal Workspace</li>
-      </ul>
+    <!-- Section Nav -->
+    <div class="section-nav">
+      <a href="#levels">Processing Levels</a>
+      <a href="#ignition">Ignition Simulator</a>
+      <a href="#inattentional">Inattentional Blindness</a>
+      <a href="#change-blindness">Change Blindness</a>
+      <a href="#attentional-blink">Attentional Blink</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#quiz">Quiz</a>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F50D;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
+    <!-- ═══════════════════════════════════
+         SECTION 1: THE THREE PROCESSING LEVELS
+         ═══════════════════════════════════ -->
+    <div class="section" id="levels">
+      <h2>1. Three Levels of Processing</h2>
+      <p>Dehaene et al. (2006) proposed that sensory stimuli are not simply "seen" or "unseen." Instead, processing falls into three distinct levels, determined by two independent factors: <strong>stimulus strength</strong> (bottom-up signal) and <strong>attentional amplification</strong> (top-down).</p>
+
+      <div class="levels-grid">
+        <div class="level-card" id="card-subliminal" onclick="showLevel('subliminal')">
+          <div class="level-icon">&#128064;</div>
+          <h3 style="color: var(--subliminal-color);">Subliminal</h3>
+          <p class="level-subtitle">Invisible to awareness</p>
+          <div class="level-conditions">
+            <span class="condition-chip unmet">Weak signal</span>
+            <span class="condition-chip unmet">&#177; Attention</span>
+          </div>
+        </div>
+        <div class="level-card" id="card-preconscious" onclick="showLevel('preconscious')">
+          <div class="level-icon">&#128171;</div>
+          <h3 style="color: var(--preconscious-color);">Preconscious</h3>
+          <p class="level-subtitle">Strong signal, no attention</p>
+          <div class="level-conditions">
+            <span class="condition-chip met">Strong signal</span>
+            <span class="condition-chip unmet">No attention</span>
+          </div>
+        </div>
+        <div class="level-card" id="card-conscious" onclick="showLevel('conscious')">
+          <div class="level-icon">&#9728;&#65039;</div>
+          <h3 style="color: var(--conscious-color);">Conscious</h3>
+          <p class="level-subtitle">Full awareness &amp; report</p>
+          <div class="level-conditions">
+            <span class="condition-chip met">Strong signal</span>
+            <span class="condition-chip met">Attention</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-panel" id="level-info">
+        <p style="text-align:center; color: var(--text-muted);">Click a card above to learn about each processing level and its neural signature.</p>
+      </div>
     </div>
 
-    <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
-    </footer>
+    <!-- ═══════════════════════════════════
+         SECTION 2: IGNITION SIMULATOR
+         ═══════════════════════════════════ -->
+    <div class="section" id="ignition">
+      <h2>2. The Ignition Simulator</h2>
+      <p>In Dehaene's Global Neuronal Workspace model, conscious perception occurs when a sensory signal triggers <strong>ignition</strong> &mdash; a sudden, nonlinear surge of activity across parietal and prefrontal cortex. Two conditions must be met: the signal must be strong enough, and top-down attention must amplify it. Adjust both sliders to see when the brain "ignites."</p>
+
+      <div class="callout">
+        <p><strong>The key insight:</strong> Ignition is all-or-nothing. A stimulus just below the threshold produces only local sensory activity. One tiny step above the threshold, and activity suddenly broadcasts across the entire frontoparietal network &mdash; consciousness switches on like a light.</p>
+      </div>
+
+      <div class="ignition-panel">
+        <div class="slider-group">
+          <label style="color: var(--subliminal-color);">&#128308; Signal Strength (bottom-up)</label>
+          <input type="range" id="signal-slider" min="0" max="100" value="30" oninput="updateIgnition()">
+          <div class="slider-value" id="signal-value">30% &mdash; Weak (masked stimulus)</div>
+        </div>
+        <div class="slider-group">
+          <label style="color: var(--preconscious-color);">&#128161; Attention (top-down)</label>
+          <input type="range" id="attention-slider" min="0" max="100" value="20" oninput="updateIgnition()">
+          <div class="slider-value" id="attention-value">20% &mdash; Diverted elsewhere</div>
+        </div>
+      </div>
+
+      <!-- Brain visualization -->
+      <div class="ignition-viz" id="ignition-viz">
+        <!-- Threshold line -->
+        <div class="threshold-line" style="top: 40%;">
+          <span class="threshold-label">Ignition threshold</span>
+        </div>
+
+        <!-- Brain regions (will be positioned by JS) -->
+        <div class="brain-region" id="br-v1" style="left:15%; top:55%; width:50px; height:50px; background: rgba(106,122,154,0.15);">
+          <span>V1</span>
+        </div>
+        <div class="brain-region" id="br-v4" style="left:30%; top:45%; width:45px; height:45px; background: rgba(106,122,154,0.1);">
+          <span>V4/IT</span>
+        </div>
+        <div class="brain-region" id="br-parietal" style="left:52%; top:30%; width:55px; height:55px; background: rgba(200,154,240,0.08);">
+          <span>Parietal</span>
+        </div>
+        <div class="brain-region" id="br-pfc" style="left:72%; top:25%; width:60px; height:60px; background: rgba(240,200,160,0.08);">
+          <span>PFC</span>
+        </div>
+        <div class="brain-region" id="br-acc" style="left:60%; top:55%; width:40px; height:40px; background: rgba(200,154,240,0.06);">
+          <span>ACC</span>
+        </div>
+
+        <!-- State label -->
+        <div class="ignition-label subliminal" id="ignition-state">SUBLIMINAL</div>
+      </div>
+
+      <div class="info-panel" id="ignition-info">
+        <p style="text-align:center; color: var(--text-muted);">Adjust the sliders above. Watch the brain regions light up &mdash; and see what happens when both signal and attention cross the threshold together.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 3: INATTENTIONAL BLINDNESS
+         ═══════════════════════════════════ -->
+    <div class="section" id="inattentional">
+      <h2>3. Inattentional Blindness</h2>
+      <p>Simons &amp; Chabris (1999) showed that when attention is fully engaged on a task, people fail to notice a clearly visible, unexpected event &mdash; even a person in a gorilla suit walking through the scene. This is <strong>inattentional blindness</strong>: the stimulus is strong (it's right there!), but attention is consumed elsewhere.</p>
+
+      <div class="callout">
+        <p><strong>Connection to Dehaene's model:</strong> In inattentional blindness the gorilla stimulus is strong (not subliminal), but attention is fully deployed to the counting task. The gorilla remains in a <em>preconscious</em> state &mdash; it has sufficient signal strength to reach consciousness, but without attentional amplification, it never ignites in the global workspace.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="startIB()" id="ib-btn">&#9654; Start the Task</button>
+        <button class="btn" onclick="resetIB()">&#8635; Reset</button>
+      </div>
+
+      <div class="ib-stage" id="ib-stage">
+        <div class="ib-instruction" id="ib-instruction">
+          <h3>Count the White Passes</h3>
+          <p>Watch the white balls carefully.<br>Count every time a white ball bounces off another white ball.<br>Ignore the dark balls. Press Start when ready.</p>
+        </div>
+        <div class="ib-counter" id="ib-counter" style="display:none;">White passes: <span id="ib-count">0</span></div>
+      </div>
+
+      <div class="info-panel" id="ib-info">
+        <p style="text-align:center; color: var(--text-muted);">This is a simplified demonstration of the inattentional blindness paradigm. Press "Start the Task" and count carefully!</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 4: CHANGE BLINDNESS
+         ═══════════════════════════════════ -->
+    <div class="section" id="change-blindness">
+      <h2>4. Change Blindness</h2>
+      <p>In the <strong>flicker paradigm</strong>, two versions of a scene alternate with a brief blank flash between them. Even large changes &mdash; a building disappearing, a color swap &mdash; can go undetected for many seconds. The blank disrupts the motion transient that would normally draw attention to the change.</p>
+
+      <div class="callout">
+        <p><strong>Why it works:</strong> Without the transient signal from abrupt change (the blank resets it), you must serially search the scene with focused attention. Each location you're not attending to remains in a preconscious state &mdash; the change is there, but without attention directed to that location, it cannot enter awareness.</p>
+      </div>
+
+      <h3>With mask (blank flash)</h3>
+      <p style="margin-bottom:8px;">The brief gray flash between images disrupts the motion transient. Try to find the change:</p>
+      <div class="btn-row">
+        <button class="btn" onclick="startCB()" id="cb-btn">&#9654; Start Flicker (with mask)</button>
+        <button class="btn" onclick="stopCB()">&#9632; Stop</button>
+        <button class="btn" onclick="revealCB()">&#128270; Reveal Change</button>
+      </div>
+
+      <div class="cb-stage" id="cb-stage">
+        <div class="cb-blank" id="cb-blank"></div>
+        <!-- Shapes will be drawn by JS -->
+      </div>
+      <div class="cb-timer" id="cb-timer"></div>
+
+      <h3 style="margin-top:20px;">Without mask (no blank flash)</h3>
+      <p style="margin-bottom:8px;">Now watch the <em>same</em> scene alternate without the blank. The change should pop out almost instantly &mdash; the motion transient captures your attention automatically:</p>
+      <div class="btn-row">
+        <button class="btn" onclick="startCBNoMask()" id="cb-nomask-btn">&#9654; Start Without Mask</button>
+        <button class="btn" onclick="stopCBNoMask()">&#9632; Stop</button>
+      </div>
+
+      <div class="cb-stage" id="cb-stage-nomask">
+        <!-- Shapes will be drawn by JS -->
+      </div>
+
+      <div class="info-panel" id="cb-info">
+        <p style="text-align:center; color: var(--text-muted);">Compare the two versions. With the mask, finding the change is slow and effortful (serial search). Without it, the change is immediately obvious because the motion transient captures attention automatically.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 5: ATTENTIONAL BLINK
+         ═══════════════════════════════════ -->
+    <div class="section" id="attentional-blink">
+      <h2>5. The Attentional Blink</h2>
+      <p>When two targets appear in a rapid stream, detecting the first target (T1) causes a brief "blink" during which the second target (T2) is often missed &mdash; especially if it appears 200&ndash;500ms after T1. This <strong>attentional blink</strong> reveals a processing bottleneck: T1's entry into the global workspace temporarily blocks T2 from achieving ignition.</p>
+
+      <div class="callout">
+        <p><strong>Dehaene's interpretation:</strong> Processing T1 occupies the global workspace. T2 arrives while the workspace is still broadcasting T1 &mdash; there are no resources left to amplify T2. It remains preconscious and decays before attention becomes available again. By ~700ms, the workspace has cleared and T2 can ignite normally.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="runAB()" id="ab-btn">&#9654; Run RSVP Stream</button>
+        <button class="btn" onclick="resetAB()">&#8635; Reset</button>
+      </div>
+
+      <div class="ab-stream" id="ab-stream">
+        <span style="color: var(--text-muted); font-size: 0.82rem;">Press "Run RSVP Stream" to see a rapid serial visual presentation</span>
+      </div>
+
+      <h3>T2 Detection Accuracy by Lag</h3>
+      <p>This classic pattern shows the "blink" &mdash; a dip in T2 accuracy when it appears 200&ndash;500ms after T1, recovering by ~700ms.</p>
+
+      <div class="ab-timeline" id="ab-timeline">
+        <!-- Bars generated by JS -->
+      </div>
+
+      <div class="info-panel" id="ab-info">
+        <p style="text-align:center; color: var(--text-muted);">The RSVP stream shows letters at ~100ms each. T1 (red) and T2 (green) are target letters. Watch how T2 becomes invisible when it closely follows T1.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 6: COMPARISON TABLE
+         ═══════════════════════════════════ -->
+    <div class="section" id="comparison">
+      <h2>6. Putting It All Together</h2>
+      <p>Each phenomenon maps onto Dehaene's taxonomy. The same underlying mechanism &mdash; whether attention amplifies a signal into the global workspace &mdash; explains why stimuli can be physically present yet psychologically invisible.</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Phenomenon</th>
+            <th>Signal Strength</th>
+            <th>Attention Status</th>
+            <th>Processing Level</th>
+            <th>Neural Signature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Masked prime</strong></td>
+            <td style="color: var(--subliminal-color);">Weak (brief + masked)</td>
+            <td>Irrelevant</td>
+            <td style="color: var(--subliminal-color);">Subliminal</td>
+            <td>Local V1/V2 only, no P3b</td>
+          </tr>
+          <tr>
+            <td><strong>Inattentional blindness</strong></td>
+            <td style="color: #7ce07c;">Strong (visible stimulus)</td>
+            <td style="color: #e07c7c;">Deployed elsewhere</td>
+            <td style="color: var(--preconscious-color);">Preconscious</td>
+            <td>Sensory activation, no frontoparietal ignition</td>
+          </tr>
+          <tr>
+            <td><strong>Change blindness</strong></td>
+            <td style="color: #7ce07c;">Strong (large change)</td>
+            <td style="color: #e07c7c;">Not at change location</td>
+            <td style="color: var(--preconscious-color);">Preconscious</td>
+            <td>Transient signal disrupted by blank</td>
+          </tr>
+          <tr>
+            <td><strong>Attentional blink (T2)</strong></td>
+            <td style="color: #7ce07c;">Strong (visible letter)</td>
+            <td style="color: #e07c7c;">Occupied by T1</td>
+            <td style="color: var(--preconscious-color);">Preconscious</td>
+            <td>Early ERPs present, P3b absent for missed T2</td>
+          </tr>
+          <tr>
+            <td><strong>Seen stimulus</strong></td>
+            <td style="color: #7ce07c;">Strong</td>
+            <td style="color: #7ce07c;">Available</td>
+            <td style="color: var(--conscious-color);">Conscious</td>
+            <td>Full ignition: P3b, gamma synchrony, frontoparietal broadcast</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         SECTION 7: QUIZ
+         ═══════════════════════════════════ -->
+    <div class="section" id="quiz">
+      <h2>7. Check Your Understanding</h2>
+
+      <div class="quiz-q" id="q1">
+        <p>1. According to Dehaene et al. (2006), what two conditions must <em>both</em> be met for a stimulus to become conscious?</p>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">A. The stimulus must be emotionally salient and personally relevant</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, true)">B. The stimulus must have sufficient signal strength AND receive top-down attentional amplification</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">C. The stimulus must activate both the dorsal and ventral visual streams</button>
+        <button class="quiz-option" onclick="checkQuiz(1, this, false)">D. The stimulus must persist for at least 500ms and involve a novel feature</button>
+        <div class="quiz-explanation" id="q1-exp">Dehaene's taxonomy is built on two independent factors: bottom-up signal strength and top-down attentional amplification. Both are required for ignition in the global neuronal workspace, which produces conscious perception.</div>
+      </div>
+
+      <div class="quiz-q" id="q2">
+        <p>2. In Dehaene's framework, a <em>preconscious</em> stimulus is one that:</p>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">A. Has weak signal strength regardless of attention</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">B. Has been fully processed but immediately forgotten</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, true)">C. Has strong bottom-up signal strength but lacks top-down attentional amplification</button>
+        <button class="quiz-option" onclick="checkQuiz(2, this, false)">D. Is processed by the subcortical pathway only</button>
+        <div class="quiz-explanation" id="q2-exp">A preconscious stimulus has enough strength to potentially reach consciousness &mdash; it is <em>not</em> subliminal. What it lacks is attention. If attention were redirected to it, it could ignite in the global workspace and become conscious. The gorilla in inattentional blindness is preconscious, not subliminal.</div>
+      </div>
+
+      <div class="quiz-q" id="q3">
+        <p>3. Why does inattentional blindness provide evidence for the role of attention in conscious access?</p>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">A. Because the unexpected stimulus is too faint to be detected</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, true)">B. Because a clearly visible stimulus goes unnoticed when attention is engaged elsewhere, showing that signal strength alone is insufficient for consciousness</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">C. Because participants have impaired V1 processing during the task</button>
+        <button class="quiz-option" onclick="checkQuiz(3, this, false)">D. Because it demonstrates that only emotional stimuli can capture attention automatically</button>
+        <div class="quiz-explanation" id="q3-exp">The gorilla is large, clearly visible, and present for several seconds &mdash; it has strong bottom-up signal strength. Yet roughly 50% of participants miss it entirely because their attention is locked onto the counting task. This dissociation proves that stimulus strength alone cannot produce consciousness; attentional amplification is also required.</div>
+      </div>
+
+      <div class="quiz-q" id="q4">
+        <p>4. What is "ignition" in the Global Neuronal Workspace model?</p>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">A. The initial feedforward sweep of activity from retina to V1</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">B. A gradual buildup of activation across all brain regions</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, true)">C. A sudden, nonlinear surge of activity across the frontoparietal network that broadcasts information globally</button>
+        <button class="quiz-option" onclick="checkQuiz(4, this, false)">D. The transfer of information from short-term to long-term memory</button>
+        <div class="quiz-explanation" id="q4-exp">Ignition is the hallmark of conscious access: a sudden, all-or-nothing cascade where parietal and prefrontal neurons become synchronized and broadcast the stimulus representation to the entire cortex. It is nonlinear &mdash; activity doesn't gradually increase; it either ignites or it doesn't. This is associated with the P3b ERP component and late gamma-band synchrony.</div>
+      </div>
+
+      <div class="quiz-q" id="q5">
+        <p>5. During the attentional blink, T2 is missed because:</p>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">A. T2 is presented subliminally (below sensory threshold)</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">B. The visual system is physically unable to process two stimuli within 500ms</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, true)">C. The global workspace is still occupied broadcasting T1, so T2 cannot achieve ignition and remains preconscious</button>
+        <button class="quiz-option" onclick="checkQuiz(5, this, false)">D. T2 is masked by the subsequent distractor letters</button>
+        <div class="quiz-explanation" id="q5-exp">T2 has strong signal strength (it's clearly visible and processed by early sensory areas &mdash; early ERPs are present). However, T1 is still occupying the global workspace, consuming the top-down attentional resources needed for ignition. T2 arrives in a "preconscious" state and decays before the workspace clears. By ~700ms (Lag 7+), T1 processing has finished and T2 can ignite normally.</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>PSYCH 302: Mind, Brain &amp; Consciousness &bull; University of Washington<br>
+      Based on: <a href="https://doi.org/10.1016/j.tics.2006.03.007" target="_blank">Dehaene et al. (2006)</a>, Simons (2000), Freiberger &amp; Cerf (2022)</p>
+    </div>
 
   </div>
 
+  <script>
+    // ═══════════════════════════════════
+    // SECTION 1: PROCESSING LEVELS
+    // ═══════════════════════════════════
+    const levelData = {
+      subliminal: {
+        title: 'Subliminal Processing',
+        color: 'var(--subliminal-color)',
+        desc: 'The stimulus signal is <strong>too weak</strong> to reach consciousness regardless of attention. Typical example: a masked prime flashed for ~30ms and immediately followed by a pattern mask. Even if you try to attend to it, you cannot see it. Neural activity remains confined to early sensory areas (V1, V2) and never propagates to the frontoparietal network.',
+        neural: 'Early ERP components only (C1, P1). No N2/P3b. No frontal activation.',
+        badge: 'Weak signal &rarr; No ignition possible',
+        badgeBg: 'rgba(106,122,154,0.2)'
+      },
+      preconscious: {
+        title: 'Preconscious Processing',
+        color: 'var(--preconscious-color)',
+        desc: 'The stimulus signal is <strong>strong enough</strong> to potentially reach consciousness, but attention is directed elsewhere. The stimulus activates sensory cortex robustly, yet without top-down attentional amplification it <em>cannot ignite</em> the global workspace. If attention shifts to it, it can become conscious. This is the state of the "gorilla" in inattentional blindness &mdash; the image is right there, but you miss it because your attention is on the counting task.',
+        neural: 'Strong early ERPs (N1, N2). Activation in V4/IT. But no P3b, no prefrontal activation, no global broadcast.',
+        badge: 'Strong signal + No attention &rarr; Ignition blocked',
+        badgeBg: 'rgba(200,154,240,0.2)'
+      },
+      conscious: {
+        title: 'Conscious Processing',
+        color: 'var(--conscious-color)',
+        desc: 'Both conditions are met: the stimulus has <strong>strong signal strength</strong> and receives <strong>top-down attentional amplification</strong>. This triggers <strong>ignition</strong> &mdash; a sudden, nonlinear surge of synchronized activity that broadcasts the representation across the frontoparietal workspace. The person can now report, reflect on, and act upon the stimulus. This is all-or-nothing: there is no "half-conscious" state.',
+        neural: 'Full cascade: early ERPs &rarr; N2 &rarr; large P3b (&sim;300ms) &rarr; late gamma-band synchrony &rarr; sustained frontoparietal activation.',
+        badge: 'Strong signal + Attention &rarr; IGNITION!',
+        badgeBg: 'rgba(240,200,160,0.25)'
+      }
+    };
+
+    function showLevel(type) {
+      document.querySelectorAll('.level-card').forEach(c => {
+        c.classList.remove('selected', 'sel-subliminal', 'sel-preconscious', 'sel-conscious');
+      });
+      const card = document.getElementById('card-' + type);
+      card.classList.add('selected', 'sel-' + type);
+
+      const data = levelData[type];
+      const panel = document.getElementById('level-info');
+      panel.innerHTML = `
+        <h4 style="color: ${data.color};">${data.title}</h4>
+        <p>${data.desc}</p>
+        <p style="margin-top:8px;"><strong>Neural signature:</strong> ${data.neural}</p>
+        <span class="speed-badge" style="background: ${data.badgeBg}; color: ${data.color};">${data.badge}</span>
+      `;
+    }
+
+    // ═══════════════════════════════════
+    // SECTION 2: IGNITION SIMULATOR
+    // ═══════════════════════════════════
+    function updateIgnition() {
+      const signal = parseInt(document.getElementById('signal-slider').value);
+      const attention = parseInt(document.getElementById('attention-slider').value);
+
+      // Signal labels
+      let sigLabel = '';
+      if (signal < 25) sigLabel = 'Very weak (heavily masked)';
+      else if (signal < 50) sigLabel = 'Weak (masked stimulus)';
+      else if (signal < 70) sigLabel = 'Moderate (brief flash)';
+      else sigLabel = 'Strong (clear stimulus)';
+      document.getElementById('signal-value').textContent = signal + '% \u2014 ' + sigLabel;
+
+      // Attention labels
+      let attLabel = '';
+      if (attention < 25) attLabel = 'Diverted elsewhere';
+      else if (attention < 50) attLabel = 'Partially available';
+      else if (attention < 70) attLabel = 'Moderately focused';
+      else attLabel = 'Fully focused here';
+      document.getElementById('attention-value').textContent = attention + '% \u2014 ' + attLabel;
+
+      // Determine state
+      // Subliminal: signal < 45 (regardless of attention)
+      // Preconscious: signal >= 45 but attention < 50
+      // Conscious: signal >= 45 AND attention >= 50
+      const isSubliminal = signal < 45;
+      const isPreconscious = !isSubliminal && attention < 50;
+      const isConscious = !isSubliminal && attention >= 50;
+
+      // Combined activation for ignition effect
+      const combined = (signal / 100) * (attention / 100);
+      const ignited = isConscious && combined > 0.22;
+
+      // Update brain regions
+      const v1 = document.getElementById('br-v1');
+      const v4 = document.getElementById('br-v4');
+      const parietal = document.getElementById('br-parietal');
+      const pfc = document.getElementById('br-pfc');
+      const acc = document.getElementById('br-acc');
+      const regions = [v1, v4, parietal, pfc, acc];
+
+      regions.forEach(r => { r.classList.remove('active', 'ignited'); });
+
+      // V1 always active if signal > 15
+      if (signal > 15) {
+        v1.style.background = `rgba(106,122,154,${0.15 + signal * 0.004})`;
+        v1.classList.add('active');
+      } else {
+        v1.style.background = 'rgba(106,122,154,0.08)';
+      }
+
+      // V4/IT active if signal > 35
+      if (signal > 35) {
+        v4.style.background = `rgba(${isSubliminal ? '106,122,154' : '200,154,240'},${0.1 + signal * 0.003})`;
+        v4.classList.add('active');
+      } else {
+        v4.style.background = 'rgba(106,122,154,0.06)';
+      }
+
+      // Parietal: needs signal AND attention
+      if (isConscious || (signal > 55 && attention > 35)) {
+        const intensity = Math.min(1, combined * 2);
+        parietal.style.background = `rgba(200,154,240,${0.1 + intensity * 0.25})`;
+        if (ignited) parietal.classList.add('ignited');
+        else parietal.classList.add('active');
+      } else {
+        parietal.style.background = 'rgba(200,154,240,0.05)';
+      }
+
+      // PFC: needs strong combined
+      if (ignited) {
+        pfc.style.background = `rgba(240,200,160,${0.15 + combined * 0.4})`;
+        pfc.classList.add('ignited');
+      } else if (isConscious) {
+        pfc.style.background = 'rgba(240,200,160,0.12)';
+        pfc.classList.add('active');
+      } else {
+        pfc.style.background = 'rgba(240,200,160,0.04)';
+      }
+
+      // ACC
+      if (ignited) {
+        acc.style.background = `rgba(200,154,240,${0.1 + combined * 0.3})`;
+        acc.classList.add('ignited');
+      } else {
+        acc.style.background = 'rgba(200,154,240,0.04)';
+      }
+
+      // State label
+      const stateEl = document.getElementById('ignition-state');
+      stateEl.className = 'ignition-label';
+      if (isConscious) {
+        stateEl.textContent = ignited ? '\u2728 IGNITION \u2014 CONSCIOUS \u2728' : 'CONSCIOUS';
+        stateEl.classList.add('conscious');
+      } else if (isPreconscious) {
+        stateEl.textContent = 'PRECONSCIOUS';
+        stateEl.classList.add('preconscious');
+      } else {
+        stateEl.textContent = 'SUBLIMINAL';
+        stateEl.classList.add('subliminal');
+      }
+
+      // Info panel
+      const info = document.getElementById('ignition-info');
+      if (isSubliminal) {
+        info.innerHTML = '<p><strong style="color:var(--subliminal-color);">Subliminal:</strong> Signal is too weak. Even with full attention, this stimulus would not reach consciousness. Only early sensory cortex (V1) shows activation. No global broadcast, no reportable experience.</p>';
+      } else if (isPreconscious) {
+        info.innerHTML = '<p><strong style="color:var(--preconscious-color);">Preconscious:</strong> The signal is strong enough &mdash; sensory cortex is active &mdash; but attention is not directed here. The representation exists in V4/IT but cannot propagate to the frontoparietal workspace. If attention shifted to this stimulus, it <em>could</em> become conscious.</p>';
+      } else if (ignited) {
+        info.innerHTML = '<p><strong style="color:var(--conscious-color);">&#9889; Ignition achieved!</strong> Strong signal + sufficient attention triggers a nonlinear surge across the parietal-prefrontal network. Information is now broadcast globally: you are <em>aware</em> of the stimulus, can report it, hold it in working memory, and act on it. The P3b ERP component would fire at ~300ms.</p>';
+      } else {
+        info.innerHTML = '<p><strong style="color:var(--conscious-color);">Conscious (approaching ignition):</strong> Both conditions are nearly met. Increase signal or attention slightly more to trigger full ignition &mdash; the all-or-nothing broadcast.</p>';
+      }
+    }
+
+    // Initialize ignition on load
+    updateIgnition();
+
+    // ═══════════════════════════════════
+    // SECTION 3: INATTENTIONAL BLINDNESS
+    // ═══════════════════════════════════
+    let ibRunning = false;
+    let ibAnimId = null;
+    let ibBalls = [];
+    let ibGorilla = null;
+    let ibPassCount = 0;
+    let ibPhase = 'idle'; // idle, running, reveal, done
+
+    function createIBBalls() {
+      const stage = document.getElementById('ib-stage');
+      const stageW = stage.offsetWidth;
+      const stageH = stage.offsetHeight;
+
+      // Create 3 white and 3 black balls
+      ibBalls = [];
+      const colors = ['white','white','white','black','black','black'];
+      colors.forEach((color, i) => {
+        const el = document.createElement('div');
+        el.className = 'ib-ball ' + color;
+        const x = 60 + Math.random() * (stageW - 120);
+        const y = 60 + Math.random() * (stageH - 120);
+        const vx = (1.5 + Math.random() * 1.5) * (Math.random() < 0.5 ? 1 : -1);
+        const vy = (1.5 + Math.random() * 1.5) * (Math.random() < 0.5 ? 1 : -1);
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        stage.appendChild(el);
+        ibBalls.push({ el, x, y, vx, vy, color, r: 14 });
+      });
+    }
+
+    function startIB() {
+      if (ibRunning) return;
+      resetIB();
+      ibRunning = true;
+      ibPhase = 'running';
+      ibPassCount = 0;
+      document.getElementById('ib-btn').textContent = 'Running...';
+      document.getElementById('ib-instruction').style.display = 'none';
+      document.getElementById('ib-counter').style.display = 'block';
+      document.getElementById('ib-count').textContent = '0';
+
+      const stage = document.getElementById('ib-stage');
+      createIBBalls();
+
+      // Gorilla appears at ~6s, crosses slowly, disappears at ~10s
+      let gorillaTimer = null;
+      const stageH = stage.offsetHeight;
+      const gorillaStartTime = 6000;
+      const gorillaDuration = 4000;
+
+      const startTime = performance.now();
+      let gorillaAdded = false;
+      let gorillaEl = null;
+
+      function animate(now) {
+        if (!ibRunning) return;
+        const elapsed = now - startTime;
+        const stageW = stage.offsetWidth;
+        const stageH2 = stage.offsetHeight;
+
+        // Move balls
+        ibBalls.forEach(b => {
+          b.x += b.vx;
+          b.y += b.vy;
+          if (b.x < b.r || b.x > stageW - b.r) { b.vx *= -1; b.x = Math.max(b.r, Math.min(stageW - b.r, b.x)); }
+          if (b.y < 40 + b.r || b.y > stageH2 - b.r) { b.vy *= -1; b.y = Math.max(40 + b.r, Math.min(stageH2 - b.r, b.y)); }
+          b.el.style.left = (b.x - b.r) + 'px';
+          b.el.style.top = (b.y - b.r) + 'px';
+        });
+
+        // Check white-white collisions for pass counting
+        for (let i = 0; i < ibBalls.length; i++) {
+          for (let j = i + 1; j < ibBalls.length; j++) {
+            const a = ibBalls[i], bBall = ibBalls[j];
+            if (a.color !== 'white' || bBall.color !== 'white') continue;
+            const dx = a.x - bBall.x;
+            const dy = a.y - bBall.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < (a.r + bBall.r + 4)) {
+              // Bounce
+              const nx = dx / dist;
+              const ny = dy / dist;
+              const dvx = a.vx - bBall.vx;
+              const dvy = a.vy - bBall.vy;
+              const dvn = dvx * nx + dvy * ny;
+              if (dvn > 0) {
+                a.vx -= dvn * nx;
+                a.vy -= dvn * ny;
+                bBall.vx += dvn * nx;
+                bBall.vy += dvn * ny;
+                ibPassCount++;
+                document.getElementById('ib-count').textContent = ibPassCount;
+              }
+            }
+          }
+        }
+
+        // Gorilla
+        if (elapsed >= gorillaStartTime && !gorillaAdded) {
+          gorillaAdded = true;
+          gorillaEl = document.createElement('div');
+          gorillaEl.className = 'ib-gorilla';
+          gorillaEl.textContent = 'UE';
+          gorillaEl.style.top = (stageH2 / 2 - 22) + 'px';
+          gorillaEl.style.left = '-45px';
+          stage.appendChild(gorillaEl);
+          ibGorilla = gorillaEl;
+        }
+
+        if (gorillaEl && elapsed >= gorillaStartTime && elapsed < gorillaStartTime + gorillaDuration) {
+          const gp = (elapsed - gorillaStartTime) / gorillaDuration;
+          gorillaEl.style.left = (-45 + gp * (stageW + 90)) + 'px';
+        } else if (gorillaEl && elapsed >= gorillaStartTime + gorillaDuration) {
+          gorillaEl.style.display = 'none';
+        }
+
+        // End after 14 seconds
+        if (elapsed < 14000) {
+          ibAnimId = requestAnimationFrame(animate);
+        } else {
+          finishIB();
+        }
+      }
+
+      ibAnimId = requestAnimationFrame(animate);
+    }
+
+    function finishIB() {
+      ibRunning = false;
+      ibPhase = 'reveal';
+      document.getElementById('ib-btn').textContent = '\u25B6 Start the Task';
+
+      const info = document.getElementById('ib-info');
+      info.innerHTML = `
+        <p><strong>Done!</strong> You counted <strong>${ibPassCount}</strong> white passes.</p>
+        <p style="margin-top:8px;"><strong>Did you notice anything unusual?</strong> A dark figure labeled "UE" (unexpected event) walked slowly across the entire scene from left to right. It was smaller and subtler than the original gorilla &mdash; but it was still clearly present for several seconds. About <strong>50% of participants</strong> in Simons &amp; Chabris's original study missed a person in a gorilla suit. If you missed the figure here, that's inattentional blindness in action &mdash; your attention was so consumed by counting that a visible stimulus never reached consciousness.</p>
+        <p style="margin-top:8px;">In Dehaene's terms, the gorilla was <strong>preconscious</strong>: it had strong signal strength but lacked attentional amplification, so it never achieved ignition in the global workspace.</p>
+      `;
+    }
+
+    function resetIB() {
+      if (ibAnimId) cancelAnimationFrame(ibAnimId);
+      ibRunning = false;
+      ibPhase = 'idle';
+      document.getElementById('ib-btn').textContent = '\u25B6 Start the Task';
+      const stage = document.getElementById('ib-stage');
+      // Remove all balls and gorilla
+      stage.querySelectorAll('.ib-ball, .ib-gorilla').forEach(el => el.remove());
+      ibBalls = [];
+      ibGorilla = null;
+      document.getElementById('ib-instruction').style.display = '';
+      document.getElementById('ib-counter').style.display = 'none';
+      document.getElementById('ib-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">This is a simplified demonstration of the inattentional blindness paradigm. Press "Start the Task" and count carefully!</p>';
+    }
+
+    // ═══════════════════════════════════
+    // SECTION 4: CHANGE BLINDNESS
+    // ═══════════════════════════════════
+    let cbRunning = false;
+    let cbInterval = null;
+    let cbShapes = [];
+    let cbChangeIndex = -1;
+    let cbVersion = 'A';
+    let cbStartTime = 0;
+    let cbFlickerCount = 0;
+
+    function generateCBShapes() {
+      const shapes = [];
+      const colors = ['#e8917a', '#6ab4e8', '#c89af0', '#7ce07c', '#f0c8a0', '#e06050', '#5ec4c4', '#d4727a'];
+      const types = ['rect', 'circle', 'rect', 'circle', 'rect', 'rect', 'circle', 'rect'];
+
+      for (let i = 0; i < 8; i++) {
+        const w = 30 + Math.random() * 50;
+        const h = types[i] === 'circle' ? w : (30 + Math.random() * 50);
+        shapes.push({
+          type: types[i],
+          x: 20 + Math.random() * 70,
+          y: 10 + Math.random() * 70,
+          w, h,
+          color: colors[i],
+          altColor: colors[(i + 3) % colors.length]
+        });
+      }
+      return shapes;
+    }
+
+    function drawCBShapes(version) {
+      const stage = document.getElementById('cb-stage');
+      stage.querySelectorAll('.cb-shape').forEach(el => el.remove());
+
+      cbShapes.forEach((s, i) => {
+        const el = document.createElement('div');
+        el.className = 'cb-shape';
+        const color = (version === 'B' && i === cbChangeIndex) ? s.altColor : s.color;
+
+        if (s.type === 'circle') {
+          el.style.cssText = `left:${s.x}%;top:${s.y}%;width:${s.w}px;height:${s.h}px;border-radius:50%;background:${color};`;
+        } else {
+          el.style.cssText = `left:${s.x}%;top:${s.y}%;width:${s.w}px;height:${s.h}px;border-radius:6px;background:${color};`;
+        }
+
+        // For change: hide one shape entirely in version B
+        if (version === 'B' && i === cbChangeIndex) {
+          // Change its color (already done above)
+        }
+
+        stage.appendChild(el);
+      });
+    }
+
+    function startCB() {
+      if (cbRunning) return;
+      cbRunning = true;
+      cbVersion = 'A';
+      cbFlickerCount = 0;
+      document.getElementById('cb-btn').textContent = 'Flickering...';
+
+      cbShapes = generateCBShapes();
+      cbChangeIndex = Math.floor(Math.random() * cbShapes.length);
+      cbStartTime = performance.now();
+
+      drawCBShapes('A');
+
+      // Flicker cycle: show image 800ms, blank 200ms
+      cbInterval = setInterval(() => {
+        const blank = document.getElementById('cb-blank');
+        // Show blank
+        blank.style.opacity = '1';
+        cbFlickerCount++;
+
+        setTimeout(() => {
+          if (!cbRunning) return;
+          cbVersion = (cbVersion === 'A') ? 'B' : 'A';
+          drawCBShapes(cbVersion);
+          blank.style.opacity = '0';
+        }, 200);
+
+        // Update timer
+        const elapsed = ((performance.now() - cbStartTime) / 1000).toFixed(1);
+        document.getElementById('cb-timer').textContent = elapsed + 's \u2014 ' + cbFlickerCount + ' flickers';
+      }, 1000);
+    }
+
+    function stopCB() {
+      cbRunning = false;
+      if (cbInterval) clearInterval(cbInterval);
+      document.getElementById('cb-btn').textContent = '\u25B6 Start Flicker';
+      document.getElementById('cb-blank').style.opacity = '0';
+
+      const elapsed = ((performance.now() - cbStartTime) / 1000).toFixed(1);
+      if (cbStartTime > 0) {
+        document.getElementById('cb-info').innerHTML = `<p>You watched for <strong>${elapsed} seconds</strong> across ${cbFlickerCount} flicker cycles. Did you find the change? Press "Reveal Change" to see it highlighted.</p>`;
+      }
+    }
+
+    function revealCB() {
+      stopCB();
+      if (cbShapes.length === 0 || cbChangeIndex < 0) {
+        document.getElementById('cb-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">Run the flicker task first to generate a scene.</p>';
+        return;
+      }
+
+      // Show both versions side by side with highlight
+      drawCBShapes('A');
+      // Highlight the changing shape
+      const stage = document.getElementById('cb-stage');
+      const shapes = stage.querySelectorAll('.cb-shape');
+      if (shapes[cbChangeIndex]) {
+        shapes[cbChangeIndex].style.outline = '3px solid #fff';
+        shapes[cbChangeIndex].style.outlineOffset = '3px';
+        shapes[cbChangeIndex].style.animation = 'pulse 0.6s infinite alternate';
+      }
+
+      // Add a style for pulse if not present
+      if (!document.getElementById('pulse-style')) {
+        const style = document.createElement('style');
+        style.id = 'pulse-style';
+        style.textContent = '@keyframes pulse { from { opacity: 1; } to { opacity: 0.4; } }';
+        document.head.appendChild(style);
+      }
+
+      const s = cbShapes[cbChangeIndex];
+      document.getElementById('cb-info').innerHTML = `<p><strong>The change:</strong> The highlighted ${s.type === 'circle' ? 'circle' : 'rectangle'} alternated between <span style="color:${s.color};font-weight:700;">\u25A0 this color</span> and <span style="color:${s.altColor};font-weight:700;">\u25A0 this color</span>. Without the blank flash, this change would produce a motion transient that instantly captures attention. The blank disrupts this transient, forcing you to search serially with attention &mdash; and most of the scene stays preconscious.</p>`;
+    }
+
+    // ═══════════════════════════════════
+    // CHANGE BLINDNESS — NO MASK VERSION
+    // ═══════════════════════════════════
+    let cbNoMaskRunning = false;
+    let cbNoMaskInterval = null;
+
+    function drawCBShapesNoMask(version) {
+      const stage = document.getElementById('cb-stage-nomask');
+      stage.querySelectorAll('.cb-shape').forEach(el => el.remove());
+
+      // Reuse same shapes and change index from the masked version
+      if (cbShapes.length === 0) {
+        cbShapes = generateCBShapes();
+        cbChangeIndex = Math.floor(Math.random() * cbShapes.length);
+      }
+
+      cbShapes.forEach((s, i) => {
+        const el = document.createElement('div');
+        el.className = 'cb-shape';
+        const color = (version === 'B' && i === cbChangeIndex) ? s.altColor : s.color;
+        if (s.type === 'circle') {
+          el.style.cssText = `left:${s.x}%;top:${s.y}%;width:${s.w}px;height:${s.h}px;border-radius:50%;background:${color};`;
+        } else {
+          el.style.cssText = `left:${s.x}%;top:${s.y}%;width:${s.w}px;height:${s.h}px;border-radius:6px;background:${color};`;
+        }
+        stage.appendChild(el);
+      });
+    }
+
+    function startCBNoMask() {
+      if (cbNoMaskRunning) return;
+      cbNoMaskRunning = true;
+      document.getElementById('cb-nomask-btn').textContent = 'Alternating...';
+
+      // Generate shapes if not already done
+      if (cbShapes.length === 0) {
+        cbShapes = generateCBShapes();
+        cbChangeIndex = Math.floor(Math.random() * cbShapes.length);
+      }
+
+      let nmVersion = 'A';
+      drawCBShapesNoMask('A');
+
+      // Alternate directly — no blank — same 1s cycle
+      cbNoMaskInterval = setInterval(() => {
+        nmVersion = (nmVersion === 'A') ? 'B' : 'A';
+        drawCBShapesNoMask(nmVersion);
+      }, 1000);
+    }
+
+    function stopCBNoMask() {
+      cbNoMaskRunning = false;
+      if (cbNoMaskInterval) clearInterval(cbNoMaskInterval);
+      document.getElementById('cb-nomask-btn').textContent = '\u25B6 Start Without Mask';
+    }
+
+    // ═══════════════════════════════════
+    // SECTION 5: ATTENTIONAL BLINK
+    // ═══════════════════════════════════
+    let abRunning = false;
+    let abTimeout = null;
+
+    function runAB() {
+      if (abRunning) return;
+      abRunning = true;
+      document.getElementById('ab-btn').textContent = 'Presenting...';
+
+      const stream = document.getElementById('ab-stream');
+      stream.innerHTML = '';
+
+      const letterEl = document.createElement('div');
+      letterEl.className = 'ab-letter';
+      letterEl.style.opacity = '0';
+      stream.appendChild(letterEl);
+
+      // Generate RSVP stream: ~20 items, each 100ms
+      const distractors = 'DFGHJKLNPQRSTVWXYZ'.split('');
+      const items = [];
+      const t1Pos = 5;
+      const t2Lag = 3; // Lag 3 = 300ms after T1 (in the blink)
+      const t2Pos = t1Pos + t2Lag;
+
+      for (let i = 0; i < 20; i++) {
+        if (i === t1Pos) {
+          items.push({ letter: 'R', type: 't1' });
+        } else if (i === t2Pos) {
+          items.push({ letter: 'K', type: 't2' });
+        } else {
+          items.push({ letter: distractors[Math.floor(Math.random() * distractors.length)], type: 'distractor' });
+        }
+      }
+
+      let idx = 0;
+      const interval = 100;
+
+      function showNext() {
+        if (idx >= items.length) {
+          letterEl.style.opacity = '0';
+          abRunning = false;
+          document.getElementById('ab-btn').textContent = '\u25B6 Run RSVP Stream';
+          document.getElementById('ab-info').innerHTML = `<p><strong>Did you catch both targets?</strong> T1 was the <span style="color:#e06050;font-weight:700;">red R</span> and T2 was the <span style="color:#7ce07c;font-weight:700;">green K</span>. T2 appeared at Lag ${t2Lag} (~${t2Lag * 100}ms after T1) &mdash; right in the attentional blink window. In a real experiment, T2 would be missed ~50% of the time at this lag.</p>`;
+          showABBars();
+          return;
+        }
+
+        const item = items[idx];
+        letterEl.textContent = item.letter;
+        letterEl.style.opacity = '1';
+
+        if (item.type === 't1') {
+          letterEl.style.color = '#e06050';
+          letterEl.style.textShadow = '0 0 20px rgba(224,96,80,0.5)';
+        } else if (item.type === 't2') {
+          letterEl.style.color = '#7ce07c';
+          letterEl.style.textShadow = '0 0 20px rgba(124,224,124,0.5)';
+        } else {
+          letterEl.style.color = '#fff';
+          letterEl.style.textShadow = 'none';
+        }
+
+        idx++;
+        abTimeout = setTimeout(() => {
+          letterEl.style.opacity = '0';
+          setTimeout(showNext, 20);
+        }, interval - 20);
+      }
+
+      showNext();
+    }
+
+    function showABBars() {
+      const container = document.getElementById('ab-timeline');
+      container.innerHTML = '';
+
+      // Classic attentional blink data (approximate T2 accuracy by lag)
+      const lags = [
+        { label: 'Lag 1', ms: '100ms', accuracy: 85, note: 'Lag-1 sparing' },
+        { label: 'Lag 2', ms: '200ms', accuracy: 45, note: 'Blink begins' },
+        { label: 'Lag 3', ms: '300ms', accuracy: 30, note: 'Deepest blink' },
+        { label: 'Lag 4', ms: '400ms', accuracy: 40, note: '' },
+        { label: 'Lag 5', ms: '500ms', accuracy: 55, note: 'Recovering' },
+        { label: 'Lag 6', ms: '600ms', accuracy: 70, note: '' },
+        { label: 'Lag 7', ms: '700ms', accuracy: 82, note: '' },
+        { label: 'Lag 8', ms: '800ms', accuracy: 90, note: 'Blink over' },
+      ];
+
+      lags.forEach((lag, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'ab-bar';
+        bar.style.height = '0%';
+
+        let color;
+        if (lag.accuracy < 40) color = 'rgba(200,60,60,0.6)';
+        else if (lag.accuracy < 60) color = 'rgba(200,154,240,0.5)';
+        else color = 'rgba(100,200,100,0.5)';
+        bar.style.background = color;
+
+        const label = document.createElement('div');
+        label.className = 'ab-bar-label';
+        label.textContent = lag.ms;
+        bar.appendChild(label);
+
+        bar.title = `${lag.label} (${lag.ms}): ${lag.accuracy}% T2 accuracy${lag.note ? ' — ' + lag.note : ''}`;
+        container.appendChild(bar);
+
+        // Animate
+        setTimeout(() => {
+          bar.style.height = lag.accuracy + '%';
+        }, 200 + i * 150);
+      });
+    }
+
+    function resetAB() {
+      abRunning = false;
+      if (abTimeout) clearTimeout(abTimeout);
+      document.getElementById('ab-btn').textContent = '\u25B6 Run RSVP Stream';
+      document.getElementById('ab-stream').innerHTML = '<span style="color: var(--text-muted); font-size: 0.82rem;">Press "Run RSVP Stream" to see a rapid serial visual presentation</span>';
+      document.getElementById('ab-timeline').innerHTML = '';
+      document.getElementById('ab-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">The RSVP stream shows letters at ~100ms each. T1 (red) and T2 (green) are target letters. Watch how T2 becomes invisible when it closely follows T1.</p>';
+    }
+
+    // ═══════════════════════════════════
+    // SECTION 7: QUIZ
+    // ═══════════════════════════════════
+    function checkQuiz(qNum, btn, isCorrect) {
+      const q = document.getElementById('q' + qNum);
+      const buttons = q.querySelectorAll('.quiz-option');
+      const exp = document.getElementById('q' + qNum + '-exp');
+
+      // Disable all buttons
+      buttons.forEach(b => {
+        b.style.pointerEvents = 'none';
+        b.style.opacity = '0.7';
+      });
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        btn.style.opacity = '1';
+      } else {
+        btn.classList.add('wrong');
+        btn.style.opacity = '1';
+        // Highlight correct
+        buttons.forEach(b => {
+          if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) {
+            b.classList.add('correct');
+            b.style.opacity = '1';
+          }
+        });
+      }
+
+      exp.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
