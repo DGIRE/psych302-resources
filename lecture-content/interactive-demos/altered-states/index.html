@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Predictive Coding Simulator &mdash; Interactive Demo &mdash; PSYCH 302</title>
+  <title>Altered States Explorer &mdash; PSYCH 302 Interactive Demo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --twilight-deep: #0c1525;
       --twilight-mid: #1a2744;
@@ -21,12 +20,8 @@
       --text-primary: #f0e8e5;
       --text-secondary: #b8a8b8;
       --text-muted: #7a6a82;
-      --accent: #8b2d2d;
-      --glow-rgb: 139,45,45;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--twilight-deep);
@@ -34,194 +29,16 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     .page-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.08) 0%, transparent 60%),
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
-
     .container {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 20px;
+      position: relative; z-index: 1;
+      max-width: 700px; width: 100%; margin: 0 auto; padding: 20px;
     }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--alpenglow); }
-
-    .header-card {
-      padding: 40px 28px 32px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      text-align: center;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .header-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-    .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .header-card .arc-tag {
-      display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
-    }
-    .header-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 540px;
-      margin: 0 auto;
-    }
-
-    .quick-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.25s;
-    }
-    .quick-link:hover {
-      border-color: var(--accent);
-      background: rgba(var(--glow-rgb), 0.08);
-      color: var(--accent);
-    }
-    .quick-link svg { width: 14px; height: 14px; }
-
-    .section-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    .section-card h2 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .concept-list {
-      list-style: none;
-    }
-    .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .concept-list li:last-child { border-bottom: none; }
-    .concept-list li::before {
-      content: '\2022';
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 10px;
-    }
-
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
-    }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .demo-area p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 40px 0 20px;
-    }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
-    }
-  
-    /* ── Extra-small phones ── */
-    @media (max-width: 380px) {
-      .header-card { padding: 24px 14px 20px; }
-      .header-card h1 { font-size: 1.1rem; }
-      .header-card p { font-size: 0.8rem; }
-      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
-      .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
-    }
-    /* ── Phone landscape ── */
-    @media (max-width: 812px) and (orientation: landscape) {
-      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
-      .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
-    }
-  
+    
     /* ── Breadcrumb nav ── */
     .breadcrumb {
       display: flex;
@@ -249,6 +66,7 @@
       font-weight: 600;
     }
 
+    
     /* ── Global Search ── */
     .search-fab {
       position: fixed;
@@ -356,56 +174,96 @@
       margin-top: 16px;
     }
 
+    .stub-hero {
+      text-align: center;
+      padding: 80px 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      animation: fadeIn 0.6s ease-out;
+    }
+    .stub-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+    .stub-hero h1 {
+      font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stub-hero .overline {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
+    }
+    .stub-hero p {
+      font-size: 0.88rem; color: var(--text-secondary); max-width: 480px;
+      margin: 12px auto 0; line-height: 1.6;
+    }
+    .coming-badge {
+      display: inline-block; margin-top: 20px;
+      padding: 6px 16px; border-radius: 100px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(240,200,160,0.08);
+      border: 1px solid rgba(240,200,160,0.2);
+      color: var(--peak-gold);
+    }
+    .back-links {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;
+    }
+    .back-links a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
+      text-decoration: none; transition: all 0.25s;
+    }
+    .back-links a:hover {
+      border-color: var(--alpenglow); background: rgba(212,114,122,0.06); color: var(--alpenglow);
+    }
+    footer {
+      text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 40px 0 20px;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { color: var(--alpenglow-warm); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 600px) {
+      .stub-hero { padding: 48px 20px; }
+      .stub-hero h1 { font-size: 1.15rem; }
+      .back-links { flex-direction: column; align-items: center; }
+    }
   </style>
 </head>
 <body>
-
   <div class="page-bg"></div>
-
   <div class="container">
+    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Altered States Explorer</span></nav>
 
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Predictive Coding</span></nav>
-
-    <div class="header-card">
-      <div class="header-icon">&#x1F52E;</div>
-      <span class="arc-tag">Agency, Theories &amp; Prediction</span>
-      <h1>Predictive Coding Simulator</h1>
-      <p>Build intuition for prediction error and precision weighting. Watch how the brain generates top-down expectations, detects mismatches, and updates its internal model of the world in real time.</p>
+    <div class="stub-hero">
+      <div class="stub-icon">&#x1F525;</div>
+      <div class="overline">Lecture 17 &mdash; Interactive Demo</div>
+      <h1>Altered States Explorer</h1>
+      <p>Journey through meditation, psychedelics, sleep, and flow states. Explore how the default mode network shifts across different states of consciousness.</p>
+      <span class="coming-badge">Coming Soon</span>
     </div>
 
-    <div class="quick-links">
-      <a class="quick-link" href="../../lecture-14/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 14 Content
+    <div class="back-links">
+      <a href="../../../lectures/lecture-17.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Lecture 17 Literature
       </a>
-      <a class="quick-link" href="../../../lectures/lecture-14.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 14 Literature
+      <a href="../../lecture-17/index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Lecture 17 Content
       </a>
-    </div>
-
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-          <li>Prediction error and hierarchical inference</li>
-          <li>Precision weighting and attention</li>
-          <li>Active inference and the free-energy principle</li>
-          <li>Clinical applications: schizophrenia, autism</li>
-      </ul>
-    </div>
-
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F52E;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
     </div>
 
     <footer>
       PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
     </footer>
-
   </div>
-
   
   <!-- Global Search -->
   <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
