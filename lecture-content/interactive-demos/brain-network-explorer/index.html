@@ -3,265 +3,1423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brain Network Explorer &mdash; Interactive Demo &mdash; PSYCH 302</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>From Sensation to Cognition — Interactive Explorer | PSYCH 302</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --twilight-deep: #0c1525;
-      --twilight-mid: #1a2744;
-      --twilight-blue: #2a3f6b;
-      --mist-purple: #4a3a6b;
-      --alpenglow: #d4727a;
-      --alpenglow-warm: #e8917a;
-      --peak-gold: #f0c8a0;
-      --snow-pink: #f2d4d0;
-      --sky-coral: #c85a6a;
-      --text-primary: #f0e8e5;
-      --text-secondary: #b8a8b8;
-      --text-muted: #7a6a82;
-      --accent: #1a3a5c;
-      --glow-rgb: 74,90,140;
-    }
-
-    html { scroll-behavior: smooth; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden; scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--twilight-deep);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, #0f1d2d 0%, #163e65 100%);
+      color: #e8eef5;
+      line-height: 1.7;
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .page-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.08) 0%, transparent 60%),
-        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
-      width: 100%;
-      margin: 0 auto;
       padding: 20px;
     }
 
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--alpenglow); }
+    .container { max-width: 960px; width: 100%; margin: 0 auto; }
 
-    .header-card {
-      padding: 40px 28px 32px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      margin-bottom: 24px;
+    /* ── Hero ── */
+    .hero {
       text-align: center;
+      margin-bottom: 48px;
+      padding: 44px 30px 36px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
       animation: fadeIn 0.6s ease-out;
     }
-    .header-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
+    .hero .overline {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: #5a7d9e; margin-bottom: 8px;
     }
-    .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    .hero h1 {
+      font-size: 2rem; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 6px;
     }
-    .header-card .arc-tag {
-      display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
+    .hero .subtitle {
+      font-size: 1rem; color: #b0c4de; margin-bottom: 16px;
     }
-    .header-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 540px;
-      margin: 0 auto;
+    .hero .meta {
+      font-size: 0.82rem; color: #5a7d9e;
     }
 
-    .quick-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
+    /* ── Section nav ── */
+    .section-nav {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin-bottom: 40px;
     }
-    .quick-link {
+    .section-nav a {
+      font-size: 0.78rem; font-weight: 600; color: #5a7d9e;
+      text-decoration: none; padding: 6px 14px; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s;
+    }
+    .section-nav a:hover {
+      color: #0779be; border-color: rgba(7,121,190,0.4);
+      background: rgba(7,121,190,0.1);
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 32px 28px;
+      margin-bottom: 32px;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .section-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: #0779be; margin-bottom: 8px;
+    }
+    .section h2 {
+      font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 14px;
+    }
+    .section p, .section li {
+      font-size: 0.92rem; color: #b0c4de; margin-bottom: 10px;
+    }
+
+    /* ── Interactive Diagram: Synaptic Hierarchy ── */
+    .hierarchy-diagram {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      margin: 20px auto;
+    }
+    .ring-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+    }
+    .ring {
+      position: absolute;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
+    .ring:hover, .ring.active {
+      border-color: #0779be;
+      background: rgba(7,121,190,0.08);
+    }
+    .ring-label {
+      position: absolute;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #8aacc8;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: color 0.3s;
+    }
+    .ring.active ~ .ring-label, .ring:hover ~ .ring-label { color: #fff; }
+
+    .zone-info-panel {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(7,121,190,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 16px;
+      min-height: 120px;
+      transition: all 0.3s ease;
+    }
+    .zone-info-panel h3 { color: #fff; font-size: 1rem; margin-bottom: 8px; }
+    .zone-info-panel p { font-size: 0.88rem; color: #8aacc8; margin-bottom: 6px; }
+    .zone-info-panel .zone-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 0.72rem; font-weight: 600; margin-right: 6px; margin-bottom: 6px;
+    }
+
+    /* ── Connectivity SVG ── */
+    .connectivity-svg {
+      width: 100%;
+      max-width: 700px;
+      margin: 16px auto;
+      display: block;
+    }
+    .connectivity-svg .node {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .connectivity-svg .node:hover rect,
+    .connectivity-svg .node:hover ellipse {
+      stroke: #0779be;
+      stroke-width: 2.5;
+    }
+    .connectivity-svg .node:hover text {
+      fill: #fff;
+    }
+    .connectivity-svg .edge {
+      stroke: rgba(255,255,255,0.15);
+      stroke-width: 1.5;
+      fill: none;
+      transition: stroke 0.3s, stroke-width 0.3s;
+    }
+    .connectivity-svg .edge.highlight {
+      stroke: #0779be;
+      stroke-width: 2.5;
+    }
+    .connectivity-svg .edge.feedback {
+      stroke-dasharray: 6 4;
+    }
+
+    /* ── Network cards ── */
+    .network-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .network-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .network-card:hover, .network-card.active {
+      border-color: var(--card-color, #0779be);
+      background: rgba(7,121,190,0.08);
+      transform: translateY(-2px);
+    }
+    .network-card .card-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; margin-bottom: 10px;
+      background: rgba(7,121,190,0.15);
+      border: 1px solid rgba(7,121,190,0.3);
+    }
+    .network-card h3 {
+      font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 6px;
+    }
+    .network-card p {
+      font-size: 0.82rem; color: #7a9ab8; line-height: 1.5; margin: 0;
+    }
+    .network-detail {
+      display: none;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(7,121,190,0.25);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 16px;
+      animation: slideDown 0.3s ease;
+    }
+    .network-detail.visible { display: block; }
+    .network-detail h3 { color: #fff; margin-bottom: 8px; }
+    .network-detail p { font-size: 0.88rem; color: #8aacc8; }
+    .canvas-link-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
+      border-radius: 6px;
+      border: 1px solid rgba(7,121,190,0.4);
+      background: rgba(7,121,190,0.12);
+      color: #4db8ff;
+      font-size: 0.82rem;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.25s;
+      font-family: inherit;
+      margin-right: 8px;
+      margin-top: 8px;
     }
-    .quick-link:hover {
-      border-color: var(--accent);
-      background: rgba(var(--glow-rgb), 0.08);
-      color: var(--accent);
+    .canvas-link-btn:hover {
+      background: rgba(7,121,190,0.25);
+      border-color: #0779be;
+      color: #fff;
+      transform: translateY(-1px);
     }
-    .quick-link svg { width: 14px; height: 14px; }
-
-    .section-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
+    .canvas-link-btn svg {
+      width: 14px; height: 14px; flex-shrink: 0;
     }
-    .section-card h2 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .concept-list {
-      list-style: none;
-    }
-    .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .concept-list li:last-child { border-bottom: none; }
-    .concept-list li::before {
-      content: '\2022';
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 10px;
+    .network-detail .epicentre-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 0.72rem; font-weight: 600; margin-right: 6px; margin-bottom: 6px;
+      background: rgba(7,121,190,0.2); color: #0779be;
     }
 
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
+    /* ── Transmodal binding diagram ── */
+    .binding-demo {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 30px;
     }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .demo-area p {
+    .binding-node {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px; height: 80px;
+      border-radius: 50%;
       font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s;
+      position: relative;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .binding-node.unimodal {
+      background: rgba(46,139,87,0.2);
+      border: 2px solid rgba(46,139,87,0.5);
+      color: #5fbb8a;
+    }
+    .binding-node.transmodal {
+      background: rgba(7,121,190,0.2);
+      border: 2px solid rgba(7,121,190,0.5);
+      color: #4db8ff;
+    }
+    .binding-node:hover {
+      transform: scale(1.08);
+    }
+    .binding-node.active {
+      box-shadow: 0 0 20px rgba(7,121,190,0.4);
+    }
+
+    /* ── Lesion simulator ── */
+    .lesion-controls {
+      display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0;
+    }
+    .lesion-btn {
+      padding: 8px 16px; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: #b0c4de; font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .lesion-btn:hover {
+      border-color: #c0392b;
+      background: rgba(192,57,43,0.15);
+      color: #e74c3c;
+    }
+    .lesion-btn.active {
+      border-color: #c0392b;
+      background: rgba(192,57,43,0.2);
+      color: #e74c3c;
+    }
+    .lesion-result {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 12px;
+      min-height: 80px;
+    }
+    .lesion-result h4 { color: #e74c3c; font-size: 0.92rem; margin-bottom: 8px; }
+    .lesion-result p { font-size: 0.86rem; color: #8aacc8; margin-bottom: 6px; }
+
+    /* ── Top-down slider ── */
+    .modulation-demo {
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 16px;
+    }
+    .slider-row {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .slider-row label {
+      font-size: 0.82rem; font-weight: 600; color: #8aacc8;
+      min-width: 120px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1; accent-color: #0779be;
+    }
+    .slider-row .val {
+      font-size: 0.82rem; font-weight: 600; color: #0779be;
+      min-width: 36px; text-align: right;
+    }
+    .modulation-viz {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 180px;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 0 20px;
+    }
+    .mod-bar-group {
+      display: flex; flex-direction: column; align-items: center; flex: 1;
+    }
+    .mod-bar {
+      width: 100%;
+      max-width: 60px;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.5s ease, background 0.5s ease;
+    }
+    .mod-bar-label {
+      font-size: 0.65rem; color: #5a7d9e; margin-top: 6px;
+      text-align: center; font-weight: 500;
+    }
+
+    /* ── Quiz ── */
+    .quiz-question {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .quiz-question h4 {
+      font-size: 0.92rem; color: #fff; margin-bottom: 12px;
+    }
+    .quiz-option {
+      display: block; width: 100%;
+      padding: 10px 14px; margin-bottom: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      color: #b0c4de;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-family: inherit;
+    }
+    .quiz-option:hover {
+      border-color: #0779be;
+      background: rgba(7,121,190,0.08);
+    }
+    .quiz-option.correct {
+      border-color: #27ae60;
+      background: rgba(39,174,96,0.15);
+      color: #2ecc71;
+    }
+    .quiz-option.incorrect {
+      border-color: #c0392b;
+      background: rgba(192,57,43,0.1);
+      color: #e74c3c;
+    }
+    .quiz-feedback {
+      margin-top: 10px; font-size: 0.84rem; color: #8aacc8;
+      display: none;
+    }
+    .quiz-feedback.visible { display: block; }
+
+    /* ── Utilities ── */
+    .highlight { color: #0779be; font-weight: 600; }
+    .term { color: #5fbb8a; font-weight: 600; cursor: help; border-bottom: 1px dotted #5fbb8a; }
+    .term-popup {
+      display: none;
+      position: absolute;
+      background: #0f1d2d;
+      border: 1px solid #0779be;
+      border-radius: 8px;
+      padding: 12px;
+      max-width: 300px;
+      font-size: 0.82rem;
+      color: #b0c4de;
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
 
     footer {
       text-align: center;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 40px 0 20px;
+      color: #3a5a7a;
+      font-size: 0.78rem;
+      padding: 32px 0 16px;
     }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
+      .hero h1 { font-size: 1.4rem; }
+      .section { padding: 20px 16px; }
+      .network-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-
-  <div class="page-bg"></div>
-
   <div class="container">
 
-    <a class="back-link" href="../../interactive-demos.html">&#8592; Back to Interactive Demos</a>
-
-    <div class="header-card">
-      <div class="header-icon">&#x1F9E0;</div>
-      <span class="arc-tag">Brain Organization</span>
-      <h1>Brain Network Explorer</h1>
-      <p>Interact with large-scale brain networks. Trace connections between cortical regions, explore unimodal and transmodal zones, and visualize how damage to specific areas or pathways changes network dynamics.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+      <a href="../../../interactive-demos.html" style="display:inline-flex;align-items:center;gap:6px;color:#5a7d9e;text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;">&#8592; Interactive Demos</a>
+      <a href="../../lecture-03/index.html" style="display:inline-flex;align-items:center;gap:6px;color:#5a7d9e;text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;">&#128218; Lecture 3 Content</a>
+      <a href="../../../lectures/lecture-03.html" style="display:inline-flex;align-items:center;gap:6px;color:#5a7d9e;text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;">&#128214; Lecture 3 Literature</a>
     </div>
 
-    <div class="quick-links">
-      <a class="quick-link" href="../lecture-03/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 3 Content
-      </a>
-      <a class="quick-link" href="../lecture-04/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 4 Content
-      </a>
-      <a class="quick-link" href="../../lectures/lecture-03.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 3 Literature
-      </a>
-      <a class="quick-link" href="../../lectures/lecture-04.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 4 Literature
-      </a>
+    <!-- ====== HERO ====== -->
+    <div class="hero">
+      <div class="overline">PSYCH 302 &mdash; Lecture 3 Interactive Explorer</div>
+      <h1>From Sensation to Cognition</h1>
+      <p class="subtitle">Mesulam (1998) &mdash; Large-Scale Brain Networks and the Unimodal-to-Transmodal Gradient</p>
+      <p class="meta">Interactive guide to the key concepts in this foundational reading</p>
     </div>
 
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-          <li>Unimodal vs. transmodal cortex (Mesulam&rsquo;s framework)</li>
-          <li>Large-scale network convergence zones</li>
-          <li>Disconnection syndromes and language pathways</li>
-          <li>Brodmann areas and cortical cartography</li>
-      </ul>
+    <!-- ====== SECTION NAV ====== -->
+    <div class="section-nav">
+      <a href="#hierarchy">Cortical Zones</a>
+      <a href="#connectivity">Connectivity</a>
+      <a href="#networks">5 Networks</a>
+      <a href="#transmodal">Transmodal Binding</a>
+      <a href="#modulation">Top-Down Modulation</a>
+      <a href="#lesions">Disconnection</a>
+      <a href="#quiz">Test Yourself</a>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F9E0;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
+    <!-- ====== 1. SYNAPTIC HIERARCHY ====== -->
+    <div class="section" id="hierarchy">
+      <div class="section-label">Core Framework</div>
+      <h2>The Sensory-Fugal Hierarchy: Five Cortical Zones</h2>
+      <p>Mesulam's central insight is that the cerebral cortex can be divided into five functional zones arranged along a gradient from the most highly differentiated primary sensory&ndash;motor areas to the least differentiated limbic structures. Information flows "sensory-fugally" (away from sensation) through these zones, with each step adding complexity and abstraction.</p>
+      <p><strong>Click each zone below</strong> to explore what it does and how it connects to the others.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
+        <button class="zone-btn lesion-btn" data-zone="primary" onclick="showZone('primary')">1&deg; Sensory&ndash;Motor</button>
+        <button class="zone-btn lesion-btn" data-zone="upstream" onclick="showZone('upstream')">Upstream Unimodal</button>
+        <button class="zone-btn lesion-btn" data-zone="downstream" onclick="showZone('downstream')">Downstream Unimodal</button>
+        <button class="zone-btn lesion-btn" data-zone="heteromodal" onclick="showZone('heteromodal')">Heteromodal</button>
+        <button class="zone-btn lesion-btn" data-zone="paralimbic" onclick="showZone('paralimbic')">Paralimbic</button>
+        <button class="zone-btn lesion-btn" data-zone="limbic" onclick="showZone('limbic')">Limbic</button>
+      </div>
+
+      <div class="zone-info-panel" id="zonePanel">
+        <h3 id="zoneName">Select a cortical zone above</h3>
+        <p id="zoneDesc">Click on any zone to learn about its synaptic level, architecture, and functional role in sensory-fugal processing.</p>
+        <div id="zoneTags"></div>
+        <p id="zoneDetail" style="margin-top: 10px;"></p>
+      </div>
+
+      <!-- Gradient visualization -->
+      <div style="margin-top: 24px;">
+        <p style="font-size: 0.78rem; color: #5a7d9e; text-align: center; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px;">SENSORY-FUGAL GRADIENT</p>
+        <div id="gradientBar" style="display: flex; border-radius: 8px; overflow: hidden; height: 48px; cursor: pointer;">
+          <div onclick="showZone('primary')" style="flex: 1; background: linear-gradient(135deg, #1a6b3c, #2e8b57); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">1&deg; Sensory</div>
+          <div onclick="showZone('upstream')" style="flex: 1; background: linear-gradient(135deg, #2e6da4, #3a8fd4); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">Upstream</div>
+          <div onclick="showZone('downstream')" style="flex: 1; background: linear-gradient(135deg, #5b4ba8, #7b6bc8); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">Downstream</div>
+          <div onclick="showZone('heteromodal')" style="flex: 1; background: linear-gradient(135deg, #b85c1a, #d4782a); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">Heteromodal</div>
+          <div onclick="showZone('paralimbic')" style="flex: 1; background: linear-gradient(135deg, #8b2d5b, #b84d7b); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">Paralimbic</div>
+          <div onclick="showZone('limbic')" style="flex: 1; background: linear-gradient(135deg, #8b2d2d, #c04040); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; transition: all 0.3s;" onmouseover="this.style.flex='1.3'" onmouseout="this.style.flex='1'">Limbic</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+          <span style="font-size: 0.7rem; color: #5a7d9e;">Extrapersonal world<br>High differentiation</span>
+          <span style="font-size: 0.7rem; color: #5a7d9e; text-align: right;">Internal milieu<br>Low differentiation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== 2. CONNECTIVITY MODEL ====== -->
+    <div class="section" id="connectivity">
+      <div class="section-label">Connectivity Architecture</div>
+      <h2>How Information Flows: The Concentric Ring Model</h2>
+      <p>Mesulam represents the cortex as concentric rings (Figure 2 in the paper), where each ring corresponds to a different synaptic level. Level 1 is occupied by primary sensory cortex (e.g., V1). Each successive ring is separated by at least one synaptic step. Information flows outward from sensation to cognition through both serial and parallel pathways.</p>
+
+      <svg class="connectivity-svg" viewBox="0 0 700 400" id="connectivitySVG">
+        <!-- Concentric arcs (semicircles) -->
+        <ellipse cx="350" cy="380" rx="80" ry="70" fill="none" stroke="rgba(46,139,87,0.4)" stroke-width="1.5"/>
+        <ellipse cx="350" cy="380" rx="160" ry="140" fill="none" stroke="rgba(46,109,164,0.4)" stroke-width="1.5"/>
+        <ellipse cx="350" cy="380" rx="240" ry="210" fill="none" stroke="rgba(91,75,168,0.4)" stroke-width="1.5"/>
+        <ellipse cx="350" cy="380" rx="320" ry="280" fill="none" stroke="rgba(184,92,26,0.4)" stroke-width="1.5"/>
+
+        <!-- Level labels -->
+        <text x="350" y="318" text-anchor="middle" font-size="10" fill="#5a7d9e" font-weight="600">Level 1</text>
+        <text x="350" y="248" text-anchor="middle" font-size="10" fill="#5a7d9e" font-weight="600">Level 2</text>
+        <text x="350" y="178" text-anchor="middle" font-size="10" fill="#5a7d9e" font-weight="600">Level 3&ndash;4</text>
+        <text x="350" y="108" text-anchor="middle" font-size="10" fill="#5a7d9e" font-weight="600">Level 5&ndash;6</text>
+
+        <!-- Edges (drawn first so nodes overlay) -->
+        <!-- V1 to V2 -->
+        <line class="edge" id="e-v1-v2" x1="350" y1="330" x2="270" y2="260"/>
+        <line class="edge" id="e-v1-v2b" x1="350" y1="330" x2="430" y2="260"/>
+        <!-- V2 to V4/V5 -->
+        <line class="edge" id="e-v2-v4" x1="270" y1="260" x2="200" y2="195"/>
+        <line class="edge" id="e-v2-v5" x1="430" y1="260" x2="500" y2="195"/>
+        <!-- V4 to AIT -->
+        <line class="edge" id="e-v4-ait" x1="200" y1="195" x2="140" y2="125"/>
+        <!-- V5 to MST/LIP -->
+        <line class="edge" id="e-v5-mst" x1="500" y1="195" x2="560" y2="125"/>
+        <!-- Cross connections -->
+        <line class="edge" id="e-v4-v5" x1="200" y1="195" x2="500" y2="195" stroke-dasharray="4 3"/>
+        <!-- Transmodal connections -->
+        <line class="edge" id="e-ait-t" x1="140" y1="125" x2="350" y2="60"/>
+        <line class="edge" id="e-mst-t" x1="560" y1="125" x2="350" y2="60"/>
+
+        <!-- Feedback arrows (dashed) -->
+        <line class="edge feedback" id="e-fb1" x1="355" y1="65" x2="205" y2="200"/>
+        <line class="edge feedback" id="e-fb2" x1="345" y1="65" x2="495" y2="200"/>
+
+        <!-- Nodes -->
+        <g class="node" id="n-v1" onmouseover="highlightPath('v1')" onmouseout="clearPaths()">
+          <ellipse cx="350" cy="330" rx="30" ry="16" fill="rgba(46,139,87,0.3)" stroke="#2e8b57" stroke-width="1.5"/>
+          <text x="350" y="334" text-anchor="middle" font-size="12" fill="#5fbb8a" font-weight="600">V1</text>
+        </g>
+        <g class="node" id="n-v2a" onmouseover="highlightPath('v2')" onmouseout="clearPaths()">
+          <ellipse cx="270" cy="260" rx="24" ry="14" fill="rgba(46,109,164,0.3)" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="270" y="264" text-anchor="middle" font-size="11" fill="#4d9ee0" font-weight="600">V2</text>
+        </g>
+        <g class="node" id="n-v2b" onmouseover="highlightPath('v2')" onmouseout="clearPaths()">
+          <ellipse cx="430" cy="260" rx="24" ry="14" fill="rgba(46,109,164,0.3)" stroke="#2e6da4" stroke-width="1.5"/>
+          <text x="430" y="264" text-anchor="middle" font-size="11" fill="#4d9ee0" font-weight="600">V3</text>
+        </g>
+        <g class="node" id="n-v4" onmouseover="highlightPath('ventral')" onmouseout="clearPaths()">
+          <ellipse cx="200" cy="195" rx="28" ry="14" fill="rgba(91,75,168,0.3)" stroke="#5b4ba8" stroke-width="1.5"/>
+          <text x="200" y="199" text-anchor="middle" font-size="11" fill="#9b8be0" font-weight="600">V4</text>
+        </g>
+        <g class="node" id="n-v5" onmouseover="highlightPath('dorsal')" onmouseout="clearPaths()">
+          <ellipse cx="500" cy="195" rx="28" ry="14" fill="rgba(91,75,168,0.3)" stroke="#5b4ba8" stroke-width="1.5"/>
+          <text x="500" y="199" text-anchor="middle" font-size="11" fill="#9b8be0" font-weight="600">V5</text>
+        </g>
+        <g class="node" id="n-ait" onmouseover="highlightPath('ventral')" onmouseout="clearPaths()">
+          <ellipse cx="140" cy="125" rx="28" ry="14" fill="rgba(184,92,26,0.3)" stroke="#b85c1a" stroke-width="1.5"/>
+          <text x="140" y="129" text-anchor="middle" font-size="10" fill="#d4a055" font-weight="600">AIT</text>
+        </g>
+        <g class="node" id="n-mst" onmouseover="highlightPath('dorsal')" onmouseout="clearPaths()">
+          <ellipse cx="560" cy="125" rx="28" ry="14" fill="rgba(184,92,26,0.3)" stroke="#b85c1a" stroke-width="1.5"/>
+          <text x="560" y="129" text-anchor="middle" font-size="10" fill="#d4a055" font-weight="600">MST</text>
+        </g>
+        <g class="node" id="n-trans" onmouseover="highlightPath('transmodal')" onmouseout="clearPaths()">
+          <ellipse cx="350" cy="60" rx="42" ry="18" fill="rgba(192,57,43,0.3)" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="350" y="56" text-anchor="middle" font-size="9" fill="#e07060" font-weight="600">Transmodal</text>
+          <text x="350" y="68" text-anchor="middle" font-size="9" fill="#e07060" font-weight="600">Gateway</text>
+        </g>
+
+        <!-- Stream labels -->
+        <text x="120" y="80" font-size="10" fill="#d4a055" font-weight="600" opacity="0.6">VENTRAL</text>
+        <text x="120" y="92" font-size="9" fill="#d4a055" opacity="0.4">"What"</text>
+        <text x="555" y="80" font-size="10" fill="#d4a055" font-weight="600" opacity="0.6">DORSAL</text>
+        <text x="555" y="92" font-size="9" fill="#d4a055" opacity="0.4">"Where"</text>
+
+        <!-- Feedback label -->
+        <text x="255" y="140" font-size="9" fill="#5a7d9e" font-style="italic" transform="rotate(-40 255 140)">top-down feedback</text>
+      </svg>
+
+      <p style="font-size: 0.82rem; color: #5a7d9e; text-align: center;"><strong>Hover over nodes</strong> to trace the dorsal ("where") and ventral ("what") pathways. Dashed lines show top-down feedback connections from transmodal areas back to unimodal areas.</p>
+    </div>
+
+    <!-- ====== 3. FIVE LARGE-SCALE NETWORKS ====== -->
+    <div class="section" id="networks">
+      <div class="section-label">Large-Scale Networks</div>
+      <h2>Five Neurocognitive Networks</h2>
+      <p>Mesulam identifies at least five large-scale distributed networks, each organized around interconnected transmodal epicentres. These networks are not isolated modules&mdash;they share components and individual cortical nodes can dynamically shift their network affiliation depending on the task.</p>
+
+      <div class="network-grid" id="networkGrid">
+        <div class="network-card" style="--card-color: #3498db;" onclick="showNetwork(0)">
+          <div class="card-icon" style="background: rgba(52,152,219,0.15); border-color: rgba(52,152,219,0.3);">&#127758;</div>
+          <h3>Spatial Awareness</h3>
+          <p>Right hemisphere-dominant. Directed spatial attention and exploration.</p>
+        </div>
+        <div class="network-card" style="--card-color: #2ecc71;" onclick="showNetwork(1)">
+          <div class="card-icon" style="background: rgba(46,204,113,0.15); border-color: rgba(46,204,113,0.3);">&#128172;</div>
+          <h3>Language</h3>
+          <p>Left hemisphere-dominant. Lexical retrieval, syntax, and word comprehension.</p>
+        </div>
+        <div class="network-card" style="--card-color: #e74c3c;" onclick="showNetwork(2)">
+          <div class="card-icon" style="background: rgba(231,76,60,0.15); border-color: rgba(231,76,60,0.3);">&#129504;</div>
+          <h3>Memory &amp; Emotion</h3>
+          <p>Hippocampal&ndash;entorhinal and amygdaloid complex. Explicit memory and emotional binding.</p>
+        </div>
+        <div class="network-card" style="--card-color: #9b59b6;" onclick="showNetwork(3)">
+          <div class="card-icon" style="background: rgba(155,89,182,0.15); border-color: rgba(155,89,182,0.3);">&#9881;&#65039;</div>
+          <h3>Executive / Working Memory</h3>
+          <p>Prefrontal cortex epicentre. Holds information on-line and modulates other networks.</p>
+        </div>
+        <div class="network-card" style="--card-color: #f39c12;" onclick="showNetwork(4)">
+          <div class="card-icon" style="background: rgba(243,156,18,0.15); border-color: rgba(243,156,18,0.3);">&#128064;</div>
+          <h3>Face &amp; Object Recognition</h3>
+          <p>Midtemporal and temporopolar cortices. Categorical perception to individual identification.</p>
+        </div>
+      </div>
+
+      <div class="network-detail" id="networkDetail">
+        <h3 id="netDetailName"></h3>
+        <div id="netDetailTags" style="margin-bottom: 10px;"></div>
+        <p id="netDetailDesc"></p>
+        <p id="netDetailLesion" style="margin-top: 10px;"></p>
+        <div id="netDetailLinks"></div>
+      </div>
+    </div>
+
+    <!-- ====== 4. TRANSMODAL GATEWAYS & BINDING ====== -->
+    <div class="section" id="transmodal">
+      <div class="section-label">Key Concept</div>
+      <h2>Transmodal Gateways and Multimodal Binding</h2>
+      <p>Transmodal areas are the highest synaptic levels of sensory-fugal processing. They receive input from multiple unimodal areas and serve as <strong>critical gateways</strong> (not storage centres) for binding modality-specific fragments into coherent experiences, memories, and thoughts. Think of them as <em>directories</em> or <em>lookup tables</em> that point to where information is stored, rather than warehouses that contain the information itself.</p>
+
+      <div style="text-align: center; margin: 24px 0 12px;">
+        <p style="font-size: 0.82rem; color: #5a7d9e; margin-bottom: 12px; font-weight: 600;">Click a transmodal node to see what it binds:</p>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 20px;">
+        <div class="binding-node transmodal" onclick="showBinding('wernicke')" style="width: 100px; height: 100px;">Wernicke's<br>Area</div>
+        <div class="binding-node transmodal" onclick="showBinding('hippo')" style="width: 100px; height: 100px;">Hippocampal Complex</div>
+        <div class="binding-node transmodal" onclick="showBinding('amygdala')" style="width: 100px; height: 100px;">Amygdala</div>
+        <div class="binding-node transmodal" onclick="showBinding('pfc')" style="width: 100px; height: 100px;">Prefrontal Cortex</div>
+        <div class="binding-node transmodal" onclick="showBinding('midtemp')" style="width: 100px; height: 100px;">Midtemporal Cortex</div>
+      </div>
+
+      <div class="zone-info-panel" id="bindingPanel">
+        <h3 id="bindingName">Select a transmodal node</h3>
+        <p id="bindingDesc">Each transmodal area acts as a gateway for a different cognitive domain. Click one to see what modality-specific inputs it binds and what cognitive function it supports.</p>
+        <div id="bindingInputs"></div>
+      </div>
+
+      <!-- Figure 3 concept -->
+      <div style="margin-top: 24px; background: rgba(0,0,0,0.15); border-radius: 10px; padding: 20px;">
+        <p style="font-size: 0.82rem; color: #5a7d9e; font-weight: 600; margin-bottom: 8px;">HOW BINDING WORKS (FIGURE 3 CONCEPT)</p>
+        <p>When two unimodal areas (A and B) are simultaneously active&mdash;say the visual form of a face and the sound of a voice&mdash;their co-activation is registered by a transmodal node (Tr) through Hebbian covariance. The transmodal node does not store a merged copy. Instead, it creates a <em>directory entry</em> that links A and B. Later, activating A alone is enough to reactivate B through Tr, enabling associative retrieval and recognition.</p>
+        <p>This "binding through directories" model explains why transmodal lesions cause <strong>global</strong> multimodal deficits (the directory is lost), while unimodal lesions cause <strong>modality-specific</strong> deficits (one entry is lost, but the rest remain).</p>
+      </div>
+    </div>
+
+    <!-- ====== 5. TOP-DOWN MODULATION ====== -->
+    <div class="section" id="modulation">
+      <div class="section-label">Top-Down Processing</div>
+      <h2>How the Brain Sculpts Sensory Experience</h2>
+      <p>Information doesn't just flow bottom-up from sensation to cognition. Higher transmodal areas exert powerful top-down influences that reshape activity at earlier synaptic levels. Mesulam describes several kinds of modulation that sculpt the raw sensory signal into a subjectively meaningful experience.</p>
+
+      <div class="modulation-demo">
+        <p style="font-size: 0.82rem; color: #5a7d9e; font-weight: 600; margin-bottom: 14px;">ADJUST TOP-DOWN INFLUENCES</p>
+
+        <div class="slider-row">
+          <label>Working Memory</label>
+          <input type="range" min="0" max="100" value="50" oninput="updateModulation()"/>
+          <span class="val" id="wmVal">50</span>
+        </div>
+        <div class="slider-row">
+          <label>Attention</label>
+          <input type="range" min="0" max="100" value="50" oninput="updateModulation()"/>
+          <span class="val" id="attVal">50</span>
+        </div>
+        <div class="slider-row">
+          <label>Emotion / Motivation</label>
+          <input type="range" min="0" max="100" value="50" oninput="updateModulation()"/>
+          <span class="val" id="emoVal">50</span>
+        </div>
+        <div class="slider-row">
+          <label>Novelty</label>
+          <input type="range" min="0" max="100" value="50" oninput="updateModulation()"/>
+          <span class="val" id="novVal">50</span>
+        </div>
+
+        <p style="font-size: 0.78rem; color: #5a7d9e; text-align: center; margin: 14px 0 4px; font-weight: 600;">ACTIVITY AT EACH SYNAPTIC LEVEL</p>
+        <div class="modulation-viz" id="modViz">
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar1" style="height: 80px; background: #2e8b57;"></div>
+            <div class="mod-bar-label">1&deg; Sensory</div>
+          </div>
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar2" style="height: 70px; background: #2e6da4;"></div>
+            <div class="mod-bar-label">Upstream Unimodal</div>
+          </div>
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar3" style="height: 60px; background: #5b4ba8;"></div>
+            <div class="mod-bar-label">Downstream Unimodal</div>
+          </div>
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar4" style="height: 50px; background: #b85c1a;"></div>
+            <div class="mod-bar-label">Heteromodal</div>
+          </div>
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar5" style="height: 40px; background: #8b2d5b;"></div>
+            <div class="mod-bar-label">Paralimbic</div>
+          </div>
+          <div class="mod-bar-group">
+            <div class="mod-bar" id="bar6" style="height: 30px; background: #8b2d2d;"></div>
+            <div class="mod-bar-label">Limbic</div>
+          </div>
+        </div>
+
+        <p id="modExplanation" style="font-size: 0.84rem; color: #8aacc8; margin-top: 16px; text-align: center;">Adjust the sliders to see how top-down influences change activity levels across the synaptic hierarchy. At baseline, early levels have the strongest bottom-up signal, but top-down modulation increasingly shapes downstream and higher areas.</p>
+      </div>
+    </div>
+
+    <!-- ====== 6. CLINICAL DISCONNECTION ====== -->
+    <div class="section" id="lesions">
+      <div class="section-label">Clinical Applications</div>
+      <h2>Disconnection Syndromes: What Lesions Teach Us</h2>
+      <p>The architecture of the sensory-fugal hierarchy predicts specific patterns of deficit when connections are damaged. Unimodal lesions produce modality-specific impairments, while transmodal lesions produce global, multimodal deficits. Click a lesion scenario to see the predicted outcome.</p>
+
+      <div class="lesion-controls" id="lesionBtns">
+        <button class="lesion-btn" onclick="showLesion(0)">Fusiform Gyrus Lesion</button>
+        <button class="lesion-btn" onclick="showLesion(1)">Wernicke's Area Lesion</button>
+        <button class="lesion-btn" onclick="showLesion(2)">Hippocampal Lesion</button>
+        <button class="lesion-btn" onclick="showLesion(3)">Prefrontal Lesion</button>
+        <button class="lesion-btn" onclick="showLesion(4)">V1 + Splenium Lesion</button>
+        <button class="lesion-btn" onclick="showLesion(5)">Posterior Parietal Lesion</button>
+      </div>
+
+      <div class="lesion-result" id="lesionResult">
+        <h4 id="lesionName">Select a lesion scenario</h4>
+        <p id="lesionType"></p>
+        <p id="lesionEffect"></p>
+        <p id="lesionWhy" style="font-style: italic; color: #5a7d9e;"></p>
+      </div>
+    </div>
+
+    <!-- ====== 7. TEST YOURSELF ====== -->
+    <div class="section" id="quiz">
+      <div class="section-label">Self-Assessment</div>
+      <h2>Test Your Understanding</h2>
+      <p>Five questions randomly selected from a pool of 20. Each time you reload, you get a different set.</p>
+
+      <div id="quizContainer"></div>
+
+      <div style="display: flex; gap: 16px; align-items: center; margin-top: 20px;">
+        <div id="quizScore" style="font-size: 0.92rem; color: #8aacc8;"></div>
+        <button onclick="generateQuiz()" style="margin-left: auto; padding: 10px 20px; border-radius: 6px; border: 1px solid #0779be; background: rgba(7,121,190,0.15); color: #0779be; font-size: 0.86rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s;" onmouseover="this.style.background='rgba(7,121,190,0.25)'" onmouseout="this.style.background='rgba(7,121,190,0.15)'">New Questions</button>
+      </div>
     </div>
 
     <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+      PSYCH 302 &mdash; University of Washington &mdash; Based on Mesulam, M.-M. (1998). <em>Brain</em>, 121, 1013&ndash;1052.
     </footer>
 
   </div>
 
+  <script>
+    // ===== ZONE DATA =====
+    const zones = {
+      primary: {
+        name: "Primary Sensory-Motor Cortex",
+        desc: "The entry portal for sensory information (V1, A1, S1) and the exit gateway for motor commands (M1). These areas have the most highly differentiated cytoarchitecture in the cortex.",
+        tags: [
+          { text: "Synaptic Level 1", color: "#2e8b57" },
+          { text: "Highest Differentiation", color: "#2e8b57" },
+          { text: "Retinotopic / Tonotopic", color: "#2e8b57" }
+        ],
+        detail: "Primary sensory areas contain finely tuned neurons that map sensory features with high precision (retinotopy in V1, tonotopy in A1). They encode elementary features: orientation, spatial frequency, pitch, and frequency. The koniocortical architecture (densely packed small neurons) distinguishes these areas from all others. Importantly, these areas are relatively protected from top-down modulation\u2014emotional and motivational influences are weakest here."
+      },
+      upstream: {
+        name: "Upstream Unimodal Association Cortex",
+        desc: "One synapse from primary cortex. These areas encode relatively elementary features\u2014colour, motion, basic form\u2014within a single sensory modality.",
+        tags: [
+          { text: "Synaptic Level 2", color: "#2e6da4" },
+          { text: "Single Modality", color: "#2e6da4" },
+          { text: "Elementary Features", color: "#2e6da4" }
+        ],
+        detail: "Examples include V2 (secondary visual cortex) and parts of the superior temporal gyrus for audition. Neurons here respond primarily to stimulation in one modality and lesions produce deficits confined to that modality. The mapping is still fairly retinotopic/tonotopic, but more complex features start to emerge (colour vs. motion segregation begins here in V2\u2192V4/V5)."
+      },
+      downstream: {
+        name: "Downstream Unimodal Association Cortex",
+        desc: "Two or more synapses from primary cortex. Contains coarsely tuned neuronal groups specialised for complex, composite features: faces, objects, words, spatial locations.",
+        tags: [
+          { text: "Synaptic Level 3\u20134", color: "#5b4ba8" },
+          { text: "Complex Features", color: "#5b4ba8" },
+          { text: "Category-Selective", color: "#5b4ba8" }
+        ],
+        detail: "This is where the inferotemporal cortex (face and object areas like the fusiform gyrus) and the dorsal parietal spatial processing areas live. Neurons here are tuned to complete objects and spatial configurations rather than elementary features. The fusiform face area, visual word-form area, and spatial location areas all sit at this level. Memory traces also begin to accumulate here\u2014downstream areas can store long-term representations of familiar objects and faces."
+      },
+      heteromodal: {
+        name: "Heteromodal (Transmodal) Association Cortex",
+        desc: "Receives convergent input from unimodal areas in more than one modality. Neurons respond to stimulation in multiple senses. Lesions produce multimodal behavioural deficits.",
+        tags: [
+          { text: "Synaptic Level 5\u20136", color: "#b85c1a" },
+          { text: "Multimodal Convergence", color: "#b85c1a" },
+          { text: "Gateway / Directory", color: "#b85c1a" }
+        ],
+        detail: "Key heteromodal regions include prefrontal cortex, posterior parietal cortex, lateral temporal cortex, and parts of the parahippocampal gyrus. These areas act as critical gateways\u2014not storage centres\u2014that create directories binding modality-specific information into coherent percepts and memories. They represent the transmodal epicentres of the five large-scale networks. Their paradoxical vulnerability: they are 'neural bottlenecks' where focal damage can cause disproportionately large cognitive deficits."
+      },
+      paralimbic: {
+        name: "Paralimbic Cortex",
+        desc: "A transitional zone between the six-layered homotypical isocortex and the more primitive allocortex of limbic structures. Bridges the outside world to the internal milieu.",
+        tags: [
+          { text: "Transitional Architecture", color: "#8b2d5b" },
+          { text: "Emotion \u00d7 Cognition", color: "#8b2d5b" },
+          { text: "Orbitofrontal / Insula / Cingulate", color: "#8b2d5b" }
+        ],
+        detail: "Includes the caudal orbitofrontal cortex, insula, temporal pole, parahippocampal gyrus, and retrosplenial-cingulate complex. Divided into olfactocentric (temporopolar-insular-orbitofrontal) and hippocampocentric (parahippocampal-posterior cingulate) subdivisions. These areas channel emotion and motivation into the cognitive processing stream and play a particularly prominent role in encoding the acquired significance of sensory events."
+      },
+      limbic: {
+        name: "Limbic (Core) Structures",
+        desc: "The hippocampal formation, amygdala, prepiriform cortex, and septal area. The most primitive allocortical architecture, with massive reciprocal connections to the hypothalamus.",
+        tags: [
+          { text: "Allocortical", color: "#8b2d2d" },
+          { text: "Internal Milieu", color: "#8b2d2d" },
+          { text: "Memory Binding / Emotion", color: "#8b2d2d" }
+        ],
+        detail: "These structures are polarized towards the internal milieu\u2014regulating emotion, motivation, memory, and autonomic-endocrine function. The hippocampal complex binds new explicit memories; the amygdala binds sensory representations to emotional valence. They receive input from the most downstream stages of sensory-fugal processing and exert powerful top-down modulation back through paralimbic and heteromodal areas. The limbic system acts as a 'nursery for memories in gestation.'"
+      }
+    };
+
+    function showZone(key) {
+      const z = zones[key];
+      document.getElementById('zoneName').textContent = z.name;
+      document.getElementById('zoneDesc').textContent = z.desc;
+      document.getElementById('zoneDetail').textContent = z.detail;
+      const tags = document.getElementById('zoneTags');
+      tags.innerHTML = z.tags.map(t => `<span class="zone-tag" style="background: ${t.color}22; color: ${t.color}; border: 1px solid ${t.color}55;">${t.text}</span>`).join('');
+      document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.zone-btn[data-zone="${key}"]`).classList.add('active');
+    }
+
+    // ===== CONNECTIVITY HIGHLIGHTS =====
+    function highlightPath(path) {
+      clearPaths();
+      const paths = {
+        v1: ['e-v1-v2', 'e-v1-v2b'],
+        v2: ['e-v1-v2', 'e-v1-v2b', 'e-v2-v4', 'e-v2-v5'],
+        ventral: ['e-v1-v2', 'e-v2-v4', 'e-v4-ait', 'e-ait-t'],
+        dorsal: ['e-v1-v2b', 'e-v2-v5', 'e-v5-mst', 'e-mst-t'],
+        transmodal: ['e-ait-t', 'e-mst-t', 'e-fb1', 'e-fb2']
+      };
+      (paths[path] || []).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('highlight');
+      });
+    }
+    function clearPaths() {
+      document.querySelectorAll('.edge').forEach(e => e.classList.remove('highlight'));
+    }
+
+    // ===== NETWORK DATA =====
+    const networkData = [
+      {
+        name: "Spatial Awareness Network",
+        color: "#3498db",
+        epicentres: ["Posterior Parietal Cortex", "Frontal Eye Fields", "Cingulate Region"],
+        desc: "Coordinates the distribution of attention within the extrapersonal space. The parietal component provides a multimodal representation of the spatial environment; the frontal eye field component supplies a motor map for exploratory and orienting acts; and the cingulate component maps expectancy and relevance. This network is right hemisphere-dominant, which is why unilateral right hemisphere damage can cause contralateral spatial neglect.",
+        lesion: "Damage produces hemispatial neglect\u2014the patient ignores stimuli in the contralateral space, especially after right hemisphere lesions.",
+        canvasLinks: [{ label: "Attention", url: "https://canvas.uw.edu/courses/1888912/pages/attention?module_item_id=25204502" }]
+      },
+      {
+        name: "Language Network",
+        color: "#2ecc71",
+        epicentres: ["Wernicke's Area", "Broca's Area"],
+        desc: "The left hemisphere-dominant network for linking sensory word-forms to their arbitrary symbolic meanings. Wernicke's area acts as a transmodal gateway linking auditory/visual word-forms to distributed lexical associations. Broca's area is critical for articulation, syntax, and word generation. The language network follows the same organizational principles as face recognition\u2014unimodal encoding of word-forms feeding into transmodal gateways for meaning.",
+        lesion: "Wernicke's lesions: fluent but meaningless speech, impaired comprehension. Broca's lesions: effortful, non-fluent speech with preserved comprehension. Disconnection between them: conduction aphasia.",
+        canvasLinks: [{ label: "Language & Brain Mapping", url: "https://canvas.uw.edu/courses/1888912/pages/language-and-brain-mapping?module_item_id=25204476" }]
+      },
+      {
+        name: "Memory-Emotion Network",
+        color: "#e74c3c",
+        epicentres: ["Hippocampal-Entorhinal Complex", "Amygdaloid Complex"],
+        desc: "The hippocampal-entorhinal complex binds new explicit (declarative) memories by creating transient limbic-dependent associations that are gradually consolidated into stable neocortical representations. The amygdala binds sensory representations to emotional valence\u2014encoding the acquired motivational significance of events. These two components are dissociable: hippocampal lesions impair explicit recall but preserve autonomic emotional responses, while amygdaloid lesions do the reverse.",
+        lesion: "Bilateral hippocampal damage: severe anterograde amnesia (can't form new memories) with temporal gradient of retrograde amnesia. Amygdala damage: hypoemotionality, impaired conditioned emotional responses.",
+        canvasLinks: [{ label: "Memory", url: "https://canvas.uw.edu/courses/1888912/pages/memory?module_item_id=25204508" }, { label: "Emotion", url: "https://canvas.uw.edu/courses/1888912/pages/emotion?module_item_id=25204503" }]
+      },
+      {
+        name: "Working Memory-Executive Network",
+        color: "#9b59b6",
+        epicentres: ["Lateral Prefrontal Cortex", "(Posterior Parietal Cortex)"],
+        desc: "The prefrontal cortex holds information on-line in working memory, temporally expanding the neural response to brief events so they can interact with past memories and future goals. Prefrontal neurons show delay activity\u2014they maintain a representation of a stimulus after it disappears. This network orchestrates top-down modulation of all other networks, inhibits automatic responses, promotes novelty-seeking, and enables the flexibility that distinguishes primate cognition from the rigid stimulus-response patterns of simpler organisms.",
+        lesion: "Prefrontal damage: impaired working memory, perseveration, difficulty inhibiting habitual responses, placid disinterest in novel events, vulnerability to distraction.",
+        canvasLinks: [{ label: "Cognitive Control & Flexible Behavior", url: "https://canvas.uw.edu/courses/1888912/pages/cognitive-control-and-flexible-behavior?module_item_id=25204509" }]
+      },
+      {
+        name: "Face & Object Recognition Network",
+        color: "#f39c12",
+        epicentres: ["Midtemporal Cortex", "Temporopolar Cortex"],
+        desc: "Transforms categorical visual encoding (done by downstream unimodal areas like the fusiform gyrus) into individual-level recognition through transmodal associations. The midtemporal and temporopolar cortices bind the visual percept of a face to its associated name, voice, emotional associations, and biographical knowledge. This is the network where seeing a face becomes recognizing a person.",
+        lesion: "Prosopagnosia (bilateral fusiform/unimodal lesion): can\u2019t recognise familiar faces but can tell that a face is a face. Object agnosia (more upstream): can\u2019t even categorize objects.",
+        canvasLinks: [{ label: "Visual Perception", url: "https://canvas.uw.edu/courses/1888912/pages/visual-perception?module_item_id=25204479" }]
+      }
+    ];
+
+    function showNetwork(idx) {
+      const n = networkData[idx];
+      const det = document.getElementById('networkDetail');
+      document.getElementById('netDetailName').textContent = n.name;
+      document.getElementById('netDetailTags').innerHTML = n.epicentres.map(e => `<span class="epicentre-tag" style="background: ${n.color}22; color: ${n.color}; border: 1px solid ${n.color}55;">${e}</span>`).join('');
+      document.getElementById('netDetailDesc').textContent = n.desc;
+      document.getElementById('netDetailLesion').innerHTML = `<strong style="color: #e74c3c;">When damaged:</strong> ${n.lesion}`;
+      // Canvas links
+      const linksContainer = document.getElementById('netDetailLinks');
+      if (n.canvasLinks && n.canvasLinks.length > 0) {
+        linksContainer.innerHTML = '<p style="font-size:0.78rem; color:#5a7d9e; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; margin-top:14px;">EXPLORE THIS TOPIC IN PSYCH 302</p>' +
+          n.canvasLinks.map(l => `<a class="canvas-link-btn" href="${l.url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${l.label}</a>`).join('');
+      } else {
+        linksContainer.innerHTML = '';
+      }
+      det.classList.add('visible');
+      document.querySelectorAll('.network-card').forEach((c, i) => {
+        c.classList.toggle('active', i === idx);
+      });
+    }
+
+    // ===== TRANSMODAL BINDING DATA =====
+    const bindingData = {
+      wernicke: {
+        name: "Wernicke's Area (Lexical Gateway)",
+        desc: "Acts as the transmodal gateway for language. Binds auditory and visual word-forms to their distributed lexical-semantic associations (colour, tools, animals, actions). Does not store word meanings itself\u2014instead, it coordinates access to meanings stored across the temporal and parietal cortex.",
+        inputs: ["Auditory word-forms (superior temporal)", "Visual word-forms (fusiform/occipitotemporal)", "Lexical associations (distributed temporal cortex)", "Phonological output (via Broca's area)"]
+      },
+      hippo: {
+        name: "Hippocampal-Entorhinal Complex (Memory Gateway)",
+        desc: "The transmodal gateway for explicit (declarative) memory. Binds modality-specific fragments of a new experience into a coherent episodic or semantic trace. Acts as a 'nursery for memories'\u2014new associations depend on hippocampal integrity for months to years before being consolidated into stable neocortical representations.",
+        inputs: ["Visual object/scene information (temporal cortex)", "Spatial location information (parietal cortex)", "Emotional valence (amygdala)", "Temporal context and sequence information"]
+      },
+      amygdala: {
+        name: "Amygdala (Emotional Valuation Gateway)",
+        desc: "Binds sensory representations to their emotional and motivational significance. Selectively modulates unimodal sensory responses to enhance processing of emotionally relevant stimuli. Complementary to the hippocampus: hippocampal lesions impair explicit recall but preserve autonomic emotional responses; amygdalar lesions preserve recall but abolish emotional colouring.",
+        inputs: ["Visual object identity (inferotemporal)", "Auditory patterns (superior temporal)", "Primary/secondary reinforcement signals", "Hypothalamic homeostatic states"]
+      },
+      pfc: {
+        name: "Prefrontal Cortex (Executive Gateway)",
+        desc: "Orchestrates working memory across all domains. Exerts top-down modulation on unimodal and transmodal areas to prolong neural responses, sustain attention, inhibit prepotent responses, and enable mental imagery. The dorsolateral component handles spatial working memory; the ventrolateral component handles object working memory.",
+        inputs: ["Spatial information (posterior parietal)", "Object information (inferotemporal)", "Emotional valence (amygdala/orbitofrontal)", "Motor plans (premotor cortex)"]
+      },
+      midtemp: {
+        name: "Midtemporal / Temporopolar Cortex (Recognition Gateway)",
+        desc: "Transforms categorical visual percepts into individually recognized entities. When you see a face and know it\u2019s your friend, these areas are binding the visual form (from fusiform unimodal cortex) with the person\u2019s name, voice, emotional associations, and biographical memory.",
+        inputs: ["Face/object identity (fusiform gyrus)", "Voice identity (superior temporal)", "Biographical knowledge (distributed temporal)", "Emotional associations (amygdala)"]
+      }
+    };
+
+    function showBinding(key) {
+      const b = bindingData[key];
+      document.getElementById('bindingName').textContent = b.name;
+      document.getElementById('bindingDesc').textContent = b.desc;
+      document.getElementById('bindingInputs').innerHTML = '<p style="font-size:0.82rem; color:#5a7d9e; font-weight:600; margin-bottom:6px;">BINDS TOGETHER:</p>' +
+        b.inputs.map(i => `<span class="zone-tag" style="background: rgba(7,121,190,0.15); color: #0779be; border: 1px solid rgba(7,121,190,0.3);">${i}</span>`).join('');
+      document.querySelectorAll('.binding-node').forEach(n => n.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+
+    // ===== TOP-DOWN MODULATION =====
+    function updateModulation() {
+      const sliders = document.querySelectorAll('.slider-row input[type="range"]');
+      const vals = Array.from(sliders).map(s => parseInt(s.value));
+      document.getElementById('wmVal').textContent = vals[0];
+      document.getElementById('attVal').textContent = vals[1];
+      document.getElementById('emoVal').textContent = vals[2];
+      document.getElementById('novVal').textContent = vals[3];
+
+      // Model: early levels have strong bottom-up but weak top-down
+      // Later levels are more susceptible to top-down modulation
+      const topDown = (vals[0] + vals[1] + vals[2] + vals[3]) / 400; // 0-1
+
+      // Weights: how much each level is affected by top-down
+      const tdWeights = [0.05, 0.15, 0.35, 0.55, 0.75, 0.85];
+      // Base bottom-up signal (decreasing from sensory levels)
+      const baseHeights = [90, 75, 55, 40, 30, 25];
+
+      const bars = [
+        document.getElementById('bar1'),
+        document.getElementById('bar2'),
+        document.getElementById('bar3'),
+        document.getElementById('bar4'),
+        document.getElementById('bar5'),
+        document.getElementById('bar6')
+      ];
+
+      bars.forEach((bar, i) => {
+        const base = baseHeights[i];
+        const boost = tdWeights[i] * topDown * 100;
+        const h = Math.min(base + boost, 175);
+        bar.style.height = h + 'px';
+        // Color intensity based on activity
+        const intensity = h / 175;
+        bar.style.opacity = 0.4 + intensity * 0.6;
+      });
+
+      // Explanation text
+      const exp = document.getElementById('modExplanation');
+      if (topDown < 0.25) {
+        exp.textContent = "Low top-down influence: processing is dominated by bottom-up sensory signals. The early synaptic levels carry the strongest activity. Higher areas have relatively little to work with.";
+      } else if (topDown < 0.5) {
+        exp.textContent = "Moderate top-down influence: attention and working memory begin to boost activity in downstream unimodal and heteromodal areas, enriching the sensory representation with context.";
+      } else if (topDown < 0.75) {
+        exp.textContent = "Strong top-down influence: working memory, attention, and emotional modulation substantially reshape activity. Downstream and transmodal areas show elevated activity as the brain sculpts sensation into a subjectively meaningful experience.";
+      } else {
+        exp.textContent = "Very strong top-down influence: all higher areas are maximally engaged. This models states like intense concentration, emotional arousal, or vivid mental imagery\u2014where the brain's internal processes powerfully shape the interpretation of sensory input. Even early levels receive some modulatory boost.";
+      }
+    }
+
+    // ===== LESION DATA =====
+    const lesionData = [
+      {
+        name: "Prosopagnosia (Fusiform Gyrus Bilateral Lesion)",
+        type: "Type: Unimodal (downstream) visual association lesion",
+        effect: "The patient cannot recognise familiar faces by visual inspection alone. They can tell that a face is a face (generic categorisation intact), but cannot identify the specific person. However, recognition becomes possible through other modalities\u2014hearing the person's voice activates the correct transmodal associations through auditory pathways.",
+        why: "This is a disconnection between the unimodal face-encoding area ('f' in Mesulam's diagram) and the transmodal gateway ('T') that binds visual identity to multimodal knowledge of the person. The directory entry still exists; the visual 'address' can no longer reach it."
+      },
+      {
+        name: "Wernicke's Aphasia",
+        type: "Type: Transmodal gateway lesion (language network)",
+        effect: "The patient produces fluent but meaningless speech (word salad) and has severely impaired comprehension in all modalities\u2014spoken words, written words, and even sign language. Both encoding (naming) and decoding (understanding) are disrupted.",
+        why: "Wernicke's area is the transmodal gateway that links sensory word-forms to their distributed meanings. Destroying this gateway severs the directory that binds phonological/orthographic representations to lexical-semantic associations. The words still exist in unimodal cortex, but the lookup mechanism is gone."
+      },
+      {
+        name: "Anterograde Amnesia (Bilateral Hippocampal Lesion)",
+        type: "Type: Transmodal (limbic) gateway lesion",
+        effect: "Devastating inability to form new explicit memories (anterograde amnesia). The patient can learn new motor skills (implicit memory intact) and can access some remote memories. There is a temporal gradient: very recent memories are completely lost, but older, consolidated memories are partially spared.",
+        why: "The hippocampal complex is the transmodal gateway for explicit memory\u2014it binds new experience fragments into coherent traces. Without it, new associations cannot form. Already-consolidated memories survive because their associative linkages have been transferred to stable neocortical connections over time."
+      },
+      {
+        name: "Dysexecutive Syndrome (Prefrontal Lesion)",
+        type: "Type: Transmodal (executive network) epicentre lesion",
+        effect: "Impaired working memory, difficulty sustaining attention, perseveration (inability to switch tasks), placid disinterest in novel events, impulsivity, and difficulty inhibiting habitual responses. Consciousness may appear preserved but is impoverished.",
+        why: "The prefrontal cortex is the transmodal gateway for working memory and executive control. It modulates all other networks by prolonging neural responses (delay activity) and providing top-down bias. Without it, the brain loses the ability to hold information on-line, plan, and flexibly adapt behaviour."
+      },
+      {
+        name: "Pure Alexia (V1 + Splenium Lesion)",
+        type: "Type: Disconnection syndrome (visual pathway cut off from language network)",
+        effect: "The patient cannot read (alexia) but can write, speak, and understand spoken language normally. Visual object recognition may be relatively preserved. The specific deficit is in connecting visual word-form information to language areas.",
+        why: "A lesion in left V1 causes a right visual field deficit. The splenial lesion disconnects the intact right hemisphere visual areas from the left hemisphere word-form areas and Wernicke's area. Visual input can no longer reach the language network through any route\u2014the visual 'address' for written words is completely severed from the transmodal language gateway."
+      },
+      {
+        name: "Hemispatial Neglect (Right Posterior Parietal Lesion)",
+        type: "Type: Transmodal (spatial awareness network) epicentre lesion",
+        effect: "The patient ignores stimuli in the left side of extrapersonal space\u2014they may eat only from the right side of the plate, dress only the right side of the body, and fail to notice people approaching from the left. The deficit is not blindness; it is a loss of spatial awareness.",
+        why: "The posterior parietal cortex is a transmodal epicentre of the spatial awareness network. It integrates spatial information from visual and auditory modalities with motor maps and motivational relevance. Losing this gateway doesn't destroy the sensory channels\u2014it destroys the coherent, interactive spatial representation needed for directed attention."
+      }
+    ];
+
+    function showLesion(idx) {
+      const l = lesionData[idx];
+      document.getElementById('lesionName').textContent = l.name;
+      document.getElementById('lesionType').textContent = l.type;
+      document.getElementById('lesionEffect').textContent = l.effect;
+      document.getElementById('lesionWhy').textContent = l.why;
+      document.querySelectorAll('#lesionBtns .lesion-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+      });
+    }
+
+    // ===== QUIZ QUESTION POOL =====
+    const questionPool = [
+      // --- Cortical Zones ---
+      {
+        category: "Cortical Zones",
+        question: "What is the key distinction between unimodal and transmodal cortex?",
+        options: [
+          "Unimodal areas are larger than transmodal areas",
+          "Unimodal areas respond to a single sensory modality; transmodal areas receive convergent input from multiple modalities",
+          "Transmodal areas are more differentiated cytoarchitectonically",
+          "Unimodal areas are located only in the frontal lobe"
+        ],
+        correct: 1,
+        feedback: "Unimodal association cortex responds predominantly to one sensory modality (e.g., visual areas respond to visual stimuli only). Transmodal areas receive inputs from unimodal areas in more than one modality and display multimodal responses. This is why transmodal lesions cause multimodal behavioural deficits."
+      },
+      {
+        category: "Cortical Zones",
+        question: "Which cortical zone has the most highly differentiated cytoarchitecture?",
+        options: [
+          "Heteromodal association cortex",
+          "Paralimbic cortex",
+          "Primary sensory-motor cortex",
+          "Downstream unimodal association cortex"
+        ],
+        correct: 2,
+        feedback: "Primary sensory and motor cortices display the most specialized cytoarchitecture in the cortex\u2014koniocortical (densely packed small neurons) in sensory areas and macropyramidal in motor cortex. As you move along the sensory-fugal gradient toward limbic areas, cytoarchitectonic differentiation progressively decreases."
+      },
+      {
+        category: "Cortical Zones",
+        question: "What distinguishes upstream from downstream unimodal association cortex?",
+        options: [
+          "Upstream areas are multimodal; downstream areas are unimodal",
+          "Upstream areas encode elementary features (colour, pitch); downstream areas encode complex composite features (faces, objects, words)",
+          "Upstream areas are in the frontal lobe; downstream areas are in the temporal lobe",
+          "Downstream areas respond only to auditory stimuli"
+        ],
+        correct: 1,
+        feedback: "Upstream unimodal areas (one synapse from primary cortex) encode elementary features like colour, motion, and pitch. Downstream unimodal areas (two or more synapses away) contain coarsely tuned neuronal groups specialized for complex composite features like faces, objects, words, and spatial locations. Both remain within a single sensory modality."
+      },
+      {
+        category: "Cortical Zones",
+        question: "The paralimbic cortex is best described as:",
+        options: [
+          "The primary entry portal for sensory information",
+          "A transitional zone between homotypical isocortex and primitive allocortex, bridging outside world to internal milieu",
+          "The highest level of the sensory processing hierarchy",
+          "An area exclusively devoted to motor output"
+        ],
+        correct: 1,
+        feedback: "Paralimbic cortex (including the insula, orbitofrontal cortex, temporal pole, parahippocampal gyrus, and cingulate) provides a gradual cytoarchitectonic transition between the six-layered isocortex and the more primitive allocortex of core limbic structures. It channels emotion and motivation into the cognitive processing stream."
+      },
+      // --- Connectivity ---
+      {
+        category: "Connectivity",
+        question: "Why do unimodal auditory and visual association areas have no direct connections to each other?",
+        options: [
+          "They developed from different embryological layers",
+          "The corpus callosum blocks cross-modal connections",
+          "This separation actively protects the fidelity (accuracy) of sensory encoding during the first four synaptic levels",
+          "Cross-modal connections only exist in non-human primates"
+        ],
+        correct: 2,
+        feedback: "The absence of direct unimodal-to-unimodal cross-modal connections is a design feature, not a limitation. The top-down feedback from transmodal cortex protects sensory fidelity by keeping visual and auditory channels separate during early processing. Cross-modal binding only occurs at the transmodal level."
+      },
+      {
+        category: "Connectivity",
+        question: "In Mesulam's concentric ring model, what does each ring represent?",
+        options: [
+          "A different brain lobe (frontal, temporal, parietal, occipital)",
+          "A different neurotransmitter system",
+          "A different synaptic level, separated by at least one synapse from the next",
+          "A different developmental stage of the brain"
+        ],
+        correct: 2,
+        feedback: "Each concentric ring represents a different synaptic level. Level 1 is primary sensory cortex (e.g., V1). Each successive ring is separated by at least one unit of synaptic distance. The model shows how information flows outward (sensory-fugally) from sensation through increasingly abstract levels of processing."
+      },
+      {
+        category: "Connectivity",
+        question: "The dorsal and ventral visual processing streams are specialized for:",
+        options: [
+          "Dorsal: colour perception; Ventral: motion detection",
+          "Dorsal: spatial location and movement (\"where\"); Ventral: object identity and form (\"what\")",
+          "Dorsal: auditory processing; Ventral: visual processing",
+          "Dorsal: left visual field; Ventral: right visual field"
+        ],
+        correct: 1,
+        feedback: "The ventral visuofugal pathway (through V4, inferotemporal areas) is specialized for the identification of objects, faces, and forms\u2014the 'what' pathway. The dorsal pathway (through V5/MT, posterior parietal areas) is specialized for encoding spatial attributes, location, and movement\u2014the 'where' pathway."
+      },
+      {
+        category: "Connectivity",
+        question: "Which statement about connections in the sensory-fugal hierarchy is TRUE?",
+        options: [
+          "Connections only run in one direction: from sensation to cognition",
+          "Connections are almost entirely reciprocal, allowing both feed-forward and feedback processing",
+          "Only transmodal areas send feedback projections",
+          "Connections skip levels, projecting directly from primary cortex to limbic areas"
+        ],
+        correct: 1,
+        feedback: "The vast majority of connections in the sensory-fugal hierarchy are reciprocal. Higher synaptic levels exert top-down (sensory-petal, feedback) influence on lower levels. This bidirectional architecture enables working memory, attention, mental imagery, and emotional modulation to reshape earlier sensory processing."
+      },
+      // --- Transmodal Gateways ---
+      {
+        category: "Transmodal Gateways",
+        question: "According to Mesulam, transmodal areas function primarily as:",
+        options: [
+          "Storage centres where multimodal memories are housed",
+          "Gateways or directories that bind distributed modality-specific fragments",
+          "Relay stations that simply pass information to the next level",
+          "Inhibitory zones that filter out irrelevant sensory input"
+        ],
+        correct: 1,
+        feedback: "Mesulam argues against the idea that transmodal areas are convergence centres where everything comes together. Instead, they act as directories or lookup tables that create address codes binding modality-specific fragments stored in unimodal areas. A transmodal lesion disrupts coherent binding without destroying the individual sensory components."
+      },
+      {
+        category: "Transmodal Gateways",
+        question: "In Mesulam's binding model (Figure 3), when areas A and B are simultaneously active, the transmodal node Tr:",
+        options: [
+          "Creates a merged copy of A and B in a new location",
+          "Records their co-activation via Hebbian covariance, forming a directory entry that links A and B",
+          "Inhibits one of the two areas to prevent cross-contamination",
+          "Relays both signals to the hypothalamus for emotional evaluation"
+        ],
+        correct: 1,
+        feedback: "The transmodal node Tr registers the synchronous activation of A and B through Hebbian strengthening of the Ta\u2013Tb synapses. This creates a 'directory entry' that links the two unimodal representations. Later, activating A alone is enough to reactivate B through Tr, enabling associative retrieval and recognition."
+      },
+      {
+        category: "Transmodal Gateways",
+        question: "Why are transmodal areas described as 'neural bottlenecks'?",
+        options: [
+          "Because they have the fewest neurons in the cortex",
+          "Because they process information more slowly than other areas",
+          "Because their focal damage causes disproportionately large cognitive deficits since they serve as critical gateways for binding",
+          "Because they receive input from only one sensory modality"
+        ],
+        correct: 2,
+        feedback: "Transmodal areas are paradoxically vulnerable: they serve as critical gateways for binding distributed information, so focal damage to one of these hubs produces disproportionately severe and widespread cognitive deficits. The information they bind may still exist in unimodal areas, but without the directory, coherent access is lost."
+      },
+      // --- Networks ---
+      {
+        category: "Large-Scale Networks",
+        question: "How many large-scale neurocognitive networks does Mesulam identify, and what are they?",
+        options: [
+          "Three: visual, auditory, and motor",
+          "Five: spatial awareness, language, memory-emotion, executive/working memory, and face-object recognition",
+          "Two: dorsal stream and ventral stream",
+          "Seven: one for each cortical lobe plus the brainstem, cerebellum, and thalamus"
+        ],
+        correct: 1,
+        feedback: "Mesulam identifies at least five large-scale distributed networks: (i) spatial awareness (right hemisphere-dominant), (ii) language (left hemisphere-dominant), (iii) memory-emotion (hippocampal-amygdalar), (iv) working memory/executive function (prefrontal), and (v) face-object recognition (midtemporal/temporopolar). Each is organized around interconnected transmodal epicentres."
+      },
+      {
+        category: "Large-Scale Networks",
+        question: "What does it mean that cortical nodes can 'dynamically shift network affiliation'?",
+        options: [
+          "Neurons physically migrate between brain regions",
+          "The same cortical area can participate in different networks depending on the current task demands",
+          "Networks are randomly assigned at birth and never change",
+          "Only transmodal areas can shift; unimodal areas are permanently fixed"
+        ],
+        correct: 1,
+        feedback: "Selectively distributed processing means individual cortical areas can be differentially recruited by different networks depending on the task. For example, posterior parietal cortex (BA 7) is activated during both face identification and spatial attention tasks, but its functional connectivity shifts\u2014correlating more with inferotemporal cortex during face tasks and with prefrontal cortex during attention tasks."
+      },
+      {
+        category: "Large-Scale Networks",
+        question: "The spatial awareness network is right hemisphere-dominant. What clinical evidence supports this?",
+        options: [
+          "Right hemisphere lesions cause blindness",
+          "Right hemisphere lesions cause contralateral (left-sided) spatial neglect far more often and more severely than left hemisphere lesions",
+          "The right hemisphere contains more neurons than the left",
+          "Spatial awareness requires the corpus callosum, which is closer to the right hemisphere"
+        ],
+        correct: 1,
+        feedback: "Unilateral damage to components of the spatial awareness network (posterior parietal cortex, frontal eye fields, cingulate) in the right hemisphere produces contralateral spatial neglect\u2014the patient ignores the left side of space. Left hemisphere lesions rarely produce comparable neglect of the right side, demonstrating right hemisphere dominance for spatial attention."
+      },
+      // --- Clinical / Lesions ---
+      {
+        category: "Clinical Applications",
+        question: "A patient has a bilateral lesion of the hippocampal-entorhinal complex. Which pattern would you predict?",
+        options: [
+          "Inability to perceive visual objects",
+          "Loss of working memory but intact long-term memory",
+          "Severe anterograde amnesia with relatively preserved remote memories and intact implicit learning",
+          "Complete loss of all memories, both recent and remote"
+        ],
+        correct: 2,
+        feedback: "The hippocampal-entorhinal complex is the transmodal gateway for explicit (declarative) memory. Damage prevents consolidation of new explicit memories (anterograde amnesia). Remote memories that have already been consolidated through extensive neocortical associations are relatively spared. Implicit learning continues because it relies on unimodal association areas."
+      },
+      {
+        category: "Clinical Applications",
+        question: "A patient with prosopagnosia cannot recognise familiar faces visually, but CAN recognise them by voice. This is best explained by:",
+        options: [
+          "Total destruction of all transmodal face-binding areas",
+          "A unimodal visual disconnection: the fusiform face area is cut off from transmodal gateways, but auditory pathways to those gateways are intact",
+          "Damage to the primary auditory cortex",
+          "The patient is simply not trying hard enough"
+        ],
+        correct: 1,
+        feedback: "Prosopagnosia results from disconnection between the unimodal visual face-encoding area ('f') and the transmodal gateway ('T') that binds visual identity to multimodal knowledge. The transmodal directory entry for the person still exists\u2014it can be reached through the intact auditory pathway (hearing the voice). This elegantly demonstrates the modality-specific nature of unimodal lesions vs. the multimodal nature of transmodal lesions."
+      },
+      {
+        category: "Clinical Applications",
+        question: "Pure alexia (word blindness) results from lesions to V1 and the splenium of the corpus callosum. Why can the patient still write but not read?",
+        options: [
+          "Reading and writing use completely different brain networks",
+          "Writing depends on motor cortex, which is unaffected. Reading requires visual word-forms to reach Wernicke's area, but both visual pathways to the language network are severed",
+          "The patient has forgotten the alphabet",
+          "Splenial lesions only affect motor function"
+        ],
+        correct: 1,
+        feedback: "Left V1 damage causes a right visual field deficit. The splenial lesion disconnects the intact right hemisphere visual areas from the left hemisphere word-form areas and Wernicke's area. Visual input can no longer reach the language network through any route. Writing is preserved because it relies on motor output pathways and internal language representations, not on visual input."
+      },
+      // --- Top-Down Modulation ---
+      {
+        category: "Top-Down Modulation",
+        question: "What does 'selectively distributed processing' mean?",
+        options: [
+          "Each cognitive function is localized to exactly one brain region",
+          "All brain areas contribute equally to all cognitive tasks",
+          "Multiple interconnected areas contribute to a function, but each node has a relative specialization for a specific component",
+          "Processing occurs in parallel across all cortical layers simultaneously"
+        ],
+        correct: 2,
+        feedback: "Selectively distributed processing is Mesulam's key organizational principle, sitting between strict localization (phrenology) and strict equipotentiality (Lashley). Each cortical node within a network has a relative specialization\u2014not absolute\u2014for a specific behavioural component. Individual nodes can even dynamically shift from one network to another depending on the task goal."
+      },
+      {
+        category: "Top-Down Modulation",
+        question: "Working memory enriches consciousness by:",
+        options: [
+          "Increasing the speed of neural transmission",
+          "Temporally expanding brief neural responses so that multiple items can be held on-line simultaneously, enabling their conjunction",
+          "Suppressing all sensory input to allow internal processing",
+          "Permanently storing new information in the prefrontal cortex"
+        ],
+        correct: 1,
+        feedback: "Working memory prolongs the neural response to brief events through delay activity in prefrontal neurons. This temporal expansion transforms sequential processing into a conjunctive pattern where multiple items can be held on-line simultaneously, enabling their integration with past memories and future goals. Mesulam compares it to a juggler holding multiple balls in the air."
+      },
+      {
+        category: "Top-Down Modulation",
+        question: "Top-down emotional and attentional modulation is WEAKEST at which synaptic level?",
+        options: [
+          "Downstream unimodal association cortex",
+          "Heteromodal cortex",
+          "Primary sensory cortex (Level 1)",
+          "Paralimbic cortex"
+        ],
+        correct: 2,
+        feedback: "Early sensory processing (especially at the first two synaptic levels) is relatively protected from value-based top-down modulations. Transmodal cortices send very few monosynaptic projections to primary sensory areas. The modulatory influence of emotion, motivation, and attention becomes increasingly more pronounced at downstream unimodal and heteromodal levels, where it helps create a subjectively sculpted version of the world."
+      }
+    ];
+
+    // ===== QUIZ ENGINE =====
+    const QUIZ_SIZE = 5;
+    let currentQuiz = [];
+    let quizAnswered = 0;
+    let quizCorrect = 0;
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function generateQuiz() {
+      quizAnswered = 0;
+      quizCorrect = 0;
+      document.getElementById('quizScore').textContent = '';
+
+      // Pick QUIZ_SIZE random questions from pool
+      const shuffled = shuffle(questionPool);
+      currentQuiz = shuffled.slice(0, QUIZ_SIZE);
+
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+
+      currentQuiz.forEach((q, idx) => {
+        const num = idx + 1;
+        // Shuffle options (keeping track of correct index)
+        const optionIndices = q.options.map((_, i) => i);
+        const shuffledIndices = shuffle(optionIndices);
+        const newCorrect = shuffledIndices.indexOf(q.correct);
+
+        const div = document.createElement('div');
+        div.className = 'quiz-question';
+        div.id = 'q' + num;
+
+        let html = `<h4><span style="color:#5a7d9e;font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px;">${q.category}</span>${num}. ${q.question}</h4>`;
+
+        shuffledIndices.forEach((origIdx, btnIdx) => {
+          html += `<button class="quiz-option" data-correct="${btnIdx === newCorrect}" onclick="checkPoolAnswer(${num}, this)">${q.options[origIdx]}</button>`;
+        });
+
+        html += `<div class="quiz-feedback" id="fb${num}">${q.feedback}</div>`;
+        div.innerHTML = html;
+        container.appendChild(div);
+      });
+    }
+
+    function checkPoolAnswer(qNum, btn) {
+      const qDiv = document.getElementById('q' + qNum);
+      if (qDiv.dataset.answered) return;
+      qDiv.dataset.answered = 'true';
+      quizAnswered++;
+
+      const isCorrect = btn.dataset.correct === 'true';
+      btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+      if (isCorrect) {
+        quizCorrect++;
+      } else {
+        // Highlight the correct answer
+        qDiv.querySelectorAll('.quiz-option').forEach(o => {
+          if (o.dataset.correct === 'true') o.classList.add('correct');
+        });
+      }
+
+      const fb = document.getElementById('fb' + qNum);
+      if (!isCorrect) {
+        fb.innerHTML = '<strong style="color: #e74c3c;">Not quite.</strong> ' + fb.textContent;
+      }
+      fb.classList.add('visible');
+
+      // Update score
+      if (quizAnswered === QUIZ_SIZE) {
+        const pct = Math.round((quizCorrect / QUIZ_SIZE) * 100);
+        const scoreEl = document.getElementById('quizScore');
+        if (pct === 100) {
+          scoreEl.innerHTML = `<strong style="color: #2ecc71;">Perfect! ${quizCorrect}/${QUIZ_SIZE} (${pct}%)</strong> \u2014 You have a strong grasp of Mesulam's framework.`;
+        } else if (pct >= 60) {
+          scoreEl.innerHTML = `<strong style="color: #f39c12;">${quizCorrect}/${QUIZ_SIZE} (${pct}%)</strong> \u2014 Good work! Review the explanations above for the ones you missed.`;
+        } else {
+          scoreEl.innerHTML = `<strong style="color: #e74c3c;">${quizCorrect}/${QUIZ_SIZE} (${pct}%)</strong> \u2014 Consider re-reading the sections on the concepts you missed, then try again.`;
+        }
+      }
+    }
+
+    // Initialize modulation demo and quiz
+    updateModulation();
+    generateQuiz();
+  </script>
 </body>
 </html>
