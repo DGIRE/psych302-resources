@@ -205,6 +205,22 @@
       .header-card h1 { font-size: 1.25rem; }
       .quick-links { flex-direction: column; }
     }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .header-card { padding: 24px 14px 20px; }
+      .header-card h1 { font-size: 1.1rem; }
+      .header-card p { font-size: 0.8rem; }
+      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
+      .section-card { padding: 16px 12px; }
+      .demo-area { padding: 48px 16px; }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
+      .quick-links { flex-direction: row; }
+      .demo-area { padding: 48px 20px; }
+    }
   </style>
 </head>
 <body>

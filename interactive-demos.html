@@ -180,6 +180,23 @@
       .hero h1 { font-size: 1.4rem; }
       .teaser-grid { grid-template-columns: 1fr; }
     }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.2rem; }
+      .hero p { font-size: 0.82rem; }
+      .teaser-card { padding: 20px 16px; }
+      .teaser-card h3 { font-size: 0.85rem; }
+    }
+    /* ── Tablets ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .teaser-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .hero { padding: 28px 20px 20px; margin-bottom: 28px; }
+      .teaser-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>

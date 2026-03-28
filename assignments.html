@@ -64,6 +64,23 @@
     footer a:hover { color: var(--alpenglow-warm); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 600px) { .hero h1 { font-size: 1.4rem; } .assignment-item { flex-wrap: wrap; } .summary-grid { grid-template-columns: 1fr; } .section { padding: 18px 16px; } }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.2rem; }
+      .summary-card { padding: 16px 12px; }
+      .summary-card h3 { font-size: 0.82rem; }
+      .assignment-item { padding: 12px 10px; }
+    }
+    /* ── Tablets ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .hero { padding: 20px 16px 16px; margin-bottom: 16px; }
+      .summary-grid { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>

@@ -226,6 +226,28 @@
       .cal-event { font-size: 0.55rem; padding: 2px 4px; }
       .hero h1 { font-size: 1.4rem; }
     }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .cal-nav { gap: 8px; }
+      .cal-nav .month-label { font-size: 0.92rem; min-width: 120px; }
+      .cal-nav button { padding: 6px 10px; font-size: 0.75rem; }
+      .cal-cell { min-height: 56px; padding: 4px 2px; }
+      .cal-cell .day-num { font-size: 0.62rem; }
+      .event-chip { font-size: 0.48rem; padding: 1px 3px; }
+      .hero h1 { font-size: 1.2rem; }
+    }
+    /* ── Tablets ── */
+    @media (min-width: 701px) and (max-width: 1024px) {
+      .cal-cell { min-height: 90px; }
+      .event-chip { font-size: 0.58rem; }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .hero { padding: 20px 16px 16px; margin-bottom: 16px; }
+      .cal-cell { min-height: 56px; }
+      .event-chip { font-size: 0.5rem; }
+    }
   </style>
 </head>
 <body>

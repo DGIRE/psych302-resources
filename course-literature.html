@@ -361,6 +361,25 @@
       .lecture-level { margin-left: 30px; margin-top: 4px; }
       .lecture-body { padding: 14px 14px; }
     }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.2rem; }
+      .lecture-body { padding: 10px 10px; }
+      .lecture-btn-row { flex-direction: column; }
+      .lecture-btn-row .lecture-btn,
+      .lecture-btn-row .content-btn { width: 100%; text-align: center; }
+      .reading-name { font-size: 0.78rem; }
+    }
+    /* ── Tablets ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .container { max-width: 90%; }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .hero { padding: 28px 20px 20px; margin-bottom: 28px; }
+      .lecture-card { margin-bottom: 14px; }
+    }
   </style>
 </head>
 <body>

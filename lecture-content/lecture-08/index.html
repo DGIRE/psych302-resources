@@ -248,6 +248,26 @@
       .header-card h1 { font-size: 1.25rem; }
       .quick-links { flex-direction: column; }
     }
+  
+    /* ── Extra-small phones ── */
+    @media (max-width: 380px) {
+      .header-card { padding: 20px 12px 16px; }
+      .header-card h1 { font-size: 1.1rem; }
+      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
+      .section-card { padding: 16px 12px; }
+      .media-title { font-size: 0.82rem; }
+      .placeholder-section { padding: 36px 16px; }
+    }
+    /* ── Tablets ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .container { max-width: 90%; }
+    }
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .header-card { padding: 20px 18px 16px; margin-bottom: 16px; }
+      .quick-links { flex-direction: row; }
+      .placeholder-section { padding: 36px 20px; }
+    }
   </style>
 </head>
 <body>

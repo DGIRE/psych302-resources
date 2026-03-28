@@ -435,10 +435,87 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── Tablets ── */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      .container { max-width: 90%; }
+      .network-grid { grid-template-columns: repeat(2, 1fr); }
+      .binding-demo { max-width: 90%; }
+    }
+
+    /* ── Phones (≤600px) ── */
     @media (max-width: 600px) {
+      body { padding: 12px; }
+      .hero { padding: 28px 18px 24px; margin-bottom: 32px; }
       .hero h1 { font-size: 1.4rem; }
+      .hero .subtitle { font-size: 0.88rem; }
       .section { padding: 20px 16px; }
+      .section h2 { font-size: 1.15rem; }
+      .section-nav { gap: 6px; }
+      .section-nav a { font-size: 0.68rem; padding: 5px 10px; }
       .network-grid { grid-template-columns: 1fr; }
+      .hierarchy-diagram { max-width: 100%; }
+      .ring-label { font-size: 0.6rem; }
+      .zone-info-panel { padding: 14px; }
+      .zone-info-panel h3 { font-size: 0.9rem; }
+      .zone-info-panel p { font-size: 0.82rem; }
+      .connectivity-svg { max-width: 100%; }
+      .binding-demo { padding: 16px; max-width: 100%; }
+      .binding-node { width: 64px; height: 64px; font-size: 0.7rem; }
+      .lesion-controls { gap: 6px; }
+      .lesion-btn { padding: 6px 12px; font-size: 0.76rem; }
+      .lesion-result { padding: 14px; }
+      .lesion-result h4 { font-size: 0.86rem; }
+      .lesion-result p { font-size: 0.8rem; }
+      .slider-row { flex-wrap: wrap; gap: 8px; }
+      .slider-row label { min-width: 100%; font-size: 0.78rem; }
+      .slider-row input[type="range"] { flex: 1; min-width: 0; }
+      .modulation-viz { height: 140px; padding: 0 8px; }
+      .mod-bar-label { font-size: 0.56rem; }
+      .quiz-question { padding: 14px; }
+      .quiz-question h4 { font-size: 0.86rem; }
+      .quiz-option { padding: 10px 12px; font-size: 0.8rem; }
+      .canvas-link-btn { font-size: 0.72rem; padding: 5px 10px; }
+      .network-card { padding: 16px; }
+      .network-card h3 { font-size: 0.88rem; }
+      .network-card p { font-size: 0.78rem; }
+    }
+
+    /* ── Extra-small phones (≤380px) ── */
+    @media (max-width: 380px) {
+      body { padding: 8px; }
+      .hero h1 { font-size: 1.2rem; }
+      .hero .subtitle { font-size: 0.8rem; }
+      .hero .meta { font-size: 0.72rem; }
+      .section { padding: 14px 12px; }
+      .section h2 { font-size: 1.05rem; }
+      .section-nav a { font-size: 0.62rem; padding: 4px 8px; }
+      .ring-label { font-size: 0.52rem; }
+      .binding-node { width: 52px; height: 52px; font-size: 0.6rem; }
+      .modulation-viz { height: 110px; }
+      .quiz-option { padding: 8px 10px; font-size: 0.76rem; }
+    }
+
+    /* ── Phone landscape ── */
+    @media (max-width: 812px) and (orientation: landscape) {
+      .hero { padding: 20px 18px 16px; margin-bottom: 24px; }
+      .hero h1 { font-size: 1.4rem; }
+      .section { padding: 18px 16px; }
+      .network-grid { grid-template-columns: repeat(2, 1fr); }
+      .hierarchy-diagram { max-width: 50%; }
+      .connectivity-svg { max-width: 70%; }
+      .binding-demo { max-width: 70%; }
+      .modulation-viz { height: 120px; }
+      .slider-row label { min-width: auto; }
+    }
+
+    /* ── Touch improvements ── */
+    @media (hover: none) and (pointer: coarse) {
+      .ring { border-width: 2.5px; }
+      .quiz-option { padding: 12px 14px; min-height: 44px; }
+      .lesion-btn { padding: 10px 16px; min-height: 44px; }
+      .section-nav a { padding: 8px 14px; min-height: 44px; display: inline-flex; align-items: center; }
+      .binding-node { min-width: 44px; min-height: 44px; }
+      .canvas-link-btn { padding: 8px 14px; min-height: 44px; }
     }
   </style>
 </head>
