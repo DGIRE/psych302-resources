@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Control Dashboard &mdash; PSYCH 302 Interactive Demo</title>
+  <title>Cognitive Control: MD &amp; CCN Networks &mdash; PSYCH 302 Interactive Demo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,18 +34,14 @@
       background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
-    .container {
-      position: relative; z-index: 1;
-      max-width: 700px; width: 100%; margin: 0 auto; padding: 20px;
-    }
-    
+
     /* ── Breadcrumb nav ── */
     .breadcrumb {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       font-size: 0.78rem;
       animation: fadeIn 0.3s ease-out;
     }
@@ -66,7 +62,6 @@
       font-weight: 600;
     }
 
-    
     /* ── Global Search ── */
     .search-fab {
       position: fixed;
@@ -104,10 +99,7 @@
       animation: fadeIn 0.2s ease-out;
     }
     .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
+    .search-box { max-width: 560px; margin: 0 auto; }
     .search-input {
       width: 100%;
       padding: 14px 20px;
@@ -143,71 +135,26 @@
       color: var(--text-primary);
     }
     .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-muted);
+      background: rgba(255,255,255,0.05); padding: 2px 8px;
+      border-radius: 4px; white-space: nowrap;
     }
     .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
     .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.5rem; cursor: pointer; padding: 8px;
       transition: color 0.2s;
     }
     .search-close:hover { color: var(--alpenglow); }
     .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
+      text-align: center; color: var(--text-muted);
+      font-size: 0.78rem; margin-top: 16px;
     }
 
-    .stub-hero {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .stub-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-    .stub-hero h1 {
-      font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .stub-hero .overline {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
-      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
-    }
-    .stub-hero p {
-      font-size: 0.88rem; color: var(--text-secondary); max-width: 480px;
-      margin: 12px auto 0; line-height: 1.6;
-    }
-    .coming-badge {
-      display: inline-block; margin-top: 20px;
-      padding: 6px 16px; border-radius: 100px;
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase;
-      background: rgba(240,200,160,0.08);
-      border: 1px solid rgba(240,200,160,0.2);
-      color: var(--peak-gold);
-    }
     .back-links {
-      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
     }
     .back-links a {
       display: inline-flex; align-items: center; gap: 6px;
@@ -225,59 +172,858 @@
     }
     footer a { color: var(--alpenglow); text-decoration: none; }
     footer a:hover { color: var(--alpenglow-warm); }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --twilight-deep: #0c1525;
+      --twilight-mid: #1a2744;
+      --twilight-blue: #2a3f6b;
+      --mist-purple: #4a3a6b;
+      --alpenglow: #d4727a;
+      --alpenglow-warm: #e8917a;
+      --peak-gold: #f0c8a0;
+      --snow-pink: #f2d4d0;
+      --sky-coral: #c85a6a;
+      --text-primary: #f0e8e5;
+      --text-secondary: #b8a8b8;
+      --text-muted: #7a6a82;
+      --card-bg: rgba(26,39,68,0.55);
+      --card-border: rgba(255,255,255,0.08);
+      --glow-pink: rgba(212,114,122,0.25);
+      --glow-gold: rgba(240,200,160,0.2);
     }
-    @media (max-width: 600px) {
-      .stub-hero { padding: 48px 20px; }
-      .stub-hero h1 { font-size: 1.15rem; }
-      .back-links { flex-direction: column; align-items: center; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--twilight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.65;
     }
+    .page-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+    }
+    .container {
+      position: relative; z-index: 1;
+      max-width: 960px; width: 100%; margin: 0 auto; padding: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .hero-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--alpenglow);
+      background: rgba(212,114,122,0.1);
+      border: 1px solid rgba(212,114,122,0.2);
+      border-radius: 20px;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--peak-gold) 50%, var(--alpenglow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── Section Nav (tabs) ── */
+    .section-nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px 0 40px;
+      padding: 6px;
+      background: rgba(26,39,68,0.5);
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+    }
+    .section-nav button {
+      flex: 1 1 auto;
+      min-width: 140px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .section-nav button:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+    .section-nav button.active {
+      color: var(--text-primary);
+      background: rgba(212,114,122,0.15);
+      box-shadow: 0 0 16px rgba(212,114,122,0.1);
+    }
+
+    /* ── Panels ── */
+    .panel { display: none; animation: fadeIn 0.4s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--peak-gold);
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      color: var(--alpenglow-warm);
+    }
+    .card p, .card li {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* ── Brain SVG viewer ── */
+    .brain-viewer {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 20px auto;
+    }
+    .brain-viewer svg { width: 100%; height: auto; }
+    .brain-region {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .brain-region:hover, .brain-region.active {
+      filter: drop-shadow(0 0 10px rgba(212,114,122,0.6));
+    }
+    .brain-region.active { opacity: 1 !important; }
+    .region-label {
+      font-size: 10px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 600;
+      text-anchor: middle;
+    }
+
+    /* ── Info panel beside brain ── */
+    .brain-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 700px) {
+      .brain-layout { grid-template-columns: 1fr; }
+    }
+    .region-info {
+      background: rgba(26,39,68,0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 240px;
+      transition: all 0.3s;
+    }
+    .region-info h3 {
+      font-size: 1.1rem;
+      color: var(--peak-gold);
+      margin-bottom: 10px;
+    }
+    .region-info .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .tag-md { background: rgba(212,114,122,0.2); color: var(--alpenglow); border: 1px solid rgba(212,114,122,0.3); }
+    .tag-ccn { background: rgba(140,180,255,0.15); color: #8cb4ff; border: 1px solid rgba(140,180,255,0.25); }
+    .tag-both { background: rgba(240,200,160,0.15); color: var(--peak-gold); border: 1px solid rgba(240,200,160,0.25); }
+
+    /* ── Connectivity Matrix ── */
+    .matrix-container {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .conn-matrix {
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      margin: 0 auto;
+    }
+    .conn-matrix th, .conn-matrix td {
+      padding: 6px 8px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.06);
+      min-width: 52px;
+    }
+    .conn-matrix th {
+      background: rgba(26,39,68,0.8);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+    .conn-matrix td {
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .conn-matrix .diag { background: rgba(255,255,255,0.03); color: var(--text-muted); }
+
+    /* ── Adaptive Coding Sim ── */
+    .sim-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .sim-controls label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .sim-controls input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 200px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+    .sim-controls input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--alpenglow);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(212,114,122,0.4);
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 200px;
+      padding: 10px 0;
+      margin: 10px 0;
+    }
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar {
+      width: 100%;
+      max-width: 56px;
+      border-radius: 6px 6px 0 0;
+      transition: height 0.5s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+      position: relative;
+    }
+    .bar-val {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .bar-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .legend-swatch {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+    }
+
+    /* ── Stroop Demo ── */
+    .stroop-area {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(12,21,37,0.6);
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      margin: 16px 0;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .stroop-word {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 16px 0;
+      transition: color 0.1s;
+      user-select: none;
+    }
+    .stroop-instruction {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .stroop-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .stroop-btn {
+      padding: 10px 22px;
+      border: 2px solid;
+      border-radius: 10px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stroop-btn:hover { transform: scale(1.05); }
+    .stroop-btn:active { transform: scale(0.97); }
+    .stroop-btn.btn-red { color: #ff4444; border-color: #ff4444; }
+    .stroop-btn.btn-red:hover { background: rgba(255,68,68,0.15); }
+    .stroop-btn.btn-blue { color: #4488ff; border-color: #4488ff; }
+    .stroop-btn.btn-blue:hover { background: rgba(68,136,255,0.15); }
+    .stroop-btn.btn-green { color: #44cc66; border-color: #44cc66; }
+    .stroop-btn.btn-green:hover { background: rgba(68,204,102,0.15); }
+    .stroop-btn.btn-yellow { color: #ddaa22; border-color: #ddaa22; }
+    .stroop-btn.btn-yellow:hover { background: rgba(221,170,34,0.15); }
+    .stroop-results {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .stroop-results .stat {
+      display: inline-block;
+      background: rgba(26,39,68,0.7);
+      padding: 6px 14px;
+      border-radius: 8px;
+      margin: 4px;
+      border: 1px solid var(--card-border);
+    }
+    .stroop-results .stat strong {
+      color: var(--peak-gold);
+    }
+    .start-btn {
+      padding: 12px 32px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--alpenglow), var(--sky-coral));
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 20px rgba(212,114,122,0.3);
+    }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(212,114,122,0.45); }
+
+    /* ── Network viz (CCN connectivity) ── */
+    .network-svg { width: 100%; max-width: 500px; margin: 16px auto; display: block; }
+    .net-node {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .net-node:hover { filter: brightness(1.3); }
+    .net-edge { transition: stroke-opacity 0.3s, stroke-width 0.3s; }
+
+    /* ── Tooltip ── */
+    .tooltip {
+      position: fixed;
+      background: rgba(26,39,68,0.95);
+      border: 1px solid rgba(212,114,122,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      pointer-events: none;
+      z-index: 100;
+      max-width: 260px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .tooltip.visible { opacity: 1; }
+    .tooltip strong { color: var(--peak-gold); display: block; margin-bottom: 4px; }
+
+    /* ── Practice chart ── */
+    .practice-chart {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .practice-block {
+      text-align: center;
+      flex: 1;
+      min-width: 140px;
+    }
+    .practice-block h4 {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Key Findings ── */
+    .finding {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .finding:last-child { border-bottom: none; }
+    .finding-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      background: rgba(212,114,122,0.1);
+      border: 1px solid rgba(212,114,122,0.2);
+    }
+    .finding p { font-size: 0.88rem; color: var(--text-secondary); }
+    .finding p strong { color: var(--text-primary); }
+
+    /* ── References ── */
+    .references {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .references h3 { color: var(--text-secondary); margin-bottom: 10px; font-size: 0.85rem; }
+    .references p { margin-bottom: 6px; line-height: 1.6; }
+
+    /* ── Misc ── */
+    .highlight { color: var(--peak-gold); font-weight: 600; }
+    .fade-text { color: var(--text-muted); font-size: 0.82rem; font-style: italic; }
+    .difficulty-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .diff-low { background: rgba(68,204,102,0.15); color: #44cc66; }
+    .diff-high { background: rgba(255,68,68,0.15); color: #ff6666; }
+    .canvas-wrap {
+      background: rgba(12,21,37,0.5);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      margin: 12px 0;
+    }
+    canvas { display: block; margin: 0 auto; }
+  
   </style>
 </head>
 <body>
-  <div class="page-bg"></div>
-  <div class="container">
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Cognitive Control Dashboard</span></nav>
+<div class="page-bg"></div>
+<div class="tooltip" id="tooltip"></div>
 
-    <div class="stub-hero">
-      <div class="stub-icon">&#x1F3AF;</div>
-      <div class="overline">Lecture 9 &mdash; Interactive Demo</div>
-      <h1>Cognitive Control Dashboard</h1>
-      <p>Test your Stroop interference, task-switching costs, and inhibitory control. Visualize prefrontal-basal ganglia loops and the role of dopamine in flexible behavior.</p>
-      <span class="coming-badge">Coming Soon</span>
-    </div>
+<div class="container" style="max-width: 960px;">
 
-    <div class="back-links">
-      <a href="../../../lectures/lecture-09.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 9 Literature
-      </a>
-      <a href="../../lecture-09/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        Lecture 9 Content
-      </a>
-    </div>
+  <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Cognitive Control: MD &amp; CCN Networks</span></nav>
 
-    <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
-    </footer>
+  <div class="back-links">
+    <a href="../../../lectures/lecture-09.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Lecture 9 Literature
+    </a>
+    <a href="../../lecture-09/index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Lecture 9 Content
+    </a>
   </div>
-  
-  <!-- Global Search -->
-  <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <div class="search-overlay" id="searchOverlay">
-    <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
-    <div class="search-box">
-      <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
-    </div>
-    <div class="search-results" id="searchResults"></div>
-    <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
+
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-label">Lecture 9 &middot; Interactive Explorer</div>
+    <h1>Multiple Demand &amp; Cognitive Control Networks</h1>
+    <p>Explore how frontoparietal systems flexibly adapt to support diverse cognitive demands, enhance task-relevant signals, and enable intelligent behavior.</p>
   </div>
-  <script>
+
+  <!-- Section Nav -->
+  <div class="section-nav" id="sectionNav">
+    <button class="active" data-panel="md">MD Network</button>
+    <button data-panel="ccn">CCN Connectivity</button>
+    <button data-panel="adaptive">Signal Enhancement</button>
+    <button data-panel="stroop">Try It: Stroop Task</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- PANEL 1: Multiple Demand Network               -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-md">
+    <div class="card">
+      <h2>The Multiple Demand (MD) System</h2>
+      <p>Identified by John Duncan, the MD system is a set of brain regions that activate together across many different kinds of cognitive tasks &mdash; from working memory and attention to problem-solving and novel reasoning. These regions act as a flexible neural workspace that can be rapidly reconfigured for whatever task is currently at hand.</p>
+    </div>
+
+    <div class="card">
+      <h2>Interactive Brain Map</h2>
+      <p class="fade-text">Click any region to learn about its role in the MD system.</p>
+
+      <div class="brain-layout">
+        <div class="brain-viewer">
+          <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Brain outline (lateral view) -->
+            <defs>
+              <radialGradient id="brainGrad" cx="50%" cy="45%" r="50%">
+                <stop offset="0%" stop-color="rgba(42,63,107,0.4)"/>
+                <stop offset="100%" stop-color="rgba(26,39,68,0.2)"/>
+              </radialGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- Brain silhouette -->
+            <path d="M80,180 C60,140 55,100 80,65 C100,38 140,22 185,20 C230,18 280,25 310,50 C340,75 355,110 350,150 C346,180 330,210 300,235 C270,258 230,270 200,272 C170,274 140,268 115,250 C95,236 85,210 80,180 Z"
+              fill="url(#brainGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+            <!-- Central sulcus hint -->
+            <path d="M215,30 C210,80 205,130 210,180" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
+            <!-- Lateral sulcus hint -->
+            <path d="M120,165 C160,155 200,160 240,170" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none"/>
+
+            <!-- MD Regions (clickable) -->
+            <!-- IFS (Inferior Frontal Sulcus) -->
+            <ellipse class="brain-region" data-region="ifs"
+              cx="130" cy="110" rx="28" ry="20"
+              fill="rgba(212,114,122,0.5)" stroke="rgba(212,114,122,0.8)" stroke-width="1.5" opacity="0.7"/>
+            <text class="region-label" x="130" y="114">IFS</text>
+
+            <!-- AI/FO (Anterior Insula / Frontal Operculum) -->
+            <ellipse class="brain-region" data-region="aifo"
+              cx="145" cy="170" rx="24" ry="16"
+              fill="rgba(232,145,122,0.5)" stroke="rgba(232,145,122,0.8)" stroke-width="1.5" opacity="0.7"/>
+            <text class="region-label" x="145" y="174">AI/FO</text>
+
+            <!-- pre-SMA / ACC -->
+            <ellipse class="brain-region" data-region="acc"
+              cx="190" cy="68" rx="26" ry="18"
+              fill="rgba(200,90,106,0.5)" stroke="rgba(200,90,106,0.8)" stroke-width="1.5" opacity="0.7"/>
+            <text class="region-label" x="190" y="72">ACC</text>
+
+            <!-- IPS (Intraparietal Sulcus) -->
+            <ellipse class="brain-region" data-region="ips"
+              cx="280" cy="100" rx="30" ry="18"
+              fill="rgba(140,180,255,0.45)" stroke="rgba(140,180,255,0.7)" stroke-width="1.5" opacity="0.7"/>
+            <text class="region-label" x="280" y="104">IPS</text>
+
+            <!-- RPFC (Rostral Prefrontal Cortex) -->
+            <ellipse class="brain-region" data-region="rpfc"
+              cx="95" cy="145" rx="22" ry="16"
+              fill="rgba(240,200,160,0.45)" stroke="rgba(240,200,160,0.7)" stroke-width="1.5" opacity="0.7"/>
+            <text class="region-label" x="95" y="149">RPFC</text>
+
+            <!-- Visual cortex (for contrast) -->
+            <ellipse class="brain-region" data-region="visual"
+              cx="335" cy="180" rx="22" ry="24"
+              fill="rgba(100,120,160,0.3)" stroke="rgba(100,120,160,0.5)" stroke-width="1" opacity="0.5"/>
+            <text class="region-label" x="335" y="184" style="fill:var(--text-muted);font-size:9px">V1</text>
+
+            <!-- Connection lines (semi-transparent) -->
+            <line x1="130" y1="110" x2="190" y2="68" stroke="rgba(212,114,122,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="130" y1="110" x2="280" y2="100" stroke="rgba(212,114,122,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="190" y1="68" x2="280" y2="100" stroke="rgba(212,114,122,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="130" y1="110" x2="145" y2="170" stroke="rgba(212,114,122,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="95" y1="145" x2="130" y2="110" stroke="rgba(240,200,160,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="95" y1="145" x2="145" y2="170" stroke="rgba(240,200,160,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="190" y1="68" x2="145" y2="170" stroke="rgba(212,114,122,0.12)" stroke-width="1" stroke-dasharray="4,3"/>
+          </svg>
+        </div>
+
+        <div class="region-info" id="regionInfo">
+          <h3 id="regionTitle">Select a Region</h3>
+          <div id="regionTag"></div>
+          <p id="regionDesc">Click on any highlighted brain region in the map to learn about its specific role in the Multiple Demand system. Each region contributes uniquely to cognitive flexibility and task control.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Key Principles of the MD System</h2>
+
+      <div class="finding">
+        <div class="finding-icon">1</div>
+        <div>
+          <p><strong>Diverse demand sensitivity.</strong> MD regions activate across an extraordinary range of tasks: spatial and verbal working memory, selective attention, task-switching, response conflict, mathematical reasoning, and novel problem-solving. This co-activation defines them as a unified system.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-icon">2</div>
+        <div>
+          <p><strong>Mental programs &amp; sequential control.</strong> Complex behavior is assembled from sequences of focused cognitive operations &mdash; "mental programs." MD regions support the construction, maintenance, and rapid switching between these sub-task stages, with each epoch focused on a specific operation.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-icon">3</div>
+        <div>
+          <p><strong>Adaptive coding.</strong> Neurons in MD cortex flexibly tune their responses to whatever information is currently task-relevant. The same neurons can encode stimulus color in one context, shape in another, and spatial location in a third &mdash; an efficient use of limited neural resources.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-icon">4</div>
+        <div>
+          <p><strong>Fluid intelligence link.</strong> Activity in the MD network during complex reasoning tasks correlates with scores on fluid intelligence (g-factor) measures such as Raven's Progressive Matrices. This suggests the MD system is the neural substrate of general-purpose problem solving ability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- PANEL 2: Cognitive Control Network              -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="panel" id="panel-ccn">
+    <div class="card">
+      <h2>The Cognitive Control Network (CCN)</h2>
+      <p>Cole &amp; Schneider (2007) demonstrated that six cortical regions form a tightly coupled functional network during both rest and task performance. These regions show significantly higher within-network connectivity (R = 0.74) than connectivity with the rest of cortex (R = 0.49), confirming their status as a distinct network rather than merely co-activated areas.</p>
+    </div>
+
+    <div class="card">
+      <h2>Network Connectivity Visualization</h2>
+      <p class="fade-text">Hover over nodes to highlight connections. Line thickness reflects correlation strength.</p>
+
+      <svg class="network-svg" viewBox="0 0 440 380" id="ccnNetwork">
+        <!-- Edges drawn first (behind nodes) -->
+        <g id="ccnEdges"></g>
+        <!-- Nodes -->
+        <g id="ccnNodes"></g>
+      </svg>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(140,180,255,0.8)"></div> CCN regions</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(100,120,160,0.5)"></div> Non-CCN regions</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(140,180,255,0.4);width:24px;height:3px;border-radius:2px"></div> Connection strength</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Functional Connectivity Matrix</h2>
+      <p>Within-CCN correlations (bold) are consistently higher than connections to regions outside the network, demonstrating tight functional coupling. Data from resting-state fMRI (Cole &amp; Schneider, 2007).</p>
+
+      <div class="matrix-container">
+        <table class="conn-matrix" id="connMatrix"></table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dissociable Functions Within the CCN</h2>
+
+      <div class="finding">
+        <div class="finding-icon" style="background:rgba(140,180,255,0.1);border-color:rgba(140,180,255,0.2)">D</div>
+        <div>
+          <p><strong>DLPFC &mdash; Working memory maintenance.</strong> Shows sustained activity during delay periods when information must be held in mind. Involved in active maintenance and manipulation of task-relevant representations in working memory.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-icon" style="background:rgba(140,180,255,0.1);border-color:rgba(140,180,255,0.2)">A</div>
+        <div>
+          <p><strong>ACC/pSMA &mdash; Response preparation &amp; conflict monitoring.</strong> Active during response set preparation and late in delay periods. Monitors for processing conflicts and signals the need for increased cognitive control when task demands spike.</p>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-icon" style="background:rgba(140,180,255,0.1);border-color:rgba(140,180,255,0.2)">N</div>
+        <div>
+          <p><strong>Whole-network probe processing.</strong> All six CCN regions activate during demanding probe events (targets, foils, distractors), consistent with distributed involvement in stimulus evaluation, response selection, and performance monitoring across the entire network.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- PANEL 3: Adaptive Coding / Signal Enhancement   -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="panel" id="panel-adaptive">
+    <div class="card">
+      <h2>Adaptive Coding in the MD System</h2>
+      <p>Woolgar et al. (2011) used multivoxel pattern analysis (MVPA) to measure how strongly brain regions encode task-relevant features. Their key finding: when perceptual demands increase, MD regions <em>increase</em> their coding of task-relevant information, while early visual cortex shows the <em>opposite</em> pattern. This demonstrates that MD regions actively enhance signals needed for the current task.</p>
+    </div>
+
+    <div class="card">
+      <h2>Signal Enhancement Simulator</h2>
+      <p>Adjust task difficulty to see how coding strength changes across brain regions. The MD system adaptively boosts its representation of stimulus position when the perceptual discrimination becomes harder.</p>
+
+      <div class="sim-controls">
+        <label for="diffSlider">Perceptual Difficulty:</label>
+        <input type="range" id="diffSlider" min="0" max="100" value="25">
+        <span id="diffLabel" class="difficulty-badge diff-low">Low</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="adaptiveChart" width="860" height="340"></canvas>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(140,180,255,0.8)"></div> Low perceptual difficulty</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--alpenglow)"></div> High perceptual difficulty</div>
+      </div>
+
+      <p style="margin-top:12px;font-size:0.85rem;color:var(--text-secondary);">Notice how MD regions (IFS, AI/FO, IPS, ACC/pre-SMA) show <em>increased</em> position coding accuracy under high difficulty, while visual cortex shows <em>decreased</em> coding. The MD system compensates for degraded sensory signals by sharpening its own representations.</p>
+    </div>
+
+    <div class="card">
+      <h2>Effect of Practice</h2>
+      <p>After one week of practice, the MVPA results reveal a selective rebalancing of coding within the MD system.</p>
+
+      <div class="canvas-wrap">
+        <canvas id="practiceChart" width="860" height="300"></canvas>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(140,180,255,0.8)"></div> Session 1 (novel)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--peak-gold)"></div> Session 2 (practiced)</div>
+      </div>
+
+      <div class="finding" style="margin-top:16px">
+        <div class="finding-icon">P</div>
+        <div>
+          <p><strong>Rule coding diminishes with practice</strong> while position and response coding remain stable. As stimulus-response mappings become familiar, the MD system no longer needs to strongly represent the abstract rule &mdash; it has been internalized. This selective reduction reflects efficient resource reallocation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- PANEL 4: Stroop Task Demo                       -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="panel" id="panel-stroop">
+    <div class="card">
+      <h2>Experience Cognitive Control: The Stroop Task</h2>
+      <p>The Stroop task demonstrates the kind of processing conflict that engages the MD/CCN systems. You must name the <strong>ink color</strong> of each word, ignoring the word itself. On incongruent trials (where the word and ink color differ), your ACC detects the conflict and your DLPFC works to maintain the correct task rule &mdash; the same cognitive control mechanisms studied in the papers above.</p>
+    </div>
+
+    <div class="card">
+      <div id="stroopGame">
+        <div class="stroop-area" id="stroopArea">
+          <p class="stroop-instruction">Name the <strong>ink color</strong> of the word, not the word itself.</p>
+          <button class="start-btn" id="stroopStart" onclick="startStroop()">Start Task</button>
+        </div>
+
+        <div class="stroop-results" id="stroopResults" style="display:none">
+          <div style="text-align:center;margin-bottom:12px">
+            <span class="stat">Trials: <strong id="trialCount">0</strong></span>
+            <span class="stat">Correct: <strong id="correctCount">0</strong></span>
+            <span class="stat">Accuracy: <strong id="accuracy">0%</strong></span>
+          </div>
+          <div style="text-align:center">
+            <span class="stat">Congruent RT: <strong id="congRT">&mdash;</strong></span>
+            <span class="stat">Incongruent RT: <strong id="incongRT">&mdash;</strong></span>
+            <span class="stat">Stroop Effect: <strong id="stroopEffect">&mdash;</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="stroopExplain" style="display:none">
+      <h2>What Your Results Show</h2>
+      <div id="stroopInterpretation"></div>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="references">
+    <h3>Key References</h3>
+    <p>Duncan, J. (2010). The multiple-demand (MD) system of the primate brain: mental programs for intelligent behaviour. <em>Trends in Cognitive Sciences</em>, 14(4), 172&ndash;179.</p>
+    <p>Cole, M.W. &amp; Schneider, W. (2007). The cognitive control network: Integrated cortical regions with dissociable functions. <em>NeuroImage</em>, 37, 343&ndash;360.</p>
+    <p>Woolgar, A., Thompson, R., Bor, D., &amp; Duncan, J. (2011). Multi-voxel coding of stimuli, rules, and responses in human frontoparietal cortex. <em>NeuroImage</em>, 56, 744&ndash;752.</p>
+  </div>
+
+
+
+  <footer>
+    PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+  </footer>
+
+</div>
+
+<!-- Global Search -->
+<button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+</button>
+<div class="search-overlay" id="searchOverlay">
+  <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
+  <div class="search-box">
+    <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
+</div>
+<script>
   (function() {
     var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
     var base = "../../../";
@@ -302,6 +1048,599 @@
     });
   })();
   </script>
+<script>
+
+// ═══════════════════════════════════════════
+// Section Navigation
+// ═══════════════════════════════════════════
+document.querySelectorAll('.section-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+  });
+});
+
+// ═══════════════════════════════════════════
+// MD Brain Map Region Data
+// ═══════════════════════════════════════════
+const regionData = {
+  ifs: {
+    name: 'Inferior Frontal Sulcus (IFS)',
+    tag: 'md', tagLabel: 'MD Region',
+    desc: 'Located in the lateral prefrontal cortex, the IFS is central to the MD system. Single-neuron recordings show it flexibly encodes whatever task feature is currently relevant — color, shape, location, or abstract rules. It plays a key role in constructing and maintaining the "mental program" for the current task step, and shows strong phasic activity when new task instructions are received.'
+  },
+  aifo: {
+    name: 'Anterior Insula / Frontal Operculum (AI/FO)',
+    tag: 'md', tagLabel: 'MD Region',
+    desc: 'The AI/FO sits at the junction of the insula and frontal operculum. It is associated with tonic maintenance of task sets, success/reward monitoring, and signaling completion of cognitive operations. Its autonomic connections suggest a role in linking cognitive control to arousal and motivational states. Duncan proposes it serves as a "success signal" in sequential mental programs.'
+  },
+  acc: {
+    name: 'pre-SMA / Anterior Cingulate Cortex (ACC)',
+    tag: 'both', tagLabel: 'MD + CCN',
+    desc: 'The ACC/pre-SMA complex serves dual roles. It detects processing conflicts (when competing responses are simultaneously active) and signals the need for increased top-down control. It also shows phasic responses to new task instructions and tonic activity reflecting current task complexity. In the CCN, it is involved in response set preparation late in delay periods.'
+  },
+  ips: {
+    name: 'Intraparietal Sulcus (IPS)',
+    tag: 'md', tagLabel: 'MD Region',
+    desc: 'The IPS in the posterior parietal cortex contributes to spatial attention, numerical processing, and multi-feature integration. Woolgar et al. (2011) showed that IPS adaptively increases its coding of stimulus position under high perceptual difficulty — the same enhancement effect seen in frontal MD regions. This region is particularly important for spatial aspects of task control.'
+  },
+  rpfc: {
+    name: 'Rostral Prefrontal Cortex (RPFC)',
+    tag: 'md', tagLabel: 'MD Region',
+    desc: 'The RPFC (approximately area 46/10) is linked to tonic maintenance of task sets and the interface between active and latent task components. It may be particularly involved in managing the hierarchical structure of mental programs — keeping future sub-goals in mind while the current operation executes. It shows sustained activity reflecting preparation for upcoming task demands.'
+  },
+  visual: {
+    name: 'Primary Visual Cortex (V1)',
+    tag: 'md', tagLabel: 'Sensory Cortex (Contrast)',
+    desc: 'V1 is shown here for contrast. Unlike MD regions, visual cortex shows DECREASED coding of position information when perceptual difficulty increases (Woolgar et al., 2011). When stimuli are harder to discriminate, V1 represents them more weakly — but the MD system compensates by strengthening its own representations. This dissociation is the core evidence for adaptive signal enhancement.'
+  }
+};
+
+document.querySelectorAll('.brain-region').forEach(el => {
+  el.addEventListener('click', () => {
+    const id = el.dataset.region;
+    const d = regionData[id];
+    if (!d) return;
+    document.querySelectorAll('.brain-region').forEach(r => r.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('regionTitle').textContent = d.name;
+    const tagMap = { md: 'tag-md', ccn: 'tag-ccn', both: 'tag-both' };
+    document.getElementById('regionTag').innerHTML = `<span class="tag ${tagMap[d.tag]}">${d.tagLabel}</span>`;
+    document.getElementById('regionDesc').textContent = d.desc;
+  });
+});
+
+// ═══════════════════════════════════════════
+// CCN Network Visualization
+// ═══════════════════════════════════════════
+const ccnRegions = [
+  { id: 'DLPFC', x: 100, y: 80, ccn: true },
+  { id: 'ACC/pSMA', x: 220, y: 40, ccn: true },
+  { id: 'dPMC', x: 160, y: 150, ccn: true },
+  { id: 'IFJ', x: 280, y: 130, ccn: true },
+  { id: 'AIC', x: 340, y: 60, ccn: true },
+  { id: 'PPC', x: 360, y: 190, ccn: true },
+  // Non-CCN
+  { id: 'V1', x: 80, y: 270, ccn: false },
+  { id: 'S1', x: 180, y: 280, ccn: false },
+  { id: 'M1', x: 300, y: 280, ccn: false },
+  { id: "Broca's", x: 80, y: 190, ccn: false },
+  { id: 'Hipp.', x: 390, y: 290, ccn: false },
+  { id: 'rACC', x: 220, y: 220, ccn: false }
+];
+
+// Connectivity data from Cole & Schneider Table 4
+const ccnConn = {
+  'DLPFC-ACC/pSMA': 0.72, 'DLPFC-dPMC': 0.76, 'DLPFC-IFJ': 0.63,
+  'DLPFC-AIC': 0.69, 'DLPFC-PPC': 0.61,
+  'ACC/pSMA-dPMC': 0.81, 'ACC/pSMA-IFJ': 0.75, 'ACC/pSMA-AIC': 0.79, 'ACC/pSMA-PPC': 0.70,
+  'dPMC-IFJ': 0.79, 'dPMC-AIC': 0.71, 'dPMC-PPC': 0.80,
+  'IFJ-AIC': 0.80, 'IFJ-PPC': 0.80,
+  'AIC-PPC': 0.68,
+  // some non-CCN connections (lower)
+  'DLPFC-V1': 0.41, 'DLPFC-S1': 0.31, 'DLPFC-M1': 0.43,
+  'ACC/pSMA-V1': 0.52, 'ACC/pSMA-S1': 0.46,
+  'PPC-M1': 0.61, 'PPC-S1': 0.51,
+  'IFJ-Hipp.': 0.46, 'AIC-rACC': 0.46
+};
+
+function drawCCNNetwork() {
+  const edgesG = document.getElementById('ccnEdges');
+  const nodesG = document.getElementById('ccnNodes');
+  edgesG.innerHTML = '';
+  nodesG.innerHTML = '';
+
+  // Draw edges
+  Object.entries(ccnConn).forEach(([key, val]) => {
+    const [a, b] = key.split('-');
+    const na = ccnRegions.find(r => r.id === a);
+    const nb = ccnRegions.find(r => r.id === b);
+    if (!na || !nb) return;
+    const bothCCN = na.ccn && nb.ccn;
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', na.x); line.setAttribute('y1', na.y);
+    line.setAttribute('x2', nb.x); line.setAttribute('y2', nb.y);
+    line.setAttribute('stroke', bothCCN ? 'rgba(140,180,255,0.35)' : 'rgba(100,120,160,0.15)');
+    line.setAttribute('stroke-width', Math.max(1, (val - 0.3) * 6));
+    line.classList.add('net-edge');
+    line.dataset.nodes = key;
+    edgesG.appendChild(line);
+  });
+
+  // Draw nodes
+  ccnRegions.forEach(r => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.classList.add('net-node');
+    g.dataset.id = r.id;
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', r.x); circle.setAttribute('cy', r.y);
+    circle.setAttribute('r', r.ccn ? 22 : 14);
+    circle.setAttribute('fill', r.ccn ? 'rgba(140,180,255,0.25)' : 'rgba(100,120,160,0.15)');
+    circle.setAttribute('stroke', r.ccn ? 'rgba(140,180,255,0.7)' : 'rgba(100,120,160,0.4)');
+    circle.setAttribute('stroke-width', r.ccn ? 2 : 1);
+    g.appendChild(circle);
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', r.x); text.setAttribute('y', r.y + 4);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('font-size', r.ccn ? '10' : '8');
+    text.setAttribute('fill', r.ccn ? '#c8d8ff' : '#8090a8');
+    text.setAttribute('font-weight', '600');
+    text.setAttribute('font-family', 'Inter, sans-serif');
+    text.setAttribute('pointer-events', 'none');
+    text.textContent = r.id;
+    g.appendChild(text);
+
+    // Hover interaction
+    g.addEventListener('mouseenter', () => highlightNode(r.id));
+    g.addEventListener('mouseleave', () => resetNetwork());
+    nodesG.appendChild(g);
+  });
+}
+
+function highlightNode(id) {
+  document.querySelectorAll('.net-edge').forEach(e => {
+    const nodes = e.dataset.nodes;
+    if (nodes.includes(id)) {
+      e.setAttribute('stroke-opacity', '1');
+      e.setAttribute('stroke', nodes.split('-').every(n => ccnRegions.find(r => r.id === n)?.ccn)
+        ? 'rgba(140,180,255,0.7)' : 'rgba(100,120,160,0.4)');
+    } else {
+      e.setAttribute('stroke-opacity', '0.05');
+    }
+  });
+  document.querySelectorAll('.net-node').forEach(n => {
+    if (n.dataset.id !== id) {
+      n.style.opacity = '0.3';
+    }
+  });
+}
+
+function resetNetwork() {
+  document.querySelectorAll('.net-edge').forEach(e => {
+    e.removeAttribute('stroke-opacity');
+    const [a, b] = e.dataset.nodes.split('-');
+    const na = ccnRegions.find(r => r.id === a);
+    const nb = ccnRegions.find(r => r.id === b);
+    e.setAttribute('stroke', (na?.ccn && nb?.ccn) ? 'rgba(140,180,255,0.35)' : 'rgba(100,120,160,0.15)');
+  });
+  document.querySelectorAll('.net-node').forEach(n => n.style.opacity = '1');
+}
+
+drawCCNNetwork();
+
+// ═══════════════════════════════════════════
+// Connectivity Matrix
+// ═══════════════════════════════════════════
+function buildMatrix() {
+  const ccnNames = ['DLPFC', 'ACC/pSMA', 'dPMC', 'IFJ', 'AIC', 'PPC'];
+  const allNames = [...ccnNames, 'S1', 'V1', "Broca's", 'Hipp.', 'M1', 'rACC'];
+  const data = {
+    'DLPFC': { 'ACC/pSMA': 0.72, 'dPMC': 0.76, 'IFJ': 0.63, 'AIC': 0.69, 'PPC': 0.61, 'S1': 0.31, 'V1': 0.41, "Broca's": 0.44, 'Hipp.': 0.35, 'M1': 0.43, 'rACC': 0.27 },
+    'ACC/pSMA': { 'dPMC': 0.81, 'IFJ': 0.75, 'AIC': 0.79, 'PPC': 0.70, 'S1': 0.46, 'V1': 0.52, "Broca's": 0.64, 'Hipp.': 0.44, 'M1': 0.61, 'rACC': 0.37 },
+    'dPMC': { 'IFJ': 0.79, 'AIC': 0.71, 'PPC': 0.80, 'S1': 0.51, 'V1': 0.50, "Broca's": 0.56, 'Hipp.': 0.52, 'M1': 0.62, 'rACC': 0.30 },
+    'IFJ': { 'AIC': 0.80, 'PPC': 0.80, 'S1': 0.46, 'V1': 0.47, "Broca's": 0.65, 'Hipp.': 0.52, 'M1': 0.70, 'rACC': 0.46 },
+    'AIC': { 'PPC': 0.68, 'S1': 0.41, 'V1': 0.44, "Broca's": 0.68, 'Hipp.': 0.45, 'M1': 0.63, 'rACC': 0.46 },
+    'PPC': { 'S1': 0.39, 'V1': 0.51, "Broca's": 0.51, 'Hipp.': 0.38, 'M1': 0.61, 'rACC': 0.20 }
+  };
+
+  const table = document.getElementById('connMatrix');
+  // Header
+  let html = '<tr><th></th>';
+  ccnNames.forEach(n => html += `<th>${n}</th>`);
+  html += '</tr>';
+
+  allNames.forEach(row => {
+    html += `<tr><th>${row}</th>`;
+    ccnNames.forEach(col => {
+      if (row === col) {
+        html += '<td class="diag">&mdash;</td>';
+      } else {
+        const val = data[row]?.[col] || data[col]?.[row] || null;
+        if (val) {
+          const isCCN = ccnNames.includes(row) && ccnNames.includes(col);
+          const intensity = Math.round((val - 0.2) * 180);
+          const bg = isCCN
+            ? `rgba(140,180,255,${(val - 0.3) * 0.4})`
+            : `rgba(100,120,160,${(val - 0.3) * 0.2})`;
+          html += `<td style="background:${bg};${isCCN ? 'font-weight:700' : ''}">${val.toFixed(2)}</td>`;
+        } else {
+          html += '<td class="diag"></td>';
+        }
+      }
+    });
+    html += '</tr>';
+  });
+  table.innerHTML = html;
+}
+buildMatrix();
+
+// ═══════════════════════════════════════════
+// Adaptive Coding Chart (Canvas)
+// ═══════════════════════════════════════════
+const adaptiveCanvas = document.getElementById('adaptiveChart');
+const actx = adaptiveCanvas.getContext('2d');
+
+// Base data (classification accuracy % from Woolgar et al. 2011, Fig 4A - position coding)
+const regions = ['IFS', 'AI/FO', 'IPS', 'ACC/\npre-SMA', 'Avg MD', 'Visual\nCortex'];
+const lowDiff =  [58, 56, 54, 55, 56, 60];   // Low perceptual difficulty
+const highDiff = [65, 64, 63, 66, 64, 50];   // High perceptual difficulty
+const chance = 50;
+
+function drawAdaptiveChart(difficulty) {
+  const w = adaptiveCanvas.width;
+  const h = adaptiveCanvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  adaptiveCanvas.style.width = w/2 + 'px';
+  adaptiveCanvas.style.height = h/2 + 'px';
+
+  actx.clearRect(0, 0, w, h);
+
+  const left = 80, right = 40, top = 30, bottom = 55;
+  const chartW = w - left - right;
+  const chartH = h - top - bottom;
+  const barW = chartW / regions.length;
+  const t = difficulty / 100; // 0 to 1
+
+  // Y axis: 40% to 75%
+  const yMin = 40, yMax = 75;
+  const yScale = chartH / (yMax - yMin);
+
+  // Grid
+  actx.strokeStyle = 'rgba(255,255,255,0.06)';
+  actx.lineWidth = 1;
+  for (let v = 40; v <= 75; v += 5) {
+    const y = top + chartH - (v - yMin) * yScale;
+    actx.beginPath(); actx.moveTo(left, y); actx.lineTo(w - right, y); actx.stroke();
+    actx.fillStyle = 'rgba(255,255,255,0.3)';
+    actx.font = '18px Inter';
+    actx.textAlign = 'right';
+    actx.fillText(v + '%', left - 8, y + 5);
+  }
+
+  // Chance line
+  const chanceY = top + chartH - (chance - yMin) * yScale;
+  actx.strokeStyle = 'rgba(255,255,255,0.15)';
+  actx.setLineDash([6, 4]);
+  actx.beginPath(); actx.moveTo(left, chanceY); actx.lineTo(w - right, chanceY); actx.stroke();
+  actx.setLineDash([]);
+  actx.fillStyle = 'rgba(255,255,255,0.25)';
+  actx.font = '16px Inter';
+  actx.textAlign = 'left';
+  actx.fillText('chance', w - right + 4, chanceY + 5);
+
+  // Y axis label
+  actx.save();
+  actx.translate(18, top + chartH / 2);
+  actx.rotate(-Math.PI / 2);
+  actx.fillStyle = 'rgba(255,255,255,0.4)';
+  actx.font = '18px Inter';
+  actx.textAlign = 'center';
+  actx.fillText('Classification Accuracy (%)', 0, 0);
+  actx.restore();
+
+  // Bars
+  regions.forEach((name, i) => {
+    const x = left + i * barW;
+    const lowVal = lowDiff[i];
+    const highVal = highDiff[i];
+    const currentVal = lowVal + (highVal - lowVal) * t;
+
+    // Low difficulty bar (static reference)
+    const lowH = (lowVal - yMin) * yScale;
+    const lowY = top + chartH - lowH;
+    actx.fillStyle = 'rgba(140,180,255,0.35)';
+    actx.beginPath();
+    roundRect(actx, x + barW * 0.12, lowY, barW * 0.34, lowH, 6);
+    actx.fill();
+
+    // Current difficulty bar
+    const curH = (currentVal - yMin) * yScale;
+    const curY = top + chartH - curH;
+    const isVisual = i === regions.length - 1;
+    actx.fillStyle = isVisual
+      ? `rgba(${160 + 60*t},${120 - 40*t},${100 - 30*t},0.7)`
+      : `rgba(212,${114 - 40*t},${122 - 20*t},0.7)`;
+    actx.beginPath();
+    roundRect(actx, x + barW * 0.54, curY, barW * 0.34, curH, 6);
+    actx.fill();
+
+    // Value labels
+    actx.fillStyle = 'rgba(255,255,255,0.7)';
+    actx.font = 'bold 17px Inter';
+    actx.textAlign = 'center';
+    actx.fillText(currentVal.toFixed(0) + '%', x + barW * 0.71, curY - 6);
+
+    // Region labels
+    actx.fillStyle = 'rgba(255,255,255,0.45)';
+    actx.font = '17px Inter';
+    const lines = name.split('\n');
+    lines.forEach((line, li) => {
+      actx.fillText(line, x + barW * 0.5, top + chartH + 20 + li * 16);
+    });
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+const diffSlider = document.getElementById('diffSlider');
+const diffLabel = document.getElementById('diffLabel');
+diffSlider.addEventListener('input', () => {
+  const v = parseInt(diffSlider.value);
+  drawAdaptiveChart(v);
+  if (v < 40) {
+    diffLabel.textContent = 'Low';
+    diffLabel.className = 'difficulty-badge diff-low';
+  } else if (v < 70) {
+    diffLabel.textContent = 'Medium';
+    diffLabel.className = 'difficulty-badge';
+    diffLabel.style.background = 'rgba(221,170,34,0.15)';
+    diffLabel.style.color = '#ddaa22';
+  } else {
+    diffLabel.textContent = 'High';
+    diffLabel.className = 'difficulty-badge diff-high';
+  }
+});
+drawAdaptiveChart(25);
+
+// ═══════════════════════════════════════════
+// Practice Effect Chart
+// ═══════════════════════════════════════════
+const practiceCanvas = document.getElementById('practiceChart');
+const pctx = practiceCanvas.getContext('2d');
+
+function drawPracticeChart() {
+  const w = practiceCanvas.width;
+  const h = practiceCanvas.height;
+  practiceCanvas.style.width = w/2 + 'px';
+  practiceCanvas.style.height = h/2 + 'px';
+  pctx.clearRect(0, 0, w, h);
+
+  const left = 80, right = 40, top = 30, bottom = 50;
+  const chartH = h - top - bottom;
+  const chartW = w - left - right;
+
+  const labels = ['IFS', 'AI/FO', 'IPS', 'ACC/pre-SMA', 'Avg MD'];
+  const session1 = [67, 66, 64, 68, 66]; // Rule coding session 1
+  const session2 = [58, 57, 60, 56, 58]; // Rule coding session 2
+  const barW = chartW / labels.length;
+  const yMin = 40, yMax = 80;
+  const yScale = chartH / (yMax - yMin);
+
+  // Grid
+  pctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  pctx.lineWidth = 1;
+  for (let v = 40; v <= 80; v += 5) {
+    const y = top + chartH - (v - yMin) * yScale;
+    pctx.beginPath(); pctx.moveTo(left, y); pctx.lineTo(w - right, y); pctx.stroke();
+    pctx.fillStyle = 'rgba(255,255,255,0.3)';
+    pctx.font = '18px Inter';
+    pctx.textAlign = 'right';
+    pctx.fillText(v + '%', left - 8, y + 5);
+  }
+
+  // Chance
+  const chanceY = top + chartH - (50 - yMin) * yScale;
+  pctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  pctx.setLineDash([6, 4]);
+  pctx.beginPath(); pctx.moveTo(left, chanceY); pctx.lineTo(w - right, chanceY); pctx.stroke();
+  pctx.setLineDash([]);
+
+  // Y label
+  pctx.save();
+  pctx.translate(18, top + chartH / 2);
+  pctx.rotate(-Math.PI / 2);
+  pctx.fillStyle = 'rgba(255,255,255,0.4)';
+  pctx.font = '18px Inter';
+  pctx.textAlign = 'center';
+  pctx.fillText('Rule Classification Accuracy (%)', 0, 0);
+  pctx.restore();
+
+  labels.forEach((name, i) => {
+    const x = left + i * barW;
+
+    // Session 1
+    const s1H = (session1[i] - yMin) * yScale;
+    const s1Y = top + chartH - s1H;
+    pctx.fillStyle = 'rgba(140,180,255,0.45)';
+    pctx.beginPath();
+    roundRect(pctx, x + barW * 0.12, s1Y, barW * 0.34, s1H, 6);
+    pctx.fill();
+
+    // Session 2
+    const s2H = (session2[i] - yMin) * yScale;
+    const s2Y = top + chartH - s2H;
+    pctx.fillStyle = 'rgba(240,200,160,0.55)';
+    pctx.beginPath();
+    roundRect(pctx, x + barW * 0.54, s2Y, barW * 0.34, s2H, 6);
+    pctx.fill();
+
+    // Decrease arrow
+    pctx.fillStyle = 'rgba(255,100,100,0.7)';
+    pctx.font = 'bold 18px Inter';
+    pctx.textAlign = 'center';
+    const diff = session1[i] - session2[i];
+    pctx.fillText('↓' + diff + '%', x + barW * 0.71, s2Y - 6);
+
+    // Labels
+    pctx.fillStyle = 'rgba(255,255,255,0.45)';
+    pctx.font = '17px Inter';
+    pctx.fillText(name, x + barW * 0.5, top + chartH + 22);
+  });
+}
+drawPracticeChart();
+
+// ═══════════════════════════════════════════
+// Stroop Task
+// ═══════════════════════════════════════════
+const colors = [
+  { name: 'RED', hex: '#ff4444', btn: 'btn-red' },
+  { name: 'BLUE', hex: '#4488ff', btn: 'btn-blue' },
+  { name: 'GREEN', hex: '#44cc66', btn: 'btn-green' },
+  { name: 'YELLOW', hex: '#ddaa22', btn: 'btn-yellow' }
+];
+
+let stroopState = {
+  running: false,
+  trials: [],
+  currentTrial: null,
+  trialStart: 0,
+  totalTrials: 20,
+  trialNum: 0
+};
+
+function startStroop() {
+  stroopState = { running: true, trials: [], currentTrial: null, trialStart: 0, totalTrials: 20, trialNum: 0 };
+  document.getElementById('stroopResults').style.display = 'block';
+  document.getElementById('stroopExplain').style.display = 'none';
+  updateStroopStats();
+  nextStroopTrial();
+}
+
+function nextStroopTrial() {
+  if (stroopState.trialNum >= stroopState.totalTrials) {
+    endStroop();
+    return;
+  }
+  stroopState.trialNum++;
+  const isCongruent = Math.random() < 0.5;
+  const wordIdx = Math.floor(Math.random() * colors.length);
+  let inkIdx = wordIdx;
+  if (!isCongruent) {
+    while (inkIdx === wordIdx) inkIdx = Math.floor(Math.random() * colors.length);
+  }
+
+  stroopState.currentTrial = {
+    word: colors[wordIdx].name,
+    inkColor: colors[inkIdx],
+    correctAnswer: colors[inkIdx].name,
+    congruent: isCongruent
+  };
+
+  const area = document.getElementById('stroopArea');
+  area.innerHTML = `
+    <p class="stroop-instruction">Trial ${stroopState.trialNum} of ${stroopState.totalTrials} &mdash; Name the <strong>INK COLOR</strong></p>
+    <div class="stroop-word" style="color:${stroopState.currentTrial.inkColor.hex}">${stroopState.currentTrial.word}</div>
+    <div class="stroop-buttons">
+      ${colors.map(c => `<button class="stroop-btn ${c.btn}" onclick="stroopRespond('${c.name}')">${c.name}</button>`).join('')}
+    </div>
+  `;
+  stroopState.trialStart = performance.now();
+}
+
+function stroopRespond(answer) {
+  if (!stroopState.running || !stroopState.currentTrial) return;
+  const rt = performance.now() - stroopState.trialStart;
+  const correct = answer === stroopState.currentTrial.correctAnswer;
+
+  stroopState.trials.push({
+    congruent: stroopState.currentTrial.congruent,
+    correct,
+    rt
+  });
+
+  // Brief feedback
+  const area = document.getElementById('stroopArea');
+  const word = area.querySelector('.stroop-word');
+  if (word) {
+    word.style.textShadow = correct ? '0 0 20px rgba(68,204,102,0.6)' : '0 0 20px rgba(255,68,68,0.6)';
+  }
+
+  updateStroopStats();
+  setTimeout(nextStroopTrial, correct ? 300 : 600);
+}
+
+function updateStroopStats() {
+  const t = stroopState.trials;
+  document.getElementById('trialCount').textContent = t.length;
+  const correct = t.filter(x => x.correct).length;
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('accuracy').textContent = t.length ? Math.round(correct / t.length * 100) + '%' : '0%';
+
+  const congCorrect = t.filter(x => x.congruent && x.correct);
+  const incongCorrect = t.filter(x => !x.congruent && x.correct);
+  const congMean = congCorrect.length ? Math.round(congCorrect.reduce((s, x) => s + x.rt, 0) / congCorrect.length) : null;
+  const incongMean = incongCorrect.length ? Math.round(incongCorrect.reduce((s, x) => s + x.rt, 0) / incongCorrect.length) : null;
+
+  document.getElementById('congRT').textContent = congMean ? congMean + ' ms' : '—';
+  document.getElementById('incongRT').textContent = incongMean ? incongMean + ' ms' : '—';
+  document.getElementById('stroopEffect').textContent = (congMean && incongMean) ? (incongMean - congMean) + ' ms' : '—';
+}
+
+function endStroop() {
+  stroopState.running = false;
+  const area = document.getElementById('stroopArea');
+  area.innerHTML = `
+    <p class="stroop-instruction">Task Complete!</p>
+    <button class="start-btn" onclick="startStroop()">Try Again</button>
+  `;
+
+  // Show interpretation
+  const t = stroopState.trials;
+  const congCorrect = t.filter(x => x.congruent && x.correct);
+  const incongCorrect = t.filter(x => !x.congruent && x.correct);
+  const congMean = congCorrect.length ? Math.round(congCorrect.reduce((s, x) => s + x.rt, 0) / congCorrect.length) : 0;
+  const incongMean = incongCorrect.length ? Math.round(incongCorrect.reduce((s, x) => s + x.rt, 0) / incongCorrect.length) : 0;
+  const effect = incongMean - congMean;
+  const congAcc = t.filter(x => x.congruent).length ? Math.round(t.filter(x => x.congruent && x.correct).length / t.filter(x => x.congruent).length * 100) : 0;
+  const incongAcc = t.filter(x => !x.congruent).length ? Math.round(t.filter(x => !x.congruent && x.correct).length / t.filter(x => !x.congruent).length * 100) : 0;
+
+  const explainDiv = document.getElementById('stroopExplain');
+  explainDiv.style.display = 'block';
+
+  let interpretation = `<div class="finding"><div class="finding-icon" style="background:rgba(68,204,102,0.1);border-color:rgba(68,204,102,0.2)">RT</div><div><p><strong>Your Stroop effect: ${effect} ms.</strong> `;
+
+  if (effect > 30) {
+    interpretation += `You showed a clear Stroop effect &mdash; incongruent trials took substantially longer than congruent ones. This reflects the processing conflict detected by your ACC when the word meaning and ink color disagree: your reading system automatically activates the word's meaning, which competes with the correct ink-color response. Your DLPFC and the broader MD system had to work harder to maintain the task rule and suppress the irrelevant word information.</p></div></div>`;
+  } else if (effect > 0) {
+    interpretation += `You showed a modest Stroop effect. Even with this relatively small interference, your cognitive control systems (ACC for conflict detection, DLPFC for rule maintenance) were engaged on every incongruent trial to override the automatic word-reading response.</p></div></div>`;
+  } else {
+    interpretation += `Interestingly, you showed little or no Stroop effect in reaction time. This can happen with practice or if you adopted a strategy to avoid reading the word. Even so, the MD system was likely engaged to implement this strategic suppression of word reading.</p></div></div>`;
+  }
+
+  if (incongAcc < congAcc - 5) {
+    interpretation += `<div class="finding"><div class="finding-icon">!</div><div><p><strong>Accuracy difference.</strong> You were ${congAcc}% accurate on congruent trials but only ${incongAcc}% on incongruent trials. Errors on incongruent trials occur when the automatic word-reading response "wins" the competition before cognitive control can fully engage &mdash; a brief failure of the MD system to suppress the irrelevant information.</p></div></div>`;
+  }
+
+  interpretation += `<div class="finding"><div class="finding-icon">🧠</div><div><p><strong>Neural connection.</strong> This task engages the same MD/CCN regions discussed in the papers: the ACC detects the conflict between word meaning and ink color, the DLPFC maintains the "name the ink color" rule, and the broader MD network adaptively enhances the task-relevant signal (ink color representation) while suppressing the irrelevant signal (word meaning). This is adaptive coding in action.</p></div></div>`;
+
+  document.getElementById('stroopInterpretation').innerHTML = interpretation;
+}
+
+
+</script>
 
 </body>
 </html>
