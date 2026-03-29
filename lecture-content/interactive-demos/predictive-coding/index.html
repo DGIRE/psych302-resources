@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Predictive Coding Simulator &mdash; Interactive Demo &mdash; PSYCH 302</title>
+  <title>Lecture 14: The Predictive Brain &mdash; Interactive Explorer &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,8 +21,13 @@
       --text-primary: #f0e8e5;
       --text-secondary: #b8a8b8;
       --text-muted: #7a6a82;
-      --accent: #8b2d2d;
-      --glow-rgb: 139,45,45;
+      --card-bg: rgba(26,39,68,0.55);
+      --card-border: rgba(255,255,255,0.08);
+      --glow-rgb: 208,96,80;
+      --ff-color: #6ab4e8;
+      --pp-color: #e8917a;
+      --error-color: #f0c8a0;
+      --precision-color: #c89af0;
     }
 
     html { scroll-behavior: smooth; }
@@ -33,417 +38,1325 @@
       color: var(--text-primary);
       min-height: 100vh;
       overflow-x: hidden;
+      line-height: 1.65;
     }
 
     .page-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--glow-rgb), 0.08) 0%, transparent 60%),
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(var(--glow-rgb), 0.06) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
 
     .container {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 20px;
+      position: relative; z-index: 1;
+      max-width: 960px; width: 100%; margin: 0 auto; padding: 20px;
     }
 
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--alpenglow); }
-
-    .header-card {
-      padding: 40px 28px 32px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      margin-bottom: 24px;
+    /* ── Hero ── */
+    .hero {
       text-align: center;
-      animation: fadeIn 0.6s ease-out;
+      padding: 48px 20px 36px;
     }
-    .header-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
-    .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .header-card .arc-tag {
+    .hero-label {
       display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
-    }
-    .header-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 540px;
-      margin: 0 auto;
-    }
-
-    .quick-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      text-decoration: none;
-      transition: all 0.25s;
-    }
-    .quick-link:hover {
-      border-color: var(--accent);
-      background: rgba(var(--glow-rgb), 0.08);
-      color: var(--accent);
-    }
-    .quick-link svg { width: 14px; height: 14px; }
-
-    .section-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--alpenglow);
+      background: rgba(212,114,122,0.1);
+      border: 1px solid rgba(212,114,122,0.2);
+      border-radius: 20px;
+      padding: 6px 16px;
       margin-bottom: 20px;
     }
-    .section-card h2 {
-      font-size: 0.85rem;
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--peak-gold) 50%, var(--alpenglow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 1.0rem;
+      color: var(--text-secondary);
+      max-width: 660px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .hero .source-ref {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Section Nav (tabs) ── */
+    .section-nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 24px 0 36px;
+      padding: 6px;
+      background: rgba(26,39,68,0.5);
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+    }
+    .section-nav button {
+      flex: 1 1 auto;
+      min-width: 120px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .section-nav button:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+    .section-nav button.active {
+      color: var(--text-primary);
+      background: rgba(212,114,122,0.15);
+      box-shadow: 0 0 16px rgba(212,114,122,0.1);
+    }
+
+    /* ── Panels ── */
+    .panel { display: none; animation: fadeIn 0.4s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--peak-gold);
+    }
+    .card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 16px 0 10px;
+      color: var(--text-primary);
+    }
+    .card p, .card li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Architecture Diagram ── */
+    .arch-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 20px 0;
+    }
+    @media (max-width: 700px) {
+      .arch-container { grid-template-columns: 1fr; }
+    }
+
+    .arch-panel {
+      background: rgba(0,0,0,0.25);
+      border: 2px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: all 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-panel.highlight-ff {
+      border-color: rgba(106,180,232,0.5);
+      box-shadow: 0 0 30px rgba(106,180,232,0.1);
+    }
+    .arch-panel.highlight-pp {
+      border-color: rgba(232,145,122,0.5);
+      box-shadow: 0 0 30px rgba(232,145,122,0.1);
+    }
+    .arch-panel h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .arch-panel .ff-label { color: var(--ff-color); }
+    .arch-panel .pp-label { color: var(--pp-color); }
+
+    /* SVG diagrams */
+    .arch-svg {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* ── Layer nodes in SVG ── */
+    .layer-node {
+      transition: all 0.4s;
+      cursor: pointer;
+    }
+    .layer-node:hover { filter: brightness(1.3); }
+
+    /* ── Interactive Controls ── */
+    .control-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .btn {
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      border-color: rgba(var(--glow-rgb), 0.4);
+      background: rgba(var(--glow-rgb), 0.1);
+      color: var(--text-primary);
+    }
+    .btn.active {
+      border-color: var(--alpenglow);
+      background: rgba(212,114,122,0.15);
+      color: var(--text-primary);
+      box-shadow: 0 0 20px rgba(212,114,122,0.15);
+    }
+    .btn-ff.active {
+      border-color: var(--ff-color);
+      background: rgba(106,180,232,0.15);
+      color: var(--ff-color);
+      box-shadow: 0 0 20px rgba(106,180,232,0.15);
+    }
+    .btn-pp.active {
+      border-color: var(--pp-color);
+      background: rgba(232,145,122,0.15);
+      color: var(--pp-color);
+      box-shadow: 0 0 20px rgba(232,145,122,0.15);
+    }
+
+    /* ── Info Callout ── */
+    .info-callout {
+      background: rgba(255,255,255,0.03);
+      border-left: 3px solid var(--alpenglow);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      transition: all 0.4s;
+    }
+    .info-callout strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ── Simulation Canvas ── */
+    .sim-wrapper {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .sim-wrapper canvas {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+    }
+    .sim-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 100px;
+    }
+    .stat-box .stat-label {
+      font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 14px;
+      margin-bottom: 4px;
     }
-    .concept-list {
-      list-style: none;
-    }
-    .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .concept-list li:last-child { border-bottom: none; }
-    .concept-list li::before {
-      content: '\2022';
-      color: var(--accent);
+    .stat-box .stat-value {
+      font-size: 1.2rem;
       font-weight: 700;
-      margin-right: 10px;
+      color: var(--peak-gold);
     }
 
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
-    }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .demo-area p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 40px 0 20px;
-    }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
-    }
-  
-    /* ── Extra-small phones ── */
-    @media (max-width: 380px) {
-      .header-card { padding: 24px 14px 20px; }
-      .header-card h1 { font-size: 1.1rem; }
-      .header-card p { font-size: 0.8rem; }
-      .quick-link { font-size: 0.72rem; padding: 6px 12px; }
-      .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
-    }
-    /* ── Phone landscape ── */
-    @media (max-width: 812px) and (orientation: landscape) {
-      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
-      .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
-    }
-  
-    /* ── Breadcrumb nav ── */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 32px;
-      font-size: 0.78rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      font-weight: 500;
-    }
-    .breadcrumb a:hover { color: var(--alpenglow); }
-    .breadcrumb .bc-sep {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
-    .breadcrumb .bc-current {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-
-    /* ── Global Search ── */
-    .search-fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(26,39,68,0.95);
-      backdrop-filter: blur(12px);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .search-fab:hover {
-      border-color: var(--alpenglow);
-      color: var(--alpenglow);
-      transform: scale(1.08);
-    }
-    .search-fab svg { width: 20px; height: 20px; }
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(12,21,37,0.92);
-      backdrop-filter: blur(16px);
-      padding: 60px 20px 20px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-    .search-input {
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-input:focus { border-color: var(--alpenglow); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-results {
-      max-width: 560px;
-      margin: 16px auto 0;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-    .search-result {
+    /* ── Slider ── */
+    .slider-group {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      text-decoration: none;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    .slider-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
       color: var(--text-secondary);
-      transition: all 0.2s;
+      min-width: 120px;
     }
-    .search-result:hover {
+    .slider-group input[type="range"] {
+      flex: 1;
+      min-width: 140px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--alpenglow);
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .slider-group .slider-val {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--peak-gold);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* ── Comparison Table ── */
+    .comp-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 16px 0;
+      font-size: 0.84rem;
+    }
+    .comp-table th {
       background: rgba(255,255,255,0.06);
+      padding: 10px 14px;
+      font-weight: 700;
+      text-align: left;
       color: var(--text-primary);
+      border-bottom: 2px solid rgba(255,255,255,0.1);
     }
-    .search-result .sr-type {
-      font-size: 0.6rem;
+    .comp-table th:first-child { border-radius: 8px 0 0 0; }
+    .comp-table th:last-child { border-radius: 0 8px 0 0; }
+    .comp-table td {
+      padding: 10px 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table .col-ff { color: var(--ff-color); font-weight: 500; }
+    .comp-table .col-pp { color: var(--pp-color); font-weight: 500; }
+
+    /* ── Precision Demo ── */
+    .precision-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    @media (max-width: 600px) {
+      .precision-demo { grid-template-columns: 1fr; }
+    }
+    .precision-box {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .precision-box canvas {
+      width: 100%;
+      max-width: 240px;
+      border-radius: 8px;
+      display: block;
+      margin: 8px auto;
+    }
+    .precision-box .box-label {
+      font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
-    .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-    }
-    .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
+      margin-bottom: 8px;
     }
 
+    /* ── Active Inference Flow ── */
+    .flow-diagram {
+      width: 100%;
+      max-width: 700px;
+      margin: 16px auto;
+      display: block;
+    }
+
+    /* ── Quiz ── */
+    .quiz-q {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .quiz-q p {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .quiz-q .q-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-q .q-opt {
+      font-family: inherit;
+      font-size: 0.84rem;
+      text-align: left;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .quiz-q .q-opt:hover {
+      border-color: rgba(var(--glow-rgb), 0.3);
+      background: rgba(var(--glow-rgb), 0.05);
+      color: var(--text-primary);
+    }
+    .quiz-q .q-opt.correct {
+      border-color: #4ade80;
+      background: rgba(74,222,128,0.1);
+      color: #4ade80;
+    }
+    .quiz-q .q-opt.incorrect {
+      border-color: var(--sky-coral);
+      background: rgba(200,90,106,0.1);
+      color: var(--sky-coral);
+    }
+    .quiz-q .q-opt:disabled { cursor: default; opacity: 0.7; }
+    .quiz-q .q-opt:disabled:hover { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text-secondary); }
+    .quiz-q .q-opt.correct:disabled { opacity: 1; border-color: #4ade80; background: rgba(74,222,128,0.1); color: #4ade80; }
+    .quiz-q .q-opt.incorrect:disabled { opacity: 1; border-color: var(--sky-coral); background: rgba(200,90,106,0.1); color: var(--sky-coral); }
+    .quiz-feedback {
+      margin-top: 10px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      display: none;
+    }
+    .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+    footer a { color: var(--alpenglow); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 500px) {
+      .section-nav { flex-direction: column; }
+      .section-nav button { min-width: unset; }
+      .hero h1 { font-size: 1.5rem; }
+      .arch-container { gap: 16px; }
+    }
   </style>
 </head>
 <body>
-
   <div class="page-bg"></div>
-
   <div class="container">
 
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Predictive Coding</span></nav>
-
-    <div class="header-card">
-      <div class="header-icon">&#x1F52E;</div>
-      <span class="arc-tag">Agency, Theories &amp; Prediction</span>
-      <h1>Predictive Coding Simulator</h1>
-      <p>Build intuition for prediction error and precision weighting. Watch how the brain generates top-down expectations, detects mismatches, and updates its internal model of the world in real time.</p>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-label">Lecture 14 &middot; Interactive Explorer</div>
+      <h1>The Predictive Brain</h1>
+      <p>Explore how the brain's predictive architecture fundamentally differs from classical feedforward models. Toggle between architectures, manipulate precision weighting, and watch prediction errors propagate through a cortical hierarchy.</p>
+      <div class="source-ref">Based on Clark (2013), "Whatever Next? Predictive Brains, Situated Agents, and the Future of Cognitive Science"</div>
     </div>
 
-    <div class="quick-links">
-      <a class="quick-link" href="../../lecture-14/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 14 Content
-      </a>
-      <a class="quick-link" href="../../../lectures/lecture-14.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 14 Literature
-      </a>
+    <!-- Tab Nav -->
+    <div class="section-nav" id="sectionNav">
+      <button class="active" data-panel="arch">Architecture</button>
+      <button data-panel="sim">Signal Flow</button>
+      <button data-panel="precision">Precision</button>
+      <button data-panel="active">Active Inference</button>
+      <button data-panel="quiz">Check Understanding</button>
     </div>
 
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-          <li>Prediction error and hierarchical inference</li>
-          <li>Precision weighting and attention</li>
-          <li>Active inference and the free-energy principle</li>
-          <li>Clinical applications: schizophrenia, autism</li>
-      </ul>
+    <!-- ══════════════════════════════════════════════ -->
+    <!--  PANEL 1: Architecture Comparison              -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="panel active" id="panel-arch">
+
+      <div class="card">
+        <h2>Two Visions of the Brain</h2>
+        <p>Classical cognitive science treated the brain as a largely feedforward feature-detection device: sensory signals travel "up" through increasingly abstract processing stages until a percept is formed. The predictive processing framework inverts this picture — the brain is primarily in the business of generating top-down predictions and only passing forward the residual <em>prediction errors</em> that those predictions fail to explain.</p>
+      </div>
+
+      <div class="control-row">
+        <button class="btn btn-ff active" id="btnShowFF" onclick="showArch('ff')">Feedforward Model</button>
+        <button class="btn btn-pp" id="btnShowPP" onclick="showArch('pp')">Predictive Processing</button>
+        <button class="btn" id="btnShowBoth" onclick="showArch('both')">Compare Side-by-Side</button>
+      </div>
+
+      <div class="arch-container" id="archContainer">
+        <!-- FF Diagram -->
+        <div class="arch-panel highlight-ff" id="archFF">
+          <h3 class="ff-label">Classical Feedforward</h3>
+          <svg class="arch-svg" viewBox="0 0 260 380" id="svgFF">
+            <!-- Layers -->
+            <rect class="layer-node" x="30" y="310" width="200" height="44" rx="10" fill="rgba(106,180,232,0.15)" stroke="#6ab4e8" stroke-width="1.5" data-layer="sensory" onclick="showLayerInfo('ff','sensory')"/>
+            <text x="130" y="337" text-anchor="middle" fill="#6ab4e8" font-size="12" font-weight="600">Sensory Input (V1)</text>
+
+            <rect class="layer-node" x="30" y="230" width="200" height="44" rx="10" fill="rgba(106,180,232,0.12)" stroke="rgba(106,180,232,0.6)" stroke-width="1.5" data-layer="features" onclick="showLayerInfo('ff','features')"/>
+            <text x="130" y="257" text-anchor="middle" fill="#6ab4e8" font-size="12" font-weight="600">Feature Detection (V2/V4)</text>
+
+            <rect class="layer-node" x="30" y="150" width="200" height="44" rx="10" fill="rgba(106,180,232,0.1)" stroke="rgba(106,180,232,0.5)" stroke-width="1.5" data-layer="objects" onclick="showLayerInfo('ff','objects')"/>
+            <text x="130" y="177" text-anchor="middle" fill="#6ab4e8" font-size="12" font-weight="600">Object Recognition (IT)</text>
+
+            <rect class="layer-node" x="30" y="70" width="200" height="44" rx="10" fill="rgba(106,180,232,0.08)" stroke="rgba(106,180,232,0.4)" stroke-width="1.5" data-layer="percept" onclick="showLayerInfo('ff','percept')"/>
+            <text x="130" y="97" text-anchor="middle" fill="#6ab4e8" font-size="12" font-weight="600">Conscious Percept (PFC)</text>
+
+            <!-- Upward arrows only -->
+            <defs>
+              <marker id="arrowFF" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#6ab4e8"/></marker>
+            </defs>
+            <line x1="130" y1="310" x2="130" y2="280" stroke="#6ab4e8" stroke-width="2" marker-end="url(#arrowFF)" opacity="0.7"/>
+            <line x1="130" y1="230" x2="130" y2="200" stroke="#6ab4e8" stroke-width="2" marker-end="url(#arrowFF)" opacity="0.7"/>
+            <line x1="130" y1="150" x2="130" y2="120" stroke="#6ab4e8" stroke-width="2" marker-end="url(#arrowFF)" opacity="0.7"/>
+
+            <text x="20" y="295" fill="rgba(106,180,232,0.5)" font-size="9" font-weight="600" transform="rotate(-90 20 295)">BOTTOM-UP ONLY</text>
+
+            <!-- Label -->
+            <text x="130" y="24" text-anchor="middle" fill="rgba(106,180,232,0.5)" font-size="10" font-weight="600" letter-spacing="2">ONE-WAY TRAFFIC</text>
+          </svg>
+        </div>
+
+        <!-- PP Diagram -->
+        <div class="arch-panel" id="archPP" style="display:none;">
+          <h3 class="pp-label">Predictive Processing</h3>
+          <svg class="arch-svg" viewBox="0 0 260 380" id="svgPP">
+            <!-- Layers -->
+            <rect class="layer-node" x="30" y="310" width="200" height="44" rx="10" fill="rgba(232,145,122,0.15)" stroke="#e8917a" stroke-width="1.5" data-layer="sensory" onclick="showLayerInfo('pp','sensory')"/>
+            <text x="130" y="337" text-anchor="middle" fill="#e8917a" font-size="12" font-weight="600">Sensory Surface (V1)</text>
+
+            <rect class="layer-node" x="30" y="230" width="200" height="44" rx="10" fill="rgba(232,145,122,0.12)" stroke="rgba(232,145,122,0.6)" stroke-width="1.5" data-layer="features" onclick="showLayerInfo('pp','features')"/>
+            <text x="130" y="257" text-anchor="middle" fill="#e8917a" font-size="12" font-weight="600">Representation (V2/V4)</text>
+
+            <rect class="layer-node" x="30" y="150" width="200" height="44" rx="10" fill="rgba(232,145,122,0.1)" stroke="rgba(232,145,122,0.5)" stroke-width="1.5" data-layer="objects" onclick="showLayerInfo('pp','objects')"/>
+            <text x="130" y="177" text-anchor="middle" fill="#e8917a" font-size="12" font-weight="600">Generative Model (IT)</text>
+
+            <rect class="layer-node" x="30" y="70" width="200" height="44" rx="10" fill="rgba(232,145,122,0.08)" stroke="rgba(232,145,122,0.4)" stroke-width="1.5" data-layer="percept" onclick="showLayerInfo('pp','percept')"/>
+            <text x="130" y="97" text-anchor="middle" fill="#e8917a" font-size="12" font-weight="600">High-Level Hypothesis (PFC)</text>
+
+            <!-- Bidirectional arrows -->
+            <defs>
+              <marker id="arrowUp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f0c8a0"/></marker>
+              <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#e8917a"/></marker>
+            </defs>
+
+            <!-- Error signals UP (left side) -->
+            <line x1="65" y1="310" x2="65" y2="280" stroke="#f0c8a0" stroke-width="2" marker-end="url(#arrowUp)" opacity="0.8" stroke-dasharray="4 3"/>
+            <line x1="65" y1="230" x2="65" y2="200" stroke="#f0c8a0" stroke-width="2" marker-end="url(#arrowUp)" opacity="0.8" stroke-dasharray="4 3"/>
+            <line x1="65" y1="150" x2="65" y2="120" stroke="#f0c8a0" stroke-width="2" marker-end="url(#arrowUp)" opacity="0.8" stroke-dasharray="4 3"/>
+
+            <!-- Predictions DOWN (right side) -->
+            <line x1="195" y1="114" x2="195" y2="144" stroke="#e8917a" stroke-width="2.5" marker-end="url(#arrowDown)" opacity="0.9"/>
+            <line x1="195" y1="194" x2="195" y2="224" stroke="#e8917a" stroke-width="2.5" marker-end="url(#arrowDown)" opacity="0.9"/>
+            <line x1="195" y1="274" x2="195" y2="304" stroke="#e8917a" stroke-width="2.5" marker-end="url(#arrowDown)" opacity="0.9"/>
+
+            <!-- Labels -->
+            <text x="42" y="268" fill="#f0c8a0" font-size="8" font-weight="700" letter-spacing="0.5" transform="rotate(-90 42 268)">PREDICTION ERROR ↑</text>
+            <text x="220" y="240" fill="#e8917a" font-size="8" font-weight="700" letter-spacing="0.5" transform="rotate(90 220 240)">PREDICTIONS ↓</text>
+
+            <!-- Top label -->
+            <text x="130" y="24" text-anchor="middle" fill="rgba(232,145,122,0.5)" font-size="10" font-weight="600" letter-spacing="2">BIDIRECTIONAL</text>
+
+            <!-- Animated prediction pulse -->
+            <circle id="ppPulse1" cx="195" cy="114" r="4" fill="#e8917a" opacity="0">
+              <animate attributeName="cy" values="114;144;194;224;274;304" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.9;0.9;0.9;0.9;0.9;0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle id="ppPulse2" cx="65" cy="304" r="3" fill="#f0c8a0" opacity="0">
+              <animate attributeName="cy" values="304;274;224;194;144;114" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+              <animate attributeName="opacity" values="0.8;0.8;0.8;0.8;0.8;0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Layer info display -->
+      <div class="info-callout" id="layerInfo">
+        <strong>Click any layer</strong> in the diagrams above to learn how it functions differently under each model. In the feedforward view, each layer performs fixed feature extraction. In predictive processing, each layer maintains a generative model and computes prediction errors.
+      </div>
+
+      <!-- Key Differences Table -->
+      <div class="card" style="margin-top: 24px;">
+        <h2>Key Differences at a Glance</h2>
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Feedforward</th>
+              <th>Predictive Processing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Direction of flow</strong></td>
+              <td class="col-ff">Bottom-up only</td>
+              <td class="col-pp">Bidirectional (top-down predictions + bottom-up errors)</td>
+            </tr>
+            <tr>
+              <td><strong>What travels forward</strong></td>
+              <td class="col-ff">Raw sensory features</td>
+              <td class="col-pp">Only prediction errors (the "surprise")</td>
+            </tr>
+            <tr>
+              <td><strong>Role of higher areas</strong></td>
+              <td class="col-ff">Integrate features into objects</td>
+              <td class="col-pp">Generate predictions to "explain away" input</td>
+            </tr>
+            <tr>
+              <td><strong>Context effects</strong></td>
+              <td class="col-ff">Late-stage modulation only</td>
+              <td class="col-pp">Pervasive at every level of the hierarchy</td>
+            </tr>
+            <tr>
+              <td><strong>Learning</strong></td>
+              <td class="col-ff">Supervised error correction</td>
+              <td class="col-pp">Minimize prediction error at all scales</td>
+            </tr>
+            <tr>
+              <td><strong>Action</strong></td>
+              <td class="col-ff">Separate output system</td>
+              <td class="col-pp">Same computational framework (active inference)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F52E;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
+    <!-- ══════════════════════════════════════════════ -->
+    <!--  PANEL 2: Signal Flow Simulation               -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="panel" id="panel-sim">
+
+      <div class="card">
+        <h2>Prediction Error Propagation</h2>
+        <p>Watch how sensory signals are processed differently in each model. In the feedforward model, the full signal travels upward. In predictive processing, top-down predictions "explain away" expected input — only the <em>residual prediction error</em> propagates upward. The better the brain's internal model, the less information needs to travel forward.</p>
+      </div>
+
+      <div class="control-row">
+        <button class="btn active" id="btnSimFF" onclick="startSim('ff')">Feedforward Mode</button>
+        <button class="btn" id="btnSimPP" onclick="startSim('pp')">Predictive Mode</button>
+      </div>
+
+      <div class="slider-group">
+        <label>Prediction Accuracy:</label>
+        <input type="range" id="predAccuracy" min="0" max="100" value="70" oninput="updateAccuracy()">
+        <span class="slider-val" id="predAccVal">70%</span>
+      </div>
+
+      <div class="slider-group">
+        <label>Signal Noise:</label>
+        <input type="range" id="signalNoise" min="0" max="100" value="20" oninput="updateNoise()">
+        <span class="slider-val" id="noiseVal">20%</span>
+      </div>
+
+      <div class="sim-wrapper">
+        <canvas id="simCanvas" width="880" height="360"></canvas>
+        <div class="sim-stats">
+          <div class="stat-box">
+            <div class="stat-label">Signal Forwarded</div>
+            <div class="stat-value" id="statForwarded">100%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Prediction Error</div>
+            <div class="stat-value" id="statError">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Bandwidth Used</div>
+            <div class="stat-value" id="statBandwidth">100%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Model</div>
+            <div class="stat-value" id="statModel" style="font-size:0.9rem;">Feedforward</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-callout" id="simInfo">
+        <strong>Try adjusting the sliders:</strong> In predictive mode, increasing prediction accuracy reduces the amount of signal that needs to travel forward — the brain only transmits what it couldn't predict. This is fundamentally an efficient coding strategy, with deep roots in information theory.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!--  PANEL 3: Precision Weighting                  -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="panel" id="panel-precision">
+
+      <div class="card">
+        <h2>Precision Weighting &amp; Attention</h2>
+        <p>Not all prediction errors are created equal. The brain assigns <em>precision</em> (inverse variance) to different error signals based on their estimated reliability. High-precision errors carry more weight and drive stronger updates. This precision-weighting mechanism provides a natural account of <strong>attention</strong>: attending to something means boosting the precision (gain) on error units in the relevant processing stream.</p>
+      </div>
+
+      <div class="slider-group">
+        <label>Prior Strength:</label>
+        <input type="range" id="priorStrength" min="0" max="100" value="50" oninput="updatePrecision()">
+        <span class="slider-val" id="priorVal">50%</span>
+      </div>
+      <div class="slider-group">
+        <label>Sensory Precision:</label>
+        <input type="range" id="sensoryPrecision" min="0" max="100" value="50" oninput="updatePrecision()">
+        <span class="slider-val" id="sensPrecVal">50%</span>
+      </div>
+
+      <div class="precision-demo">
+        <div class="precision-box">
+          <div class="box-label" style="color:var(--pp-color);">Top-Down Prediction</div>
+          <canvas id="canvasPrior" width="240" height="180"></canvas>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">What the brain expects</p>
+        </div>
+        <div class="precision-box">
+          <div class="box-label" style="color:var(--ff-color);">Sensory Input</div>
+          <canvas id="canvasSensory" width="240" height="180"></canvas>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">What actually arrives</p>
+        </div>
+        <div class="precision-box">
+          <div class="box-label" style="color:var(--error-color);">Prediction Error</div>
+          <canvas id="canvasError" width="240" height="180"></canvas>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Mismatch signal</p>
+        </div>
+        <div class="precision-box">
+          <div class="box-label" style="color:var(--precision-color);">Final Percept</div>
+          <canvas id="canvasPercept" width="240" height="180"></canvas>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Weighted combination</p>
+        </div>
+      </div>
+
+      <div class="info-callout" id="precisionInfo">
+        <strong>Experiment with the sliders:</strong> When prior strength is high and sensory precision is low, perception is dominated by expectations — you "see" what you expect. When sensory precision is high, the raw input overrides predictions. This balance explains illusions, hallucinations, and the power of context in shaping perception.
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3>Clinical Implications</h3>
+        <p>Disruptions in precision weighting may underlie several psychiatric and neurological conditions. If the brain consistently assigns <strong>too much precision</strong> to prediction errors (treating noise as signal), this could contribute to the perceptual disturbances seen in <strong>schizophrenia</strong> — where ordinary inputs feel deeply surprising and laden with false significance. Conversely, if sensory precision is <strong>chronically reduced</strong>, the system becomes overly reliant on prior expectations, potentially contributing to features of <strong>autism spectrum conditions</strong> where reduced context-sensitivity and enhanced detail-processing have been documented.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!--  PANEL 4: Active Inference                     -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="panel" id="panel-active">
+
+      <div class="card">
+        <h2>Active Inference &amp; the Free-Energy Principle</h2>
+        <p>Perhaps the most radical implication of predictive processing is its extension to action. In classical models, perception and action are separate systems — you perceive the world, then decide what to do. In the predictive processing framework, perception and action are two sides of the same coin: both work to minimize prediction error.</p>
+      </div>
+
+      <!-- Active Inference Diagram -->
+      <div class="card">
+        <h3>Two Ways to Minimize Prediction Error</h3>
+        <svg class="flow-diagram" viewBox="0 0 700 320">
+          <!-- Central node -->
+          <circle cx="350" cy="160" r="60" fill="rgba(232,145,122,0.15)" stroke="#e8917a" stroke-width="2"/>
+          <text x="350" y="153" text-anchor="middle" fill="#e8917a" font-size="13" font-weight="700">Prediction</text>
+          <text x="350" y="172" text-anchor="middle" fill="#e8917a" font-size="13" font-weight="700">Error</text>
+
+          <!-- Left: Perception path -->
+          <rect x="40" y="110" width="170" height="100" rx="14" fill="rgba(106,180,232,0.12)" stroke="#6ab4e8" stroke-width="1.5"/>
+          <text x="125" y="148" text-anchor="middle" fill="#6ab4e8" font-size="13" font-weight="700">Perception</text>
+          <text x="125" y="168" text-anchor="middle" fill="rgba(106,180,232,0.7)" font-size="10">Update internal model</text>
+          <text x="125" y="184" text-anchor="middle" fill="rgba(106,180,232,0.7)" font-size="10">to match the world</text>
+
+          <!-- Right: Action path -->
+          <rect x="490" y="110" width="170" height="100" rx="14" fill="rgba(200,154,240,0.12)" stroke="#c89af0" stroke-width="1.5"/>
+          <text x="575" y="148" text-anchor="middle" fill="#c89af0" font-size="13" font-weight="700">Action</text>
+          <text x="575" y="168" text-anchor="middle" fill="rgba(200,154,240,0.7)" font-size="10">Change the world</text>
+          <text x="575" y="184" text-anchor="middle" fill="rgba(200,154,240,0.7)" font-size="10">to match predictions</text>
+
+          <!-- Arrows -->
+          <defs>
+            <marker id="arrBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#6ab4e8"/></marker>
+            <marker id="arrPurp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c89af0"/></marker>
+          </defs>
+
+          <line x1="290" y1="150" x2="218" y2="150" stroke="#6ab4e8" stroke-width="2" marker-end="url(#arrBlue)"/>
+          <line x1="410" y1="150" x2="482" y2="150" stroke="#c89af0" stroke-width="2" marker-end="url(#arrPurp)"/>
+
+          <!-- Top label -->
+          <text x="350" y="50" text-anchor="middle" fill="rgba(232,145,122,0.5)" font-size="11" font-weight="600" letter-spacing="2">MINIMIZE PREDICTION ERROR</text>
+          <line x1="160" y1="58" x2="540" y2="58" stroke="rgba(232,145,122,0.2)" stroke-width="1"/>
+
+          <!-- Bottom: Free energy note -->
+          <rect x="170" y="260" width="360" height="50" rx="10" fill="rgba(240,200,160,0.08)" stroke="rgba(240,200,160,0.3)" stroke-width="1"/>
+          <text x="350" y="283" text-anchor="middle" fill="var(--peak-gold)" font-size="11" font-weight="600">Free-Energy Principle (Friston, 2009)</text>
+          <text x="350" y="300" text-anchor="middle" fill="rgba(240,200,160,0.6)" font-size="9.5">All adaptive systems minimize variational free energy</text>
+
+          <line x1="350" y1="220" x2="350" y2="252" stroke="rgba(240,200,160,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+        </svg>
+      </div>
+
+      <div class="card">
+        <h3>The Desert Landscape Scenario</h3>
+        <p>Imagine you are a creature in a desert. You predict cool water ahead. There is a prediction error — the world is hot and dry. You can resolve this two ways:</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0;">
+          <div style="background:rgba(106,180,232,0.08); border:1px solid rgba(106,180,232,0.2); border-radius:10px; padding:14px;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--ff-color); margin-bottom:6px;">Perception (update model)</div>
+            <p style="font-size:0.82rem; color:var(--text-secondary);">Revise your expectation — accept you are in a desert. The internal model changes to match reality.</p>
+          </div>
+          <div style="background:rgba(200,154,240,0.08); border:1px solid rgba(200,154,240,0.2); border-radius:10px; padding:14px;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--precision-color); margin-bottom:6px;">Action (change world)</div>
+            <p style="font-size:0.82rem; color:var(--text-secondary);">Walk to an oasis. Move your body so sensory input matches your prediction of finding water.</p>
+          </div>
+        </div>
+        <p>In the predictive processing framework, these are computationally equivalent — both reduce prediction error. Motor commands are simply proprioceptive predictions: the brain "predicts" a limb position, and the motor system acts to make it true.</p>
+      </div>
+
+      <div class="info-callout">
+        <strong>The deep unification:</strong> Perception, action, attention, learning, and even emotion all emerge from a single imperative — minimize prediction error across all levels of the hierarchy, across all timescales. This is what Friston's free-energy principle attempts to formalize: every aspect of brain function (and perhaps all adaptive biological systems) can be understood as free-energy minimization.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!--  PANEL 5: Check Understanding                  -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="panel" id="panel-quiz">
+
+      <div class="card">
+        <h2>Check Your Understanding</h2>
+        <p>Test your grasp of key predictive processing concepts from Clark (2013).</p>
+      </div>
+
+      <div class="quiz-q" id="q1">
+        <p>1. In the predictive processing framework, what is the primary information carried by forward (bottom-up) connections?</p>
+        <div class="q-options">
+          <button class="q-opt" onclick="answer(1,0)">Raw sensory features that are progressively combined</button>
+          <button class="q-opt" onclick="answer(1,1)">Prediction errors — the residual signal not explained by top-down predictions</button>
+          <button class="q-opt" onclick="answer(1,2)">Motor commands for active sampling of the environment</button>
+          <button class="q-opt" onclick="answer(1,3)">Attentional gain signals that modulate lower layers</button>
+        </div>
+        <div class="quiz-feedback" id="fb1">In predictive processing, forward connections carry <strong>prediction errors</strong> — the mismatch between what was predicted by higher areas and what actually arrived. This is a fundamental departure from feedforward models where the full sensory signal travels upward. As Clark describes, backward connections do the "heavy lifting" by carrying predictions downward.</div>
+      </div>
+
+      <div class="quiz-q" id="q2">
+        <p>2. How does the predictive processing account explain the role of attention?</p>
+        <div class="q-options">
+          <button class="q-opt" onclick="answer(2,0)">Attention filters out irrelevant stimuli at early sensory stages</button>
+          <button class="q-opt" onclick="answer(2,1)">Attention increases the firing rate of neurons in attended regions</button>
+          <button class="q-opt" onclick="answer(2,2)">Attention adjusts the precision (gain) on prediction error signals, weighting reliable errors more heavily</button>
+          <button class="q-opt" onclick="answer(2,3)">Attention suppresses top-down predictions to allow raw sensory input through</button>
+        </div>
+        <div class="quiz-feedback" id="fb2">In predictive processing, attention is understood as <strong>precision weighting</strong> — adjusting the gain on prediction error units. Attending to something means assigning high precision to the relevant error signals, making them more influential in updating the brain's generative model. This is achieved by altering the "volume" on error units at different levels.</div>
+      </div>
+
+      <div class="quiz-q" id="q3">
+        <p>3. What does "active inference" refer to in the predictive processing framework?</p>
+        <div class="q-options">
+          <button class="q-opt" onclick="answer(3,0)">The brain actively searches for the most informative sensory samples</button>
+          <button class="q-opt" onclick="answer(3,1)">Motor action is a form of prediction error minimization — the brain changes sensory input to match its predictions</button>
+          <button class="q-opt" onclick="answer(3,2)">Higher cortical areas actively inhibit lower-level processing</button>
+          <button class="q-opt" onclick="answer(3,3)">The immune system actively infers the presence of pathogens</button>
+        </div>
+        <div class="quiz-feedback" id="fb3"><strong>Active inference</strong> extends predictive processing to action: rather than only updating internal models (perception), the brain can also change the world through motor action so that incoming sensory signals match existing predictions. Proprioceptive predictions become motor commands — the system "predicts" a body state and the motor system acts to fulfill it.</div>
+      </div>
+
+      <div class="quiz-q" id="q4">
+        <p>4. According to Clark, what makes hierarchical predictive processing fundamentally different from a simple top-down "expectation" model?</p>
+        <div class="q-options">
+          <button class="q-opt" onclick="answer(4,0)">It operates only in sensory cortex, not in motor areas</button>
+          <button class="q-opt" onclick="answer(4,1)">It uses a bidirectional generative model where predictions and errors are computed at every level simultaneously</button>
+          <button class="q-opt" onclick="answer(4,2)">It requires conscious awareness of predictions to function</button>
+          <button class="q-opt" onclick="answer(4,3)">It relies exclusively on Hebbian learning rules</button>
+        </div>
+        <div class="quiz-feedback" id="fb4">The key innovation of <strong>hierarchical predictive processing</strong> is its bidirectional, multi-level architecture: predictions flow downward and prediction errors flow upward <em>at every level simultaneously</em>. This creates a generative model where each level tries to predict activity at the level below. It is not simply "expectations influence perception" — it is a complete computational architecture where backward connections carry the main processing load.</div>
+      </div>
+
+      <div class="quiz-q" id="q5">
+        <p>5. The free-energy principle (Friston) proposes that:</p>
+        <div class="q-options">
+          <button class="q-opt" onclick="answer(5,0)">The brain has unlimited computational resources for prediction</button>
+          <button class="q-opt" onclick="answer(5,1)">All adaptive systems minimize variational free energy — a bound on surprise — unifying perception, action, and learning</button>
+          <button class="q-opt" onclick="answer(5,2)">Neural processing is thermodynamically free, requiring no metabolic energy</button>
+          <button class="q-opt" onclick="answer(5,3)">Prediction errors are always equally weighted across all brain areas</button>
+        </div>
+        <div class="quiz-feedback" id="fb5">The <strong>free-energy principle</strong> provides a unifying mathematical framework: all adaptive biological systems (from cells to brains) act to minimize variational free energy, which serves as an upper bound on sensory surprise. In the brain, this manifests as prediction error minimization via perception (updating models), action (changing the world), and attention (weighting errors by precision).</div>
+      </div>
     </div>
 
     <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+      PSYCH 302 &middot; University of Washington &middot; Lecture 14 Interactive Explorer<br>
+      Based on Clark, A. (2013). <a href="https://doi.org/10.1017/S0140525X12000477" target="_blank" rel="noopener">Whatever next? Predictive brains, situated agents, and the future of cognitive science</a>. <em>Behavioral and Brain Sciences</em>, 36(3), 181–253.
     </footer>
 
   </div>
 
-  
-  <!-- Global Search -->
-  <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <div class="search-overlay" id="searchOverlay">
-    <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
-    <div class="search-box">
-      <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
-    </div>
-    <div class="search-results" id="searchResults"></div>
-    <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
-  </div>
-  <script>
-  (function() {
-    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
-    var base = "../../../";
-    window.doSearch = function(q) {
-      var res = document.getElementById('searchResults');
-      if (!q || q.length < 2) { res.innerHTML = ''; return; }
-      var lq = q.toLowerCase();
-      var matches = idx.filter(function(item) {
-        return item.title.toLowerCase().indexOf(lq) !== -1 || item.type.toLowerCase().indexOf(lq) !== -1;
-      }).slice(0, 12);
-      res.innerHTML = matches.map(function(m) {
-        return '<a class="search-result" href="' + base + m.url + '"><span class="sr-type">' + m.type + '</span><span class="sr-title">' + m.title + '</span></a>';
-      }).join('');
-    };
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('searchOverlay').classList.add('active');
-        document.getElementById('searchInput').focus();
-      }
-    });
-  })();
-  </script>
+<script>
+// ═══════════════════════════════════════════════
+//  Tab Navigation
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.section-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
 
+    // Initialize canvases when switching to relevant panels
+    if (btn.dataset.panel === 'sim') initSimulation();
+    if (btn.dataset.panel === 'precision') updatePrecision();
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  Panel 1: Architecture Toggle
+// ═══════════════════════════════════════════════
+function showArch(mode) {
+  const ff = document.getElementById('archFF');
+  const pp = document.getElementById('archPP');
+  const container = document.getElementById('archContainer');
+
+  document.getElementById('btnShowFF').classList.toggle('active', mode === 'ff');
+  document.getElementById('btnShowPP').classList.toggle('active', mode === 'pp');
+  document.getElementById('btnShowBoth').classList.toggle('active', mode === 'both');
+
+  if (mode === 'ff') {
+    ff.style.display = 'block';
+    pp.style.display = 'none';
+    ff.className = 'arch-panel highlight-ff';
+    container.style.gridTemplateColumns = '1fr';
+  } else if (mode === 'pp') {
+    ff.style.display = 'none';
+    pp.style.display = 'block';
+    pp.className = 'arch-panel highlight-pp';
+    container.style.gridTemplateColumns = '1fr';
+  } else {
+    ff.style.display = 'block';
+    pp.style.display = 'block';
+    ff.className = 'arch-panel highlight-ff';
+    pp.className = 'arch-panel highlight-pp';
+    container.style.gridTemplateColumns = window.innerWidth > 700 ? '1fr 1fr' : '1fr';
+  }
+}
+
+const layerDescriptions = {
+  ff: {
+    sensory: '<strong>Sensory Input (V1):</strong> In the feedforward model, V1 performs basic feature extraction — detecting oriented edges, spatial frequencies, and simple contrasts. The full representation is passed upward.',
+    features: '<strong>Feature Detection (V2/V4):</strong> Mid-level areas combine basic features into more complex patterns — textures, contours, simple shapes. Information only flows upward.',
+    objects: '<strong>Object Recognition (IT):</strong> Inferotemporal cortex builds full object representations by combining mid-level features. This is treated as a feedforward cascade of increasing abstraction.',
+    percept: '<strong>Conscious Percept (PFC):</strong> The end result — a complete perceptual representation assembled from the bottom up. Higher areas simply integrate what lower areas provide.'
+  },
+  pp: {
+    sensory: '<strong>Sensory Surface (V1):</strong> In predictive processing, V1 is <em>not</em> simply detecting features. It compares incoming signals against top-down predictions from V2/V4. Only the <em>prediction error</em> — what wasn\'t predicted — is sent forward. The "error units" here are superficial pyramidal cells.',
+    features: '<strong>Representation Layer (V2/V4):</strong> These areas maintain a generative model that sends predictions down to V1 while receiving prediction errors from below and predictions from IT above. They sit at the intersection of two flows — the duplex architecture.',
+    objects: '<strong>Generative Model (IT):</strong> Rather than passively receiving features, IT actively generates predictions about the visual scene and sends them downward. Deep pyramidal cells carry these top-down predictions. The area learns to minimize error across the whole hierarchy below.',
+    percept: '<strong>High-Level Hypothesis (PFC):</strong> PFC maintains the highest-level generative model — abstract scene understanding, goals, and expectations. Its predictions cascade down through every level, shaping perception from the very first stages of processing.'
+  }
+};
+
+function showLayerInfo(model, layer) {
+  const info = document.getElementById('layerInfo');
+  info.innerHTML = layerDescriptions[model][layer];
+  info.style.borderLeftColor = model === 'ff' ? 'var(--ff-color)' : 'var(--pp-color)';
+}
+
+// ═══════════════════════════════════════════════
+//  Panel 2: Signal Flow Simulation
+// ═══════════════════════════════════════════════
+let simMode = 'ff';
+let simAnimId = null;
+let simParticles = [];
+let predAccuracy = 70;
+let signalNoise = 20;
+
+function startSim(mode) {
+  simMode = mode;
+  document.getElementById('btnSimFF').classList.toggle('active', mode === 'ff');
+  document.getElementById('btnSimPP').classList.toggle('active', mode === 'pp');
+  document.getElementById('statModel').textContent = mode === 'ff' ? 'Feedforward' : 'Predictive';
+  document.getElementById('statModel').style.color = mode === 'ff' ? 'var(--ff-color)' : 'var(--pp-color)';
+  initSimulation();
+}
+
+function updateAccuracy() {
+  predAccuracy = parseInt(document.getElementById('predAccuracy').value);
+  document.getElementById('predAccVal').textContent = predAccuracy + '%';
+  updateSimStats();
+}
+
+function updateNoise() {
+  signalNoise = parseInt(document.getElementById('signalNoise').value);
+  document.getElementById('noiseVal').textContent = signalNoise + '%';
+  updateSimStats();
+}
+
+function updateSimStats() {
+  if (simMode === 'ff') {
+    document.getElementById('statForwarded').textContent = '100%';
+    document.getElementById('statError').textContent = '—';
+    document.getElementById('statBandwidth').textContent = '100%';
+  } else {
+    const errorPct = Math.max(5, 100 - predAccuracy + Math.round(signalNoise * 0.3));
+    document.getElementById('statForwarded').textContent = Math.min(100, errorPct) + '%';
+    document.getElementById('statError').textContent = Math.min(100, errorPct) + '%';
+    document.getElementById('statBandwidth').textContent = Math.min(100, errorPct) + '%';
+  }
+}
+
+function initSimulation() {
+  const canvas = document.getElementById('simCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  if (simAnimId) cancelAnimationFrame(simAnimId);
+  simParticles = [];
+
+  // Define layers
+  const layers = [
+    { y: H - 50, label: 'Sensory Input', color: simMode === 'ff' ? '#6ab4e8' : '#e8917a' },
+    { y: H - 130, label: 'V2 / V4', color: simMode === 'ff' ? '#6ab4e8' : '#e8917a' },
+    { y: H - 210, label: 'IT Cortex', color: simMode === 'ff' ? '#6ab4e8' : '#e8917a' },
+    { y: H - 290, label: 'PFC', color: simMode === 'ff' ? '#6ab4e8' : '#e8917a' },
+  ];
+
+  let frameCount = 0;
+
+  function spawnParticle() {
+    const isPrediction = simMode === 'pp' && Math.random() < 0.4;
+    const isError = simMode === 'pp' && !isPrediction;
+    const goingUp = simMode === 'ff' || isError;
+
+    let size = goingUp ? 3 + Math.random() * 3 : 2 + Math.random() * 2;
+    let alpha = 0.8;
+
+    if (simMode === 'pp' && goingUp) {
+      // In PP mode, forward signals shrink based on prediction accuracy
+      size *= (1 - predAccuracy / 130);
+      alpha *= (1 - predAccuracy / 150);
+    }
+
+    // Add noise effect
+    const noiseOffset = (Math.random() - 0.5) * signalNoise * 1.5;
+
+    simParticles.push({
+      x: 100 + Math.random() * (W - 200) + noiseOffset,
+      y: goingUp ? H - 40 : 40,
+      vy: goingUp ? -(1.5 + Math.random() * 2) : (1 + Math.random() * 1.5),
+      size: size,
+      alpha: alpha,
+      color: isPrediction ? '#e8917a' : (simMode === 'pp' ? '#f0c8a0' : '#6ab4e8'),
+      life: 1,
+      isPrediction: isPrediction
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw layer bars
+    layers.forEach((layer, i) => {
+      ctx.fillStyle = 'rgba(255,255,255,0.03)';
+      ctx.fillRect(40, layer.y - 15, W - 80, 30);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(40, layer.y - 15, W - 80, 30);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(layer.label, 50, layer.y + 4);
+    });
+
+    // Draw side labels
+    if (simMode === 'pp') {
+      ctx.save();
+      ctx.translate(20, H / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = 'rgba(240,200,160,0.4)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PREDICTION ERROR ↑', 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(W - 20, H / 2);
+      ctx.rotate(Math.PI / 2);
+      ctx.fillStyle = 'rgba(232,145,122,0.4)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PREDICTIONS ↓', 0, 0);
+      ctx.restore();
+    } else {
+      ctx.save();
+      ctx.translate(20, H / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = 'rgba(106,180,232,0.4)';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SIGNAL FLOW ↑', 0, 0);
+      ctx.restore();
+    }
+
+    // Spawn particles
+    frameCount++;
+    if (frameCount % 3 === 0) {
+      const numToSpawn = simMode === 'ff' ? 3 : 2;
+      for (let i = 0; i < numToSpawn; i++) spawnParticle();
+    }
+
+    // Update & draw particles
+    for (let i = simParticles.length - 1; i >= 0; i--) {
+      const p = simParticles[i];
+      p.y += p.vy;
+      p.x += (Math.random() - 0.5) * 0.8;
+      p.life -= 0.004;
+
+      if (p.life <= 0 || p.y < 10 || p.y > H - 10) {
+        simParticles.splice(i, 1);
+        continue;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha * p.life;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // Keep particle count reasonable
+    if (simParticles.length > 300) simParticles.splice(0, 50);
+
+    updateSimStats();
+    simAnimId = requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+// ═══════════════════════════════════════════════
+//  Panel 3: Precision Weighting Visualization
+// ═══════════════════════════════════════════════
+function updatePrecision() {
+  const priorStr = parseInt(document.getElementById('priorStrength').value);
+  const sensPrecision = parseInt(document.getElementById('sensoryPrecision').value);
+  document.getElementById('priorVal').textContent = priorStr + '%';
+  document.getElementById('sensPrecVal').textContent = sensPrecision + '%';
+
+  drawPrecisionCanvases(priorStr, sensPrecision);
+
+  // Update info text
+  const info = document.getElementById('precisionInfo');
+  if (priorStr > 70 && sensPrecision < 30) {
+    info.innerHTML = '<strong>Prior-dominated perception:</strong> With strong priors and low sensory precision, the brain heavily weights its expectations. This can produce illusory percepts — "seeing" what you expect rather than what is there. In extreme cases, this may resemble hallucination, where internal models override weak sensory evidence.';
+  } else if (sensPrecision > 70 && priorStr < 30) {
+    info.innerHTML = '<strong>Sensation-dominated perception:</strong> With high sensory precision and weak priors, the raw input dominates. The percept closely tracks the actual stimulus with minimal influence from expectations. This mode prioritizes accuracy over efficiency.';
+  } else {
+    info.innerHTML = '<strong>Balanced weighting:</strong> The final percept reflects a Bayesian-optimal combination of prior expectations and sensory evidence, each weighted by their respective precision. This is the brain\'s normal operating mode — expectations guide perception, but surprising inputs can still override them.';
+  }
+}
+
+function drawPrecisionCanvases(priorStr, sensPrecision) {
+  // Prior canvas — a blurry/sharp "expected" pattern
+  drawWavePattern('canvasPrior', priorStr / 100, '#e8917a', 'prior');
+  // Sensory canvas — the actual input signal
+  drawWavePattern('canvasSensory', sensPrecision / 100, '#6ab4e8', 'sensory');
+  // Error canvas — the difference
+  drawErrorPattern('canvasError', priorStr / 100, sensPrecision / 100);
+  // Percept canvas — the weighted combination
+  drawPerceptPattern('canvasPercept', priorStr / 100, sensPrecision / 100);
+}
+
+function drawWavePattern(canvasId, strength, color, type) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw wave
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.4 + strength * 0.6;
+
+  const freq = type === 'prior' ? 3 : 4;
+  const phase = type === 'prior' ? 0 : 1.2;
+  const amp = 30 + strength * 30;
+  const blur = type === 'prior' ? (1 - strength) * 8 : (1 - strength) * 8;
+
+  for (let x = 0; x < W; x++) {
+    const t = x / W * Math.PI * 2 * freq + phase;
+    let y = H / 2 + Math.sin(t) * amp;
+    if (type === 'sensory') y += Math.sin(t * 3.7) * 12; // Add detail to sensory
+    y += (Math.random() - 0.5) * blur * 2;
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Fill under curve with subtle gradient
+  ctx.lineTo(W, H);
+  ctx.lineTo(0, H);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, H / 2 - amp, 0, H);
+  grad.addColorStop(0, color.replace(')', ',0.08)').replace('rgb', 'rgba'));
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
+  ctx.globalAlpha = strength;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Precision label
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('precision: ' + Math.round(strength * 100) + '%', W - 8, 16);
+}
+
+function drawErrorPattern(canvasId, priorStr, sensPrec) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Error = difference between prior and sensory signals
+  const errorMag = Math.abs(priorStr - sensPrec) * 0.5 + 0.2;
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#f0c8a0';
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.7;
+
+  for (let x = 0; x < W; x++) {
+    const t = x / W * Math.PI * 2;
+    const priorY = Math.sin(t * 3) * (30 + priorStr * 30);
+    const sensY = Math.sin(t * 4 + 1.2) * (30 + sensPrec * 30) + Math.sin(t * 3.7 * 4 + 1.2) * 12;
+    const diff = (sensY - priorY) * errorMag;
+    const y = H / 2 + diff * 0.5;
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Error magnitude label
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('magnitude: ' + Math.round(errorMag * 100) + '%', W - 8, 16);
+}
+
+function drawPerceptPattern(canvasId, priorStr, sensPrec) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Bayesian-weighted combination
+  const totalPrec = priorStr + sensPrec + 0.01;
+  const priorWeight = priorStr / totalPrec;
+  const sensWeight = sensPrec / totalPrec;
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#c89af0';
+  ctx.lineWidth = 2.5;
+  ctx.globalAlpha = 0.8;
+
+  for (let x = 0; x < W; x++) {
+    const t = x / W * Math.PI * 2;
+    const priorY = Math.sin(t * 3) * (30 + priorStr * 30);
+    const sensY = Math.sin(t * 4 + 1.2) * (30 + sensPrec * 30) + Math.sin(t * 3.7 * 4 + 1.2) * 12;
+    const combined = priorY * priorWeight + sensY * sensWeight;
+    const y = H / 2 + combined * 0.6;
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Weight labels
+  ctx.fillStyle = 'rgba(232,145,122,0.6)';
+  ctx.font = '9px Inter, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('prior: ' + Math.round(priorWeight * 100) + '%', 8, 16);
+  ctx.fillStyle = 'rgba(106,180,232,0.6)';
+  ctx.fillText('sensory: ' + Math.round(sensWeight * 100) + '%', 8, 28);
+}
+
+// ═══════════════════════════════════════════════
+//  Panel 5: Quiz
+// ═══════════════════════════════════════════════
+const correctAnswers = { 1: 1, 2: 2, 3: 1, 4: 1, 5: 1 };
+
+function answer(qNum, optIdx) {
+  const container = document.getElementById('q' + qNum);
+  const buttons = container.querySelectorAll('.q-opt');
+  const feedback = document.getElementById('fb' + qNum);
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correctAnswers[qNum]) {
+      btn.classList.add('correct');
+    } else if (i === optIdx && i !== correctAnswers[qNum]) {
+      btn.classList.add('incorrect');
+    }
+  });
+
+  feedback.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════
+//  Initialize
+// ═══════════════════════════════════════════════
+showArch('ff');
+</script>
 </body>
 </html>

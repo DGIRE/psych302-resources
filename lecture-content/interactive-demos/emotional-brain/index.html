@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emotional Brain Explorer &mdash; PSYCH 302 Interactive Demo</title>
+  <title>Lecture 7: The Emotional Brain &mdash; Interactive Explorer &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,6 +20,16 @@
       --text-primary: #f0e8e5;
       --text-secondary: #b8a8b8;
       --text-muted: #7a6a82;
+      --card-bg: rgba(26,39,68,0.55);
+      --card-border: rgba(255,255,255,0.08);
+      --glow-rgb: 212,114,122;
+      --ventral-color: #e8917a;
+      --dorsal-color: #6ab4e8;
+      --amygdala-color: #f06090;
+      --insula-color: #c89af0;
+      --pfc-color: #6adaa0;
+      --acc-color: #f0c860;
+      --striatum-color: #60c8e0;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -28,280 +38,911 @@
       color: var(--text-primary);
       min-height: 100vh;
       overflow-x: hidden;
+      line-height: 1.65;
     }
     .page-bg {
       position: fixed; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
+      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(var(--glow-rgb), 0.06) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
-    .container {
-      position: relative; z-index: 1;
-      max-width: 700px; width: 100%; margin: 0 auto; padding: 20px;
-    }
-    
-    /* ── Breadcrumb nav ── */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 32px;
-      font-size: 0.78rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      font-weight: 500;
-    }
-    .breadcrumb a:hover { color: var(--alpenglow); }
-    .breadcrumb .bc-sep {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
-    .breadcrumb .bc-current {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
+    .container { position: relative; z-index: 1; max-width: 960px; width: 100%; margin: 0 auto; padding: 20px; }
 
-    
-    /* ── Global Search ── */
-    .search-fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(26,39,68,0.95);
-      backdrop-filter: blur(12px);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    /* ── Hero ── */
+    .hero { text-align: center; padding: 48px 20px 36px; }
+    .hero-label {
+      display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--alpenglow);
+      background: rgba(212,114,122,0.1); border: 1px solid rgba(212,114,122,0.2);
+      border-radius: 20px; padding: 6px 16px; margin-bottom: 20px;
     }
-    .search-fab:hover {
-      border-color: var(--alpenglow);
-      color: var(--alpenglow);
-      transform: scale(1.08);
-    }
-    .search-fab svg { width: 20px; height: 20px; }
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(12,21,37,0.92);
-      backdrop-filter: blur(16px);
-      padding: 60px 20px 20px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-    .search-input {
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-input:focus { border-color: var(--alpenglow); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-results {
-      max-width: 560px;
-      margin: 16px auto 0;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-    .search-result {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .search-result:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
-    .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
-    .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-    }
-    .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
-    }
-
-    .stub-hero {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .stub-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-    .stub-hero h1 {
-      font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--peak-gold) 50%, var(--alpenglow) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 16px;
     }
-    .stub-hero .overline {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
-      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
+    .hero p { font-size: 1.0rem; color: var(--text-secondary); max-width: 660px; margin: 0 auto; line-height: 1.7; }
+    .hero .source-ref { margin-top: 12px; font-size: 0.78rem; color: var(--text-muted); font-style: italic; }
+
+    /* ── Tabs ── */
+    .section-nav {
+      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+      margin: 24px 0 36px; padding: 6px;
+      background: rgba(26,39,68,0.5); border-radius: 14px; border: 1px solid var(--card-border);
     }
-    .stub-hero p {
-      font-size: 0.88rem; color: var(--text-secondary); max-width: 480px;
-      margin: 12px auto 0; line-height: 1.6;
+    .section-nav button {
+      flex: 1 1 auto; min-width: 110px; padding: 10px 14px; border: none; border-radius: 10px;
+      background: transparent; color: var(--text-muted); font-family: inherit;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.25s;
     }
-    .coming-badge {
-      display: inline-block; margin-top: 20px;
-      padding: 6px 16px; border-radius: 100px;
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase;
-      background: rgba(240,200,160,0.08);
-      border: 1px solid rgba(240,200,160,0.2);
-      color: var(--peak-gold);
+    .section-nav button:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+    .section-nav button.active {
+      color: var(--text-primary); background: rgba(212,114,122,0.15);
+      box-shadow: 0 0 16px rgba(212,114,122,0.1);
     }
-    .back-links {
-      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;
+
+    .panel { display: none; animation: fadeIn 0.4s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 28px 24px; margin-bottom: 24px;
     }
-    .back-links a {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
-      text-decoration: none; transition: all 0.25s;
+    .card h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 14px; color: var(--peak-gold); }
+    .card h3 { font-size: 0.95rem; font-weight: 600; margin: 16px 0 10px; color: var(--text-primary); }
+    .card p, .card li { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ── Buttons ── */
+    .control-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+    .btn {
+      font-family: inherit; font-size: 0.8rem; font-weight: 600; padding: 10px 18px;
+      border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: var(--text-secondary); cursor: pointer; transition: all 0.3s;
     }
-    .back-links a:hover {
-      border-color: var(--alpenglow); background: rgba(212,114,122,0.06); color: var(--alpenglow);
+    .btn:hover { border-color: rgba(var(--glow-rgb), 0.4); background: rgba(var(--glow-rgb), 0.1); color: var(--text-primary); }
+    .btn.active { border-color: var(--alpenglow); background: rgba(212,114,122,0.15); color: var(--text-primary); box-shadow: 0 0 20px rgba(212,114,122,0.15); }
+
+    /* ── Info Callout ── */
+    .info-callout {
+      background: rgba(255,255,255,0.03); border-left: 3px solid var(--alpenglow);
+      border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 16px 0;
+      font-size: 0.86rem; color: var(--text-secondary); line-height: 1.7; transition: all 0.4s;
     }
-    footer {
-      text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 40px 0 20px;
+    .info-callout strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ── Network Diagram (SVG) ── */
+    .network-svg { width: 100%; max-width: 700px; margin: 16px auto; display: block; }
+    .region-node { cursor: pointer; transition: all 0.3s; }
+    .region-node:hover { filter: brightness(1.4); }
+    .region-node.active { filter: brightness(1.5) drop-shadow(0 0 8px currentColor); }
+
+    /* ── Processing Stage Cards ── */
+    .stage-flow {
+      display: flex; gap: 16px; margin: 20px 0; overflow-x: auto; padding-bottom: 8px;
     }
+    .stage-card {
+      flex: 0 0 auto; width: 220px; background: rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,0.06);
+      border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.4s; position: relative;
+    }
+    .stage-card::after {
+      content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%);
+      font-size: 1.2rem; color: var(--text-muted);
+    }
+    .stage-card:last-child::after { display: none; }
+    .stage-card.active { border-color: var(--alpenglow); box-shadow: 0 0 24px rgba(212,114,122,0.15); }
+    .stage-card .stage-num {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .stage-card h4 { font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .stage-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Region Explorer ── */
+    .region-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px; margin: 16px 0;
+    }
+    .region-btn {
+      font-family: inherit; font-size: 0.78rem; font-weight: 600; padding: 12px 14px;
+      border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.3s; text-align: center;
+    }
+    .region-btn:hover { border-color: rgba(var(--glow-rgb), 0.3); background: rgba(var(--glow-rgb), 0.06); color: var(--text-primary); }
+    .region-btn.active { color: var(--text-primary); }
+
+    .region-detail {
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 24px; margin: 16px 0; min-height: 200px;
+    }
+    .region-detail h3 { margin-bottom: 12px; }
+    .region-detail .tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 6px; margin-right: 6px; margin-bottom: 6px; letter-spacing: 0.5px;
+    }
+
+    /* ── Ventral/Dorsal Comparison ── */
+    .dual-panel {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;
+    }
+    @media (max-width: 650px) { .dual-panel { grid-template-columns: 1fr; } .stage-flow { flex-direction: column; } .stage-card { width: 100%; } .stage-card::after { display: none; } }
+    .sys-panel {
+      background: rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 22px; transition: all 0.4s;
+    }
+    .sys-panel.highlight { box-shadow: 0 0 30px rgba(var(--glow-rgb), 0.1); }
+    .sys-panel h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sys-panel .region-list { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; }
+    .sys-panel .region-list span {
+      display: inline-block; background: rgba(255,255,255,0.05); border-radius: 6px;
+      padding: 2px 8px; margin: 2px 4px 2px 0; font-weight: 500;
+    }
+
+    /* ── Simulation ── */
+    .sim-wrapper {
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 20px; margin: 20px 0;
+    }
+    .sim-wrapper canvas { width: 100%; border-radius: 10px; display: block; }
+    .slider-group { display: flex; align-items: center; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+    .slider-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); min-width: 130px; }
+    .slider-group input[type="range"] {
+      flex: 1; min-width: 140px; -webkit-appearance: none; appearance: none;
+      height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none;
+    }
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: var(--alpenglow); cursor: pointer; border: 2px solid rgba(255,255,255,0.3);
+    }
+    .slider-group .slider-val { font-size: 0.82rem; font-weight: 700; color: var(--peak-gold); min-width: 36px; text-align: right; }
+
+    /* ── Quiz ── */
+    .quiz-q { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin: 16px 0; }
+    .quiz-q p { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .quiz-q .q-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-q .q-opt {
+      font-family: inherit; font-size: 0.84rem; text-align: left; padding: 10px 16px;
+      border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02); color: var(--text-secondary); cursor: pointer; transition: all 0.25s;
+    }
+    .quiz-q .q-opt:hover { border-color: rgba(var(--glow-rgb), 0.3); background: rgba(var(--glow-rgb), 0.05); color: var(--text-primary); }
+    .quiz-q .q-opt.correct { border-color: #4ade80; background: rgba(74,222,128,0.1); color: #4ade80; }
+    .quiz-q .q-opt.incorrect { border-color: var(--sky-coral); background: rgba(200,90,106,0.1); color: var(--sky-coral); }
+    .quiz-q .q-opt:disabled { cursor: default; opacity: 0.7; }
+    .quiz-q .q-opt.correct:disabled, .quiz-q .q-opt.incorrect:disabled { opacity: 1; }
+    .quiz-feedback { margin-top: 10px; font-size: 0.84rem; color: var(--text-secondary); line-height: 1.6; display: none; }
+    .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+
+    /* ── Comp Table ── */
+    .comp-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 16px 0; font-size: 0.84rem; }
+    .comp-table th { background: rgba(255,255,255,0.06); padding: 10px 14px; font-weight: 700; text-align: left; color: var(--text-primary); border-bottom: 2px solid rgba(255,255,255,0.1); }
+    .comp-table th:first-child { border-radius: 8px 0 0 0; }
+    .comp-table th:last-child { border-radius: 0 8px 0 0; }
+    .comp-table td { padding: 10px 14px; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.78rem; }
     footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 600px) {
-      .stub-hero { padding: 48px 20px; }
-      .stub-hero h1 { font-size: 1.15rem; }
-      .back-links { flex-direction: column; align-items: center; }
-    }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 500px) { .section-nav { flex-direction: column; } .section-nav button { min-width: unset; } .hero h1 { font-size: 1.5rem; } .region-grid { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
-  <div class="page-bg"></div>
-  <div class="container">
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Emotional Brain Explorer</span></nav>
+<div class="page-bg"></div>
+<div class="container">
 
-    <div class="stub-hero">
-      <div class="stub-icon">&#x2764;&#xFE0F;</div>
-      <div class="overline">Lecture 7 &mdash; Interactive Demo</div>
-      <h1>Emotional Brain Explorer</h1>
-      <p>Explore the amygdala, insula, and orbitofrontal circuits that generate and regulate emotion. Trace fear conditioning, emotional appraisal, and the somatic marker hypothesis.</p>
-      <span class="coming-badge">Coming Soon</span>
-    </div>
-
-    <div class="back-links">
-      <a href="../../../lectures/lecture-07.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 7 Literature
-      </a>
-      <a href="../../lecture-07/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        Lecture 7 Content
-      </a>
-    </div>
-
-    <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
-    </footer>
+  <div class="hero">
+    <div class="hero-label">Lecture 7 &middot; Interactive Explorer</div>
+    <h1>The Emotional Brain</h1>
+    <p>Explore how emotion is organized in the brain — not as a localized "limbic system" but as a dynamic network of cortical and subcortical regions whose interactions shape perception, motivation, and action.</p>
+    <div class="source-ref">Based on Pessoa (2017) and Phillips, Drevets, Rauch &amp; Lane (2003)</div>
   </div>
-  
-  <!-- Global Search -->
-  <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <div class="search-overlay" id="searchOverlay">
-    <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
-    <div class="search-box">
-      <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
-    </div>
-    <div class="search-results" id="searchResults"></div>
-    <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
+
+  <div class="section-nav" id="sectionNav">
+    <button class="active" data-panel="network">Network Model</button>
+    <button data-panel="processing">Emotion Processing</button>
+    <button data-panel="regions">Region Explorer</button>
+    <button data-panel="systems">Ventral vs Dorsal</button>
+    <button data-panel="quiz">Check Understanding</button>
   </div>
-  <script>
-  (function() {
-    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
-    var base = "../../../";
-    window.doSearch = function(q) {
-      var res = document.getElementById('searchResults');
-      if (!q || q.length < 2) { res.innerHTML = ''; return; }
-      var lq = q.toLowerCase();
-      var matches = idx.filter(function(item) {
-        return item.title.toLowerCase().indexOf(lq) !== -1 || item.type.toLowerCase().indexOf(lq) !== -1;
-      }).slice(0, 12);
-      res.innerHTML = matches.map(function(m) {
-        return '<a class="search-result" href="' + base + m.url + '"><span class="sr-type">' + m.type + '</span><span class="sr-title">' + m.title + '</span></a>';
-      }).join('');
-    };
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('searchOverlay').classList.add('active');
-        document.getElementById('searchInput').focus();
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  PANEL 1: Network Model                      -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-network">
+    <div class="card">
+      <h2>Beyond the "Limbic System"</h2>
+      <p>For decades, emotion was thought to reside in a circumscribed set of structures called the "limbic system." Pessoa (2017) argues this view is fundamentally incomplete. Instead, emotion should be understood in terms of large-scale network interactions spanning the entire neuroaxis — from brainstem to prefrontal cortex. The brain's functional architecture is highly non-modular, with signal distribution and integration as the norm.</p>
+    </div>
+
+    <div class="card">
+      <h2>Six Principles of Brain Organization</h2>
+      <p>Click each principle to see how it reshapes our understanding of the emotional brain.</p>
+      <div class="control-row" id="principleButtons">
+        <button class="btn active" onclick="showPrinciple(0)">1. Massive Connectivity</button>
+        <button class="btn" onclick="showPrinciple(1)">2. Cortical–Subcortical Loops</button>
+        <button class="btn" onclick="showPrinciple(2)">3. Distributed Function</button>
+        <button class="btn" onclick="showPrinciple(3)">4. Overlapping Networks</button>
+        <button class="btn" onclick="showPrinciple(4)">5. Dynamic Networks</button>
+        <button class="btn" onclick="showPrinciple(5)">6. Context-Sensitivity</button>
+      </div>
+      <div class="info-callout" id="principleInfo"></div>
+    </div>
+
+    <!-- Interactive Network Diagram -->
+    <div class="card">
+      <h2>Cortex–Amygdala Integrated System</h2>
+      <p>Click on brain regions in the network to see their connections. Solid lines show structural connections; dashed lines show functional coupling. Notice how every region connects to multiple others — there are no isolated "emotion centers."</p>
+      <svg class="network-svg" viewBox="0 0 700 400" id="networkSVG">
+        <!-- Connection lines (drawn first, behind nodes) -->
+        <g id="connectionLines" opacity="0.3">
+          <!-- Amygdala connections -->
+          <line x1="350" y1="200" x2="180" y2="100" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="520" y2="100" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="120" y2="220" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="580" y2="220" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="250" y2="320" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="450" y2="320" stroke="#f06090" stroke-width="1.5"/>
+          <line x1="350" y1="200" x2="350" y2="80" stroke="#f06090" stroke-width="1.5"/>
+          <!-- OFC connections -->
+          <line x1="180" y1="100" x2="350" y2="80" stroke="#6adaa0" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="180" y1="100" x2="120" y2="220" stroke="#6adaa0" stroke-width="1"/>
+          <line x1="180" y1="100" x2="250" y2="320" stroke="#6adaa0" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- dlPFC connections -->
+          <line x1="520" y1="100" x2="350" y2="80" stroke="#6ab4e8" stroke-width="1"/>
+          <line x1="520" y1="100" x2="580" y2="220" stroke="#6ab4e8" stroke-width="1"/>
+          <!-- ACC connections -->
+          <line x1="350" y1="80" x2="120" y2="220" stroke="#f0c860" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="350" y1="80" x2="580" y2="220" stroke="#f0c860" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- Insula-Striatum -->
+          <line x1="120" y1="220" x2="580" y2="220" stroke="#c89af0" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- Subcortical loops -->
+          <line x1="250" y1="320" x2="450" y2="320" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="450" y1="320" x2="580" y2="220" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="250" y1="320" x2="120" y2="220" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+        </g>
+
+        <!-- Region nodes -->
+        <g class="region-node" data-region="ofc" onclick="selectNetworkRegion('ofc')">
+          <circle cx="180" cy="100" r="32" fill="rgba(106,218,160,0.15)" stroke="#6adaa0" stroke-width="2"/>
+          <text x="180" y="96" text-anchor="middle" fill="#6adaa0" font-size="10" font-weight="700">OFC /</text>
+          <text x="180" y="110" text-anchor="middle" fill="#6adaa0" font-size="10" font-weight="700">vmPFC</text>
+        </g>
+        <g class="region-node" data-region="dlpfc" onclick="selectNetworkRegion('dlpfc')">
+          <circle cx="520" cy="100" r="32" fill="rgba(106,180,232,0.15)" stroke="#6ab4e8" stroke-width="2"/>
+          <text x="520" y="96" text-anchor="middle" fill="#6ab4e8" font-size="10" font-weight="700">dlPFC /</text>
+          <text x="520" y="110" text-anchor="middle" fill="#6ab4e8" font-size="10" font-weight="700">Dorsal PFC</text>
+        </g>
+        <g class="region-node" data-region="acc" onclick="selectNetworkRegion('acc')">
+          <circle cx="350" cy="80" r="30" fill="rgba(240,200,96,0.15)" stroke="#f0c860" stroke-width="2"/>
+          <text x="350" y="76" text-anchor="middle" fill="#f0c860" font-size="10" font-weight="700">ACC</text>
+          <text x="350" y="90" text-anchor="middle" fill="rgba(240,200,96,0.7)" font-size="8">(Cingulate)</text>
+        </g>
+        <g class="region-node" data-region="amygdala" onclick="selectNetworkRegion('amygdala')">
+          <circle cx="350" cy="200" r="38" fill="rgba(240,96,144,0.2)" stroke="#f06090" stroke-width="2.5"/>
+          <text x="350" y="196" text-anchor="middle" fill="#f06090" font-size="12" font-weight="700">Amygdala</text>
+          <text x="350" y="212" text-anchor="middle" fill="rgba(240,96,144,0.7)" font-size="8">(Extended)</text>
+        </g>
+        <g class="region-node" data-region="insula" onclick="selectNetworkRegion('insula')">
+          <circle cx="120" cy="220" r="28" fill="rgba(200,154,240,0.15)" stroke="#c89af0" stroke-width="2"/>
+          <text x="120" y="224" text-anchor="middle" fill="#c89af0" font-size="11" font-weight="700">Insula</text>
+        </g>
+        <g class="region-node" data-region="striatum" onclick="selectNetworkRegion('striatum')">
+          <circle cx="580" cy="220" r="28" fill="rgba(96,200,224,0.15)" stroke="#60c8e0" stroke-width="2"/>
+          <text x="580" y="216" text-anchor="middle" fill="#60c8e0" font-size="10" font-weight="700">Ventral</text>
+          <text x="580" y="230" text-anchor="middle" fill="#60c8e0" font-size="10" font-weight="700">Striatum</text>
+        </g>
+        <g class="region-node" data-region="hypothalamus" onclick="selectNetworkRegion('hypothalamus')">
+          <circle cx="250" cy="320" r="26" fill="rgba(232,145,122,0.15)" stroke="#e8917a" stroke-width="1.5"/>
+          <text x="250" y="316" text-anchor="middle" fill="#e8917a" font-size="9" font-weight="600">Hypo-</text>
+          <text x="250" y="328" text-anchor="middle" fill="#e8917a" font-size="9" font-weight="600">thalamus</text>
+        </g>
+        <g class="region-node" data-region="brainstem" onclick="selectNetworkRegion('brainstem')">
+          <circle cx="450" cy="320" r="26" fill="rgba(180,160,200,0.15)" stroke="rgba(180,160,200,0.6)" stroke-width="1.5"/>
+          <text x="450" y="316" text-anchor="middle" fill="rgba(180,160,200,0.8)" font-size="9" font-weight="600">Brain-</text>
+          <text x="450" y="328" text-anchor="middle" fill="rgba(180,160,200,0.8)" font-size="9" font-weight="600">stem / PAG</text>
+        </g>
+
+        <!-- Labels -->
+        <text x="350" y="380" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-weight="500" letter-spacing="2">CLICK REGIONS TO EXPLORE CONNECTIONS</text>
+      </svg>
+      <div class="info-callout" id="networkInfo">
+        <strong>Explore the network:</strong> Click on any brain region to learn about its role and connections. The amygdala sits at the center of this integrated system, but critically, it does not act alone — every region participates in multiple overlapping emotional and cognitive networks.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  PANEL 2: Emotion Processing Stages          -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="panel" id="panel-processing">
+    <div class="card">
+      <h2>Three Stages of Emotion Perception</h2>
+      <p>Phillips et al. (2003) proposed that emotion perception involves three interconnected processes. Click each stage below to explore it.</p>
+    </div>
+
+    <div class="stage-flow">
+      <div class="stage-card active" onclick="selectStage(0)">
+        <div class="stage-num" style="color:var(--ventral-color);">Stage 1</div>
+        <h4>Appraisal</h4>
+        <p>Identify the emotional significance of a stimulus</p>
+      </div>
+      <div class="stage-card" onclick="selectStage(1)">
+        <div class="stage-num" style="color:var(--amygdala-color);">Stage 2</div>
+        <h4>Affective State</h4>
+        <p>Produce autonomic, neuroendocrine, and behavioral responses</p>
+      </div>
+      <div class="stage-card" onclick="selectStage(2)">
+        <div class="stage-num" style="color:var(--dorsal-color);">Stage 3</div>
+        <h4>Regulation</h4>
+        <p>Modulate processes 1 and 2 for contextually appropriate behavior</p>
+      </div>
+    </div>
+
+    <div class="card" id="stageDetail">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="card">
+      <h2>Stimulus Processing Simulation</h2>
+      <p>Adjust the emotional intensity of an incoming stimulus and watch how activation propagates through the ventral (automatic) and dorsal (regulatory) systems.</p>
+
+      <div class="slider-group">
+        <label>Stimulus Valence:</label>
+        <input type="range" id="stimValence" min="-100" max="100" value="60" oninput="updateStimSim()">
+        <span class="slider-val" id="valenceVal">Threat</span>
+      </div>
+      <div class="slider-group">
+        <label>Stimulus Intensity:</label>
+        <input type="range" id="stimIntensity" min="0" max="100" value="70" oninput="updateStimSim()">
+        <span class="slider-val" id="intensityVal">70%</span>
+      </div>
+      <div class="slider-group">
+        <label>Regulation Effort:</label>
+        <input type="range" id="regEffort" min="0" max="100" value="30" oninput="updateStimSim()">
+        <span class="slider-val" id="regVal">30%</span>
+      </div>
+
+      <div class="sim-wrapper">
+        <canvas id="stimCanvas" width="880" height="280"></canvas>
+      </div>
+      <div class="info-callout" id="stimInfo">
+        <strong>Try it:</strong> Increase regulation effort to see how dorsal prefrontal regions dampen amygdala activation. Notice that even high regulation cannot fully suppress responses to very intense stimuli — consistent with the finding that emotional processing begins automatically and pre-consciously.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  PANEL 3: Region Explorer                    -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="panel" id="panel-regions">
+    <div class="card">
+      <h2>Key Brain Regions in Emotion</h2>
+      <p>Select a region to see its role in emotional processing, its key connections, and what happens when it is damaged.</p>
+    </div>
+
+    <div class="region-grid" id="regionGrid">
+      <button class="region-btn active" onclick="showRegion('amygdala')" style="border-color:rgba(240,96,144,0.4); color:var(--amygdala-color);">Amygdala</button>
+      <button class="region-btn" onclick="showRegion('insula')">Insula</button>
+      <button class="region-btn" onclick="showRegion('ofc')">Orbitofrontal Cortex</button>
+      <button class="region-btn" onclick="showRegion('acc')">Anterior Cingulate</button>
+      <button class="region-btn" onclick="showRegion('vstriatum')">Ventral Striatum</button>
+      <button class="region-btn" onclick="showRegion('hippocampus')">Hippocampus</button>
+      <button class="region-btn" onclick="showRegion('hypothalamus')">Hypothalamus</button>
+      <button class="region-btn" onclick="showRegion('pag')">PAG / Brainstem</button>
+    </div>
+
+    <div class="region-detail" id="regionDetail">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  PANEL 4: Ventral vs Dorsal Systems          -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="panel" id="panel-systems">
+    <div class="card">
+      <h2>Two Neural Systems for Emotion</h2>
+      <p>Phillips et al. (2003) identified two interacting neural systems underlying emotion perception. The <strong style="color:var(--ventral-color)">ventral system</strong> handles rapid, automatic identification of emotional stimuli and production of affective states. The <strong style="color:var(--dorsal-color)">dorsal system</strong> is crucial for effortful regulation and cognitive control of emotional responses.</p>
+    </div>
+
+    <div class="control-row">
+      <button class="btn active" id="btnBothSys" onclick="showSystem('both')">Both Systems</button>
+      <button class="btn" id="btnVentral" onclick="showSystem('ventral')">Ventral System</button>
+      <button class="btn" id="btnDorsal" onclick="showSystem('dorsal')">Dorsal System</button>
+    </div>
+
+    <div class="dual-panel">
+      <div class="sys-panel highlight" id="ventralPanel" style="border-color:rgba(232,145,122,0.4);">
+        <h3 style="color:var(--ventral-color);">Ventral System</h3>
+        <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:10px;">Rapid, automatic processing of emotional significance</p>
+        <div class="region-list">
+          <span style="border:1px solid rgba(240,96,144,0.3); color:var(--amygdala-color);">Amygdala</span>
+          <span style="border:1px solid rgba(200,154,240,0.3); color:var(--insula-color);">Insula</span>
+          <span style="border:1px solid rgba(96,200,224,0.3); color:var(--striatum-color);">Ventral Striatum</span>
+          <span style="border:1px solid rgba(106,218,160,0.3); color:var(--pfc-color);">vmPFC / OFC</span>
+          <span style="border:1px solid rgba(240,200,96,0.3); color:var(--acc-color);">Ventral ACC</span>
+        </div>
+        <div style="margin-top:12px; font-size:0.82rem; color:var(--text-muted);">
+          <strong style="color:var(--ventral-color);">Processes 1 &amp; 2:</strong> Identifies emotionally salient stimuli and generates automatic affective responses — autonomic arousal, behavioral impulses, and conscious feeling states.
+        </div>
+      </div>
+      <div class="sys-panel highlight" id="dorsalPanel" style="border-color:rgba(106,180,232,0.4);">
+        <h3 style="color:var(--dorsal-color);">Dorsal System</h3>
+        <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:10px;">Effortful regulation and contextual control</p>
+        <div class="region-list">
+          <span style="border:1px solid rgba(106,180,232,0.3); color:var(--dorsal-color);">Dorsal PFC</span>
+          <span style="border:1px solid rgba(240,200,96,0.3); color:var(--acc-color);">Dorsal ACC</span>
+          <span style="border:1px solid rgba(200,154,240,0.3);">Hippocampus</span>
+        </div>
+        <div style="margin-top:12px; font-size:0.82rem; color:var(--text-muted);">
+          <strong style="color:var(--dorsal-color);">Process 3:</strong> Modulates ventral system activity. Enables cognitive reappraisal, behavioral inhibition, and contextually appropriate emotional responses. Requires effortful processing.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>How the Systems Interact</h2>
+      <table class="comp-table">
+        <thead>
+          <tr><th>Feature</th><th style="color:var(--ventral-color)">Ventral</th><th style="color:var(--dorsal-color)">Dorsal</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Speed</strong></td><td>Fast, automatic</td><td>Slow, effortful</td></tr>
+          <tr><td><strong>Awareness</strong></td><td>Can operate unconsciously</td><td>Requires conscious engagement</td></tr>
+          <tr><td><strong>Function</strong></td><td>Detect salience, produce affect</td><td>Regulate, reappraise, plan</td></tr>
+          <tr><td><strong>Damage effects</strong></td><td>Emotional blunting, impaired fear</td><td>Disinhibition, poor regulation</td></tr>
+          <tr><td><strong>Disorders</strong></td><td>Flat affect, psychopathy</td><td>Anxiety, PTSD (under-regulation)</td></tr>
+          <tr><td><strong>Interaction</strong></td><td colspan="2" style="text-align:center; font-style:italic;">The dorsal system can dampen or amplify ventral system activity depending on goals, context, and cognitive strategy</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-callout">
+      <strong>Key insight:</strong> These two systems do not work in isolation. Anxiety disorders may reflect a hyperactive ventral system combined with an under-functioning dorsal regulatory system. Effective therapies like cognitive-behavioral therapy (CBT) work by strengthening dorsal prefrontal control over ventral emotional reactivity.
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!--  PANEL 5: Quiz                               -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="panel" id="panel-quiz">
+    <div class="card">
+      <h2>Check Your Understanding</h2>
+      <p>Test your grasp of key concepts from Pessoa (2017) and Phillips et al. (2003).</p>
+    </div>
+
+    <div class="quiz-q" id="q1">
+      <p>1. According to Pessoa (2017), why is the concept of a "limbic system" insufficient for understanding the emotional brain?</p>
+      <div class="q-options">
+        <button class="q-opt" onclick="answer(1,0)">Because the limbic system has been shown to not exist anatomically</button>
+        <button class="q-opt" onclick="answer(1,1)">Because emotion involves large-scale network interactions across the entire neuroaxis, not a circumscribed set of structures</button>
+        <button class="q-opt" onclick="answer(1,2)">Because emotion is processed exclusively in the prefrontal cortex</button>
+        <button class="q-opt" onclick="answer(1,3)">Because subcortical structures have no role in emotional processing</button>
+      </div>
+      <div class="quiz-feedback" id="fb1">Pessoa argues that emotion should be understood through <strong>large-scale network interactions</strong> involving both cortical and subcortical regions spanning the entire neuroaxis. The traditional "limbic system" view is too limited because it treats emotion as localized to a few structures, when in reality the brain's architecture is highly non-modular with overlapping, dynamic networks.</div>
+    </div>
+
+    <div class="quiz-q" id="q2">
+      <p>2. In Phillips et al.'s (2003) model, which brain regions are primarily associated with the automatic identification of emotional stimuli (Process 1)?</p>
+      <div class="q-options">
+        <button class="q-opt" onclick="answer(2,0)">Dorsolateral prefrontal cortex and hippocampus</button>
+        <button class="q-opt" onclick="answer(2,1)">Amygdala and insula</button>
+        <button class="q-opt" onclick="answer(2,2)">Primary visual cortex and motor cortex</button>
+        <button class="q-opt" onclick="answer(2,3)">Cerebellum and basal ganglia</button>
+      </div>
+      <div class="quiz-feedback" id="fb2">The <strong>amygdala</strong> plays a central role in identifying emotionally salient stimuli, particularly threats, while the <strong>insula</strong> is critical for identifying disgust and interoceptive emotional states. Both are part of the ventral system that handles rapid, automatic emotional appraisal — which can occur even without conscious awareness.</div>
+    </div>
+
+    <div class="quiz-q" id="q3">
+      <p>3. What does Pessoa mean by "functional diversity" of brain regions?</p>
+      <div class="q-options">
+        <button class="q-opt" onclick="answer(3,0)">Each brain region has exactly one function</button>
+        <button class="q-opt" onclick="answer(3,1)">Brain regions participate in multiple networks and are involved in many different mental functions</button>
+        <button class="q-opt" onclick="answer(3,2)">Different species use different brain regions for the same function</button>
+        <button class="q-opt" onclick="answer(3,3)">Brain functions are distributed evenly across all regions</button>
+      </div>
+      <div class="quiz-feedback" id="fb3"><strong>Functional diversity</strong> means that brain regions participate in multiple overlapping networks and are involved in a variety of mental functions. For example, the amygdala is not solely an "emotion region" — it participates in attention, memory, social cognition, and decision-making. Regions with high functional diversity tend to be hubs that participate in many networks simultaneously.</div>
+    </div>
+
+    <div class="quiz-q" id="q4">
+      <p>4. In the ventral/dorsal model, what happens when the dorsal regulatory system is impaired?</p>
+      <div class="q-options">
+        <button class="q-opt" onclick="answer(4,0)">Emotions become completely absent</button>
+        <button class="q-opt" onclick="answer(4,1)">Emotional responses become unregulated — disinhibition, impulsivity, and exaggerated emotional reactions</button>
+        <button class="q-opt" onclick="answer(4,2)">Only positive emotions are preserved</button>
+        <button class="q-opt" onclick="answer(4,3)">The ventral system compensates perfectly</button>
+      </div>
+      <div class="quiz-feedback" id="fb4">When the dorsal regulatory system (dorsal PFC, dorsal ACC, hippocampus) is impaired, the ventral system operates with reduced top-down control. This leads to <strong>disinhibition, emotional dysregulation, and impulsivity</strong>. Clinical examples include patients with ventromedial prefrontal damage who show impaired decision-making and failure to use emotional information to guide behavior appropriately.</div>
+    </div>
+
+    <div class="quiz-q" id="q5">
+      <p>5. Which of Pessoa's six principles explains why the amygdala's role changes depending on the task being performed?</p>
+      <div class="q-options">
+        <button class="q-opt" onclick="answer(5,0)">Principle 1: Massive combinatorial connectivity</button>
+        <button class="q-opt" onclick="answer(5,1)">Principle 3: Distributed functional connectivity</button>
+        <button class="q-opt" onclick="answer(5,2)">Principle 6: Context-sensitivity — brain function is shaped by the current context and task demands</button>
+        <button class="q-opt" onclick="answer(5,3)">Principle 4: Overlapping brain networks</button>
+      </div>
+      <div class="quiz-feedback" id="fb5"><strong>Context-sensitivity</strong> (Principle 6) explains that the functional role of a brain region is not fixed but changes depending on the current context — including task demands, motivational state, and the broader pattern of network activity. The amygdala may be critically involved in fear processing during threat detection but plays a different role during social cognition or reward learning.</div>
+    </div>
+  </div>
+
+  <footer>
+    PSYCH 302 &middot; University of Washington &middot; Lecture 7 Interactive Explorer<br>
+    Based on Pessoa, L. (2017). <em>A network model of the emotional brain</em>. Trends in Cognitive Sciences, 21(5), 357–371.<br>
+    Phillips, M. L., et al. (2003). <em>Neurobiology of emotion perception I</em>. Biological Psychiatry, 54, 504–514.
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  Tab Navigation
+// ═══════════════════════════════════════
+document.querySelectorAll('.section-nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+    if (btn.dataset.panel === 'processing') { selectStage(0); initStimSim(); }
+  });
+});
+
+// ═══════════════════════════════════════
+//  Panel 1: Principles
+// ═══════════════════════════════════════
+const principles = [
+  {
+    title: 'Principle 1: Massive Combinatorial Connectivity',
+    text: 'Both cortical and subcortical brain regions are densely interconnected. Rich connectivity is not limited to specific sectors — it encompasses all of them, including brainstem and cerebellum. Key features include: (i) massive interconnectivity, (ii) high global accessibility (any region can reach any other), and (iii) a "rich-club" core of especially well-connected regions. One study found 92% connectivity density across a core set of 17 regions spanning parietal, temporal, and frontal cortex.'
+  },
+  {
+    title: 'Principle 2: Cortical–Subcortical Connectional Systems',
+    text: 'The classic cortico–basal ganglia–thalamo–cortical loop is just one example of a broader principle: cortical and subcortical structures form large-scale loops that process information in parallel. The "extended amygdala" (central amygdala + bed nucleus of stria terminalis) participates in loops with the septum, hippocampus, hypothalamus, and brainstem. These loops allow subcortical structures to influence cortical processing and vice versa.'
+  },
+  {
+    title: 'Principle 3: High Distributed Functional Connectivity',
+    text: 'Understanding the brain requires looking at how regions functionally co-vary — not just where they sit anatomically. Regions may show functional connectivity even without direct structural connections. Critically, the relationship between structural and functional connectivity is not one-to-one: people born without a corpus callosum can still show coordinated activity across hemispheres.'
+  },
+  {
+    title: 'Principle 4: Overlapping Brain Networks',
+    text: 'Traditional approaches assign each region to one network. This is misleading — brain networks are inherently overlapping. Analysis of fMRI data shows that regions participate in multiple networks simultaneously. Frontal and parietal regions show particularly high "membership diversity" — they belong to many communities at once, consistent with their multifunctional role in attention, executive control, and emotional regulation.'
+  },
+  {
+    title: 'Principle 5: Dynamic Brain Networks',
+    text: 'Brain networks are not static — they evolve temporally. Functional connections change as a function of context, task demands, and motivational state. Networks are dynamic coalitions of brain regions that form and dissolve to meet specific computational needs. This means the "emotional brain" is not a fixed circuit but a shifting configuration that reorganizes moment by moment.'
+  },
+  {
+    title: 'Principle 6: Context-Sensitive Processing',
+    text: 'The function of a brain region depends on its current network context. The amygdala, for example, is not simply a "fear center" — its contribution changes depending on whether you are detecting threats, processing social signals, forming memories, or making decisions. This context-sensitivity is a fundamental property that emerges from the brain\'s massively interconnected, dynamic architecture.'
+  }
+];
+
+function showPrinciple(idx) {
+  const btns = document.querySelectorAll('#principleButtons .btn');
+  btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+  const p = principles[idx];
+  document.getElementById('principleInfo').innerHTML = `<strong>${p.title}</strong><br><br>${p.text}`;
+}
+showPrinciple(0);
+
+// ═══════════════════════════════════════
+//  Panel 1: Network Region Info
+// ═══════════════════════════════════════
+const networkRegions = {
+  amygdala: { color: '#f06090', info: '<strong style="color:#f06090">Amygdala (Extended)</strong> — The central hub of the emotional network. Connects to virtually every other region shown here. Critically involved in rapid threat detection, salience evaluation, fear conditioning, and modulating memory consolidation. The "extended amygdala" includes the central nucleus and bed nucleus of stria terminalis. Pessoa emphasizes that its role extends far beyond fear — it participates in reward processing, social cognition, and attention.' },
+  ofc: { color: '#6adaa0', info: '<strong style="color:#6adaa0">Orbitofrontal / Ventromedial PFC</strong> — Represents the reward value of stimuli and guides goal-directed behavior. OFC lesions in monkeys produce changes in food-selection and impaired ability to break learned associations. In humans, vmPFC damage leads to impaired decision-making (as shown in the Iowa Gambling Task) and failure to use emotional signals to guide choices. It connects bidirectionally with the amygdala, insula, ACC, and striatum.' },
+  dlpfc: { color: '#6ab4e8', info: '<strong style="color:#6ab4e8">Dorsolateral / Dorsal PFC</strong> — The primary hub of the dorsal regulatory system. Provides top-down cognitive control over emotional responses. Active during effortful emotion regulation strategies like cognitive reappraisal. Its connections to the ACC and striatum allow it to modulate the ventral emotional system. Damage here leads to impaired planning, working memory, and failure to regulate emotional impulses.' },
+  acc: { color: '#f0c860', info: '<strong style="color:#f0c860">Anterior Cingulate Cortex (ACC)</strong> — Has two functionally distinct divisions. The <em>ventral/affective division</em> (subgenual + pregenual ACC) connects to the amygdala and autonomic centers, monitoring emotional conflicts and visceral states. The <em>dorsal/cognitive division</em> connects to dorsal PFC and is involved in error monitoring and cognitive control. This dual nature makes the ACC a critical interface between emotional and cognitive processing.' },
+  insula: { color: '#c89af0', info: '<strong style="color:#c89af0">Insula</strong> — The interoceptive cortex that represents internal body states. Critical for the conscious experience of emotion — transforming raw autonomic signals into felt emotional experience. Specifically implicated in processing disgust (both physical and moral), pain, and empathy. The anterior insula connects extensively with the amygdala, vmPFC, and ACC, making it a key integration point for emotional awareness.' },
+  striatum: { color: '#60c8e0', info: '<strong style="color:#60c8e0">Ventral Striatum (incl. Nucleus Accumbens)</strong> — The brain\'s reward prediction center. Activated during anticipation and receipt of rewards, romantic love, and craving. Dopamine signals in the ventral striatum code reward prediction errors — the difference between expected and actual outcomes. It receives input from the amygdala and OFC and projects to the pallidum and thalamus, forming a key cortical–subcortical loop.' },
+  hypothalamus: { color: '#e8917a', info: '<strong style="color:#e8917a">Hypothalamus</strong> — The command center for autonomic and endocrine responses to emotional stimuli. Receives projections from the amygdala and brainstem. Orchestrates the physiological components of emotion: heart rate, blood pressure, hormone release (cortisol, adrenaline), and fight-or-flight activation. It is the output node that translates emotional evaluations into bodily responses.' },
+  brainstem: { color: 'rgba(180,160,200,0.8)', info: '<strong style="color:rgba(180,160,200,0.9)">Brainstem / PAG (Periaqueductal Gray)</strong> — Contains ascending neurotransmitter systems (dopamine, serotonin, norepinephrine, acetylcholine) that broadly modulate cortical processing. The PAG specifically coordinates defensive behaviors (freezing, fight, flight) and pain modulation. Brainstem nuclei form the base of cortical–subcortical connectional systems, with ascending projections that influence mood, arousal, and emotional state.' }
+};
+
+function selectNetworkRegion(id) {
+  document.querySelectorAll('.region-node').forEach(n => n.classList.remove('active'));
+  const node = document.querySelector(`.region-node[data-region="${id}"]`);
+  if (node) node.classList.add('active');
+  const r = networkRegions[id];
+  const info = document.getElementById('networkInfo');
+  info.innerHTML = r.info;
+  info.style.borderLeftColor = r.color;
+}
+
+// ═══════════════════════════════════════
+//  Panel 2: Processing Stages
+// ═══════════════════════════════════════
+const stages = [
+  {
+    title: 'Stage 1: Appraisal — Identifying Emotional Significance',
+    html: `<p>The first stage involves rapidly identifying whether a stimulus has emotional significance. This process can occur <strong>without conscious awareness</strong> — studies using backward masking show that the amygdala responds to fearful faces even when subjects cannot consciously perceive them.</p>
+    <h3>Key Regions</h3>
+    <p><strong style="color:var(--amygdala-color)">Amygdala:</strong> Responds to faces, threatening scenes, and emotionally salient stimuli across modalities (visual, auditory, olfactory). Cells in the amygdala respond selectively to faces and eye gaze direction.</p>
+    <p><strong style="color:var(--insula-color)">Insula:</strong> Particularly critical for identifying disgust — both in facial expressions and taste/smell. Shares extensive connections with the amygdala and ventromedial PFC.</p>
+    <p style="margin-top:12px;"><em>Speed matters:</em> Appraisal is fast and automatic. It biases subsequent processing before you are consciously aware of what you are feeling.</p>`
+  },
+  {
+    title: 'Stage 2: Production of Affective States',
+    html: `<p>Once a stimulus is appraised as emotionally significant, the brain generates a coordinated affective response involving autonomic, neuroendocrine, and behavioral components.</p>
+    <h3>Key Regions</h3>
+    <p><strong style="color:var(--amygdala-color)">Amygdala:</strong> Bilateral lesions result in emotional blunting and impaired fear conditioning. Electrical stimulation produces autonomic arousal and feelings of fear. Kl&uuml;ver-Bucy syndrome (bilateral temporal lobe damage) causes hyperorality, social disinhibition, and absence of emotional behavior.</p>
+    <p><strong style="color:var(--acc-color)">Ventral ACC:</strong> The affective division of the cingulate. Lesions impair autonomic responses to conditioned stimuli and reduce emotional vocalizations. Stimulation evokes visceromotor changes and feelings of various emotions.</p>
+    <p><strong style="color:var(--striatum-color)">Ventral Striatum:</strong> The reward processing hub. Activated during anticipation of reward, romantic love, and euphoric drug responses. Dopamine release here correlates with the subjective pleasantness of experiences.</p>`
+  },
+  {
+    title: 'Stage 3: Regulation of Affective States',
+    html: `<p>The third stage involves modulating the initial emotional response to produce contextually appropriate behavior. This is where the dorsal system plays its critical role.</p>
+    <h3>Key Regions</h3>
+    <p><strong style="color:var(--dorsal-color)">Dorsal PFC:</strong> Enables cognitive reappraisal — reinterpreting emotional situations to change their impact. fMRI studies show that when participants deliberately regulate their emotional responses, dorsal PFC activation increases while amygdala activation decreases.</p>
+    <p><strong style="color:var(--pfc-color)">Medial PFC:</strong> Strategically located between the reactive ventrolateral trend and the planning-based mediodorsal trend. The ventrolateral trend operates by feedback (archicortex-derived), while the mediodorsal trend operates by feed-forward (paleocortex-derived, hippocampus).</p>
+    <p><strong>Hippocampus:</strong> Implicated in contextual modulation — helps determine whether an emotional response is appropriate given the current context. Also involved in stress regulation via connections to the hypothalamic-pituitary-adrenal axis.</p>
+    <p style="margin-top:12px;"><em>Clinical relevance:</em> Impaired regulation is central to anxiety disorders, PTSD, and depression — conditions where the dorsal system fails to adequately modulate ventral emotional reactivity.</p>`
+  }
+];
+
+function selectStage(idx) {
+  document.querySelectorAll('.stage-card').forEach((c, i) => c.classList.toggle('active', i === idx));
+  const s = stages[idx];
+  document.getElementById('stageDetail').innerHTML = `<h2>${s.title}</h2>${s.html}`;
+}
+selectStage(0);
+
+// ═══════════════════════════════════════
+//  Panel 2: Stimulus Simulation
+// ═══════════════════════════════════════
+let stimAnimId = null;
+
+function initStimSim() {
+  updateStimSim();
+}
+
+function updateStimSim() {
+  const valence = parseInt(document.getElementById('stimValence').value);
+  const intensity = parseInt(document.getElementById('stimIntensity').value);
+  const regulation = parseInt(document.getElementById('regEffort').value);
+
+  document.getElementById('valenceVal').textContent = valence > 30 ? 'Threat' : valence < -30 ? 'Reward' : 'Neutral';
+  document.getElementById('intensityVal').textContent = intensity + '%';
+  document.getElementById('regVal').textContent = regulation + '%';
+
+  drawStimCanvas(valence, intensity, regulation);
+}
+
+function drawStimCanvas(valence, intensity, regulation) {
+  const canvas = document.getElementById('stimCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect(0, 0, W, H);
+
+  const iNorm = intensity / 100;
+  const rNorm = regulation / 100;
+  const threatLevel = Math.max(0, valence / 100);
+  const rewardLevel = Math.max(0, -valence / 100);
+
+  // Region activation levels
+  const amygAct = iNorm * (0.5 + threatLevel * 0.5) * (1 - rNorm * 0.5);
+  const insulaAct = iNorm * (0.3 + threatLevel * 0.4) * (1 - rNorm * 0.3);
+  const striatumAct = iNorm * (0.2 + rewardLevel * 0.6);
+  const ofcAct = iNorm * 0.6;
+  const dorsalAct = rNorm * 0.9;
+  const accAct = Math.max(amygAct, dorsalAct) * 0.7;
+
+  const regions = [
+    { x: 120, y: H/2, r: 35, act: amygAct, label: 'Amygdala', color: '#f06090' },
+    { x: 280, y: H/2 - 60, r: 28, act: insulaAct, label: 'Insula', color: '#c89af0' },
+    { x: 280, y: H/2 + 60, r: 28, act: striatumAct, label: 'V. Striatum', color: '#60c8e0' },
+    { x: 460, y: H/2, r: 30, act: ofcAct, label: 'OFC', color: '#6adaa0' },
+    { x: 620, y: H/2 - 60, r: 30, act: dorsalAct, label: 'Dorsal PFC', color: '#6ab4e8' },
+    { x: 620, y: H/2 + 60, r: 28, act: accAct, label: 'ACC', color: '#f0c860' },
+    { x: 790, y: H/2, r: 25, act: Math.max(0, amygAct - rNorm * 0.4), label: 'Output', color: '#e8917a' },
+  ];
+
+  // Draw connections
+  const conns = [[0,1],[0,2],[0,3],[1,3],[2,3],[3,4],[3,5],[4,5],[4,0],[5,0],[3,6]];
+  conns.forEach(([a,b]) => {
+    const ra = regions[a], rb = regions[b];
+    const strength = (ra.act + rb.act) / 2;
+    ctx.beginPath();
+    ctx.moveTo(ra.x, ra.y);
+    ctx.lineTo(rb.x, rb.y);
+    ctx.strokeStyle = `rgba(255,255,255,${0.05 + strength * 0.2})`;
+    ctx.lineWidth = 1 + strength * 2;
+    ctx.stroke();
+  });
+
+  // Draw regions
+  regions.forEach(r => {
+    // Glow
+    const grd = ctx.createRadialGradient(r.x, r.y, 0, r.x, r.y, r.r * (1 + r.act));
+    grd.addColorStop(0, r.color.replace(')', `,${0.1 + r.act * 0.3})`).replace('rgb', 'rgba').replace('#', ''));
+    // Use hex to rgba
+    const hex = r.color;
+    const rr = parseInt(hex.slice(1,3),16), gg = parseInt(hex.slice(3,5),16), bb = parseInt(hex.slice(5,7),16);
+    const grd2 = ctx.createRadialGradient(r.x, r.y, 0, r.x, r.y, r.r * (1 + r.act * 0.5));
+    grd2.addColorStop(0, `rgba(${rr},${gg},${bb},${0.15 + r.act * 0.35})`);
+    grd2.addColorStop(1, `rgba(${rr},${gg},${bb},0)`);
+    ctx.fillStyle = grd2;
+    ctx.beginPath();
+    ctx.arc(r.x, r.y, r.r * (1 + r.act * 0.5), 0, Math.PI * 2);
+    ctx.fill();
+
+    // Node
+    ctx.beginPath();
+    ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${rr},${gg},${bb},${0.1 + r.act * 0.2})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgba(${rr},${gg},${bb},${0.4 + r.act * 0.6})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = `rgba(${rr},${gg},${bb},${0.6 + r.act * 0.4})`;
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fontWeight = '600';
+    ctx.textAlign = 'center';
+    ctx.fillText(r.label, r.x, r.y + 4);
+
+    // Activation percentage
+    ctx.fillStyle = `rgba(255,255,255,${0.3 + r.act * 0.5})`;
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillText(Math.round(r.act * 100) + '%', r.x, r.y + r.r + 14);
+  });
+
+  // Labels
+  ctx.fillStyle = 'rgba(232,145,122,0.4)';
+  ctx.font = '10px Inter, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('VENTRAL (AUTOMATIC)', 200, 24);
+  ctx.fillStyle = 'rgba(106,180,232,0.4)';
+  ctx.fillText('DORSAL (REGULATORY)', 620, 24);
+  ctx.fillStyle = 'rgba(232,145,122,0.3)';
+  ctx.fillText('BEHAVIORAL', 790, 24);
+}
+
+// ═══════════════════════════════════════
+//  Panel 3: Region Explorer
+// ═══════════════════════════════════════
+const regionData = {
+  amygdala: {
+    title: 'Amygdala', color: '#f06090', system: 'Ventral',
+    tags: [{ text: 'Ventral System', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Hub Region', bg: 'rgba(240,200,160,0.15)', color: '#f0c8a0' }],
+    role: 'Central hub for emotional salience detection. Responds rapidly to threat-related stimuli (fearful faces, threatening scenes) and is involved in fear conditioning, reward learning, and social cognition. The "extended amygdala" includes the bed nucleus of stria terminalis.',
+    connections: 'Bidirectional connections with virtually all cortical and subcortical regions in the emotional network: OFC, ACC, insula, hippocampus, hypothalamus, brainstem, thalamus, and sensory cortices.',
+    damage: 'Bilateral amygdala damage (as in Urbach-Wiethe disease) leads to impaired fear recognition, reduced fear conditioning, and difficulty detecting emotionally salient stimuli. Klüver-Bucy syndrome (bilateral temporal lobe lesions) produces emotional flattening, hyperorality, and loss of normal social behavior.',
+    clinical: 'Hyperactivity implicated in anxiety disorders and PTSD. Reduced amygdala reactivity observed in psychopathy. Abnormal amygdala–PFC connectivity found in depression and social anxiety.'
+  },
+  insula: {
+    title: 'Insula (Insular Cortex)', color: '#c89af0', system: 'Ventral',
+    tags: [{ text: 'Ventral System', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Interoception', bg: 'rgba(200,154,240,0.15)', color: '#c89af0' }],
+    role: 'The primary interoceptive cortex — represents internal body states (heartbeat, gut feelings, temperature). Critical for conscious awareness of emotions, processing disgust (physical and moral), pain perception, and empathy. The anterior insula may be where raw autonomic signals become conscious "felt" experiences.',
+    connections: 'Extensive reciprocal connections with the amygdala, ventromedial PFC, hypothalamus, and periaqueductal gray. Also connects to somatosensory cortex and the ventral striatum.',
+    damage: 'Insula lesions impair recognition of disgust in facial expressions and reduce the experience of disgust. Stimulation produces nausea, unpleasant tastes, and epigastric sensations. Also implicated in conditioned taste aversion.',
+    clinical: 'Abnormal insula activation in anxiety disorders (heightened interoceptive awareness), eating disorders, and chronic pain conditions. Reduced insular response observed in alexithymia (difficulty identifying emotions).'
+  },
+  ofc: {
+    title: 'Orbitofrontal / Ventromedial PFC', color: '#6adaa0', system: 'Ventral',
+    tags: [{ text: 'Ventral System', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Reward Value', bg: 'rgba(106,218,160,0.15)', color: '#6adaa0' }],
+    role: 'Represents the reward value of stimuli and outcomes. Guides goal-directed behavior by integrating emotional information with decision-making. Critical for learning stimulus-reward associations, guiding food selection, and social behavior. Single-unit recordings show neurons responsive to reward value of taste, smell, and visual stimuli.',
+    connections: 'Direct connections from the amygdala. Projects to the ventral striatum, ACC, and hypothalamus. Receives input from all sensory modalities.',
+    damage: 'OFC/vmPFC lesions produce dramatic changes: impaired decision-making (Iowa Gambling Task), reduced aggression, inability to break learned reward associations, impulsivity, disinhibition, and misinterpretation of others\' moods. The famous case of Phineas Gage illustrates personality changes following frontal damage.',
+    clinical: 'Disrupted in addiction (altered reward processing), OCD (hyperactive error monitoring), and antisocial personality disorder (reduced sensitivity to social consequences).'
+  },
+  acc: {
+    title: 'Anterior Cingulate Cortex', color: '#f0c860', system: 'Both',
+    tags: [{ text: 'Ventral (Affective)', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Dorsal (Cognitive)', bg: 'rgba(106,180,232,0.15)', color: '#6ab4e8' }],
+    role: 'Uniquely positioned at the intersection of emotional and cognitive processing. The ventral/affective division (subgenual + pregenual ACC) is associated with autonomic regulation, emotional vocalization, and mood. The dorsal/cognitive division handles error monitoring, conflict detection, and cognitive control. This dual role makes the ACC a critical interface.',
+    connections: 'Ventral ACC connects to amygdala, hypothalamus, PAG, and autonomic brainstem nuclei. Dorsal ACC connects to dorsolateral PFC, parietal cortex, and motor areas.',
+    damage: 'Lesions of the affective division produce apathy to disinhibition, reduced autonomic responses to conditioned stimuli, and changes in emotional vocalization. Cingulate seizure foci are associated with spontaneous emotional outbursts.',
+    clinical: 'Subgenual ACC shows abnormal activity in major depression (a target for deep brain stimulation treatment). Dorsal ACC hyperactivity in anxiety and OCD. Reduced ACC volume in PTSD.'
+  },
+  vstriatum: {
+    title: 'Ventral Striatum (Nucleus Accumbens)', color: '#60c8e0', system: 'Ventral',
+    tags: [{ text: 'Ventral System', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Reward', bg: 'rgba(96,200,224,0.15)', color: '#60c8e0' }],
+    role: 'The brain\'s reward prediction center. Activated during anticipation and receipt of rewards, time-locked processing of reward prediction, romantic love, and euphoric experiences. Dopamine release correlates with the euphoric response and reward magnitude. Receives convergent input from the amygdala, OFC, and midbrain dopamine neurons.',
+    connections: 'Receives dopaminergic input from the VTA (ventral tegmental area). Receives projections from the amygdala, OFC, hippocampus, and medial PFC. Projects to the pallidum and thalamus, completing the cortical–subcortical loop.',
+    damage: 'Disruption leads to anhedonia (inability to experience pleasure) and motivational deficits. Lesions affect reward-based learning and decision-making.',
+    clinical: 'Central to addiction neuroscience — all drugs of abuse increase dopamine in the ventral striatum. Also implicated in depression (reduced reward responsiveness), gambling disorder, and schizophrenia (aberrant salience).'
+  },
+  hippocampus: {
+    title: 'Hippocampus', color: '#b8a8b8', system: 'Dorsal',
+    tags: [{ text: 'Dorsal System', bg: 'rgba(106,180,232,0.15)', color: '#6ab4e8' }, { text: 'Context / Memory', bg: 'rgba(184,168,184,0.2)', color: '#b8a8b8' }],
+    role: 'Provides contextual modulation of emotional responses. Encodes the spatial and temporal context of emotional experiences, enabling context-dependent fear (knowing a dark alley is dangerous but your dark bedroom is safe). Also critical for episodic memory of emotional events and regulation of the stress response via HPA axis connections.',
+    connections: 'Bidirectional connections with the amygdala, entorhinal cortex, prefrontal cortex (both medial and dorsal), and hypothalamus. Part of the Papez circuit.',
+    damage: 'Hippocampal damage impairs contextual fear conditioning (responding to the context where something bad happened) while sparing cue-specific fear. Chronic stress causes hippocampal volume reduction via glucocorticoid-mediated neurotoxicity.',
+    clinical: 'Reduced hippocampal volume in PTSD, depression, and chronic stress disorders. Hippocampal dysfunction may impair the ability to distinguish safe from dangerous contexts — potentially contributing to generalized anxiety.'
+  },
+  hypothalamus: {
+    title: 'Hypothalamus', color: '#e8917a', system: 'Subcortical',
+    tags: [{ text: 'Autonomic Output', bg: 'rgba(232,145,122,0.15)', color: '#e8917a' }, { text: 'Endocrine', bg: 'rgba(240,200,160,0.15)', color: '#f0c8a0' }],
+    role: 'The command center for the physiological expression of emotion. Translates emotional evaluations from the amygdala and cortex into bodily responses: heart rate changes, blood pressure regulation, hormone release (cortisol via HPA axis, adrenaline via sympathetic activation), temperature regulation, and feeding/drinking behavior.',
+    connections: 'Receives direct input from the amygdala, ACC, OFC, and brainstem. Projects to the pituitary gland (hormonal control), autonomic brainstem nuclei, and spinal cord. Part of the descending cortical–subcortical pathway.',
+    damage: 'Hypothalamic lesions disrupt autonomic responses to emotional stimuli, alter feeding behavior, and impair stress responses. Historical studies by Cannon and Bard showed the hypothalamus is critical for coordinated rage responses.',
+    clinical: 'Hypothalamic dysfunction involved in disorders of stress regulation, appetite (obesity, anorexia), circadian rhythm, and autonomic dysregulation.'
+  },
+  pag: {
+    title: 'Periaqueductal Gray (PAG) / Brainstem', color: 'rgba(180,160,200,0.9)', system: 'Subcortical',
+    tags: [{ text: 'Defense Behaviors', bg: 'rgba(180,160,200,0.15)', color: 'rgba(180,160,200,0.9)' }, { text: 'Ascending Systems', bg: 'rgba(200,180,220,0.15)', color: 'rgba(200,180,220,0.9)' }],
+    role: 'The PAG coordinates innate defensive behaviors — freezing, fight, flight, and submission — depending on threat proximity. Also plays a critical role in pain modulation (endogenous analgesia). The broader brainstem contains ascending neuromodulatory systems (dopamine from VTA/SN, serotonin from raphe nuclei, norepinephrine from locus coeruleus, acetylcholine from basal forebrain) that globally influence cortical emotional processing.',
+    connections: 'Receives input from the amygdala, hypothalamus, and prefrontal cortex. Ascending projections reach virtually all cortical and subcortical structures. Descending projections control motor and autonomic outputs.',
+    damage: 'PAG lesions eliminate coordinated defensive behaviors. Disruption of ascending neuromodulatory systems profoundly alters emotional state — e.g., serotonin depletion is linked to depression and aggression, dopamine disruption to anhedonia.',
+    clinical: 'Target for deep brain stimulation in treatment-resistant pain. Ascending system dysfunction implicated in depression (serotonin), ADHD (norepinephrine/dopamine), and Parkinson\'s disease (dopamine).'
+  }
+};
+
+function showRegion(id) {
+  document.querySelectorAll('.region-btn').forEach(b => { b.classList.remove('active'); b.style.borderColor = ''; b.style.color = ''; });
+  const clickedBtn = [...document.querySelectorAll('.region-btn')].find(b => b.textContent.trim().toLowerCase().includes(id === 'vstriatum' ? 'ventral striatum' : id === 'pag' ? 'pag' : id));
+  if (!clickedBtn) {
+    // match by onclick
+    document.querySelectorAll('.region-btn').forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(id)) {
+        b.classList.add('active');
+        b.style.borderColor = `${regionData[id].color}66`;
+        b.style.color = regionData[id].color;
       }
     });
-  })();
-  </script>
+  } else {
+    clickedBtn.classList.add('active');
+    clickedBtn.style.borderColor = `${regionData[id].color}66`;
+    clickedBtn.style.color = regionData[id].color;
+  }
 
+  const r = regionData[id];
+  const tagsHtml = r.tags.map(t => `<span class="tag" style="background:${t.bg}; color:${t.color};">${t.text}</span>`).join('');
+  document.getElementById('regionDetail').innerHTML = `
+    <h3 style="color:${r.color}">${r.title}</h3>
+    <div style="margin-bottom:12px;">${tagsHtml}</div>
+    <p style="margin-bottom:12px;"><strong>Role:</strong> ${r.role}</p>
+    <p style="margin-bottom:12px;"><strong>Key Connections:</strong> ${r.connections}</p>
+    <p style="margin-bottom:12px;"><strong>Effects of Damage:</strong> ${r.damage}</p>
+    <p><strong>Clinical Relevance:</strong> ${r.clinical}</p>`;
+}
+showRegion('amygdala');
+
+// ═══════════════════════════════════════
+//  Panel 4: System Toggle
+// ═══════════════════════════════════════
+function showSystem(mode) {
+  document.querySelectorAll('#panel-systems .btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnBothSys').classList.toggle('active', mode === 'both');
+  document.getElementById('btnVentral').classList.toggle('active', mode === 'ventral');
+  document.getElementById('btnDorsal').classList.toggle('active', mode === 'dorsal');
+
+  const vp = document.getElementById('ventralPanel');
+  const dp = document.getElementById('dorsalPanel');
+  vp.style.display = (mode === 'dorsal') ? 'none' : 'block';
+  dp.style.display = (mode === 'ventral') ? 'none' : 'block';
+  vp.parentElement.style.gridTemplateColumns = mode === 'both' ? (window.innerWidth > 650 ? '1fr 1fr' : '1fr') : '1fr';
+}
+
+// ═══════════════════════════════════════
+//  Panel 5: Quiz
+// ═══════════════════════════════════════
+const correctAnswers = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 2 };
+function answer(qNum, optIdx) {
+  const container = document.getElementById('q' + qNum);
+  const buttons = container.querySelectorAll('.q-opt');
+  const feedback = document.getElementById('fb' + qNum);
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correctAnswers[qNum]) btn.classList.add('correct');
+    else if (i === optIdx && i !== correctAnswers[qNum]) btn.classList.add('incorrect');
+  });
+  feedback.classList.add('show');
+}
+
+// Init
+updateStimSim();
+</script>
 </body>
 </html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're Offline — PSYCH 302</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    /* Page-specific styles for offline page */
+    .offline-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(46,139,139, 0.06) 0%, transparent 60%),
+        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .offline-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 480px;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .offline-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 16px 16px 0 0;
+    }
+
+    .offline-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .offline-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 60%, #d4727a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .offline-message {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .offline-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 32px;
+      padding: 16px;
+      background: rgba(46,139,139, 0.06);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .offline-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(var(--glow-rgb), 0.2);
+      background: rgba(var(--glow-rgb), 0.08);
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .offline-button:hover {
+      border-color: rgba(var(--glow-rgb), 0.35);
+      background: rgba(var(--glow-rgb), 0.12);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .offline-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .offline-card {
+        padding: 32px 24px;
+      }
+      .offline-title {
+        font-size: 1.25rem;
+      }
+      .offline-message {
+        font-size: 0.88rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg"></div>
+
+  <div class="offline-container">
+    <div class="offline-card">
+      <div class="offline-icon">📡</div>
+      <h1 class="offline-title">You're Offline</h1>
+      <p class="offline-message">
+        Your internet connection is currently unavailable. However, you can still access previously visited pages using the navigation below.
+      </p>
+      <div class="offline-hint">
+        <strong>Cached Content Available:</strong><br>
+        Click the links below to view previously visited lectures, course materials, and resources from your cache.
+      </div>
+      <a href="/" class="offline-button">
+        <span>↖️</span>
+        <span>Return to Home</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Monitor connection status
+    window.addEventListener('online', () => {
+      console.log('Connection restored. You can now access all resources.');
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(46,139,139, 0.9);
+        color: #f0e8e5;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        z-index: 2000;
+        animation: fadeIn 0.3s ease-out;
+      `;
+      notification.textContent = '✓ Connection restored!';
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    });
+
+    // Log offline status
+    if (!navigator.onLine) {
+      console.log('You are currently offline. Service worker will serve cached content.');
+    }
+  </script>
+</body>
+</html>
