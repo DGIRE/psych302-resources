@@ -43,7 +43,7 @@
   'use strict';
 
   // ── Configuration ──
-  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwSsMNXJGRdUpOEHZp2lsO2qMbwz02tiPgEShqjkvSTf2iVjull2wiKR5Qk6Ua-c-R-/exec';
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyKkkM3WBfGOzI_XgNm03zsIX2Nl8wd6HO3VZnPDRbVp68YMYc5gc6h28TOQaoa4qkvWw/exec';
   var SITE_VERSION = '1.0';
 
   // ── Session ID (anonymous, resets per tab) ──
