@@ -244,7 +244,47 @@
     @media (max-width: 812px) and (orientation: landscape) {
       .hero { padding: 20px 16px 16px; margin-bottom: 16px; }
     }
-  
+
+    /* ── Lecture dual-link buttons ── */
+    .lecture-links {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .lec-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 11px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .lec-btn-lit {
+      background: rgba(240,200,160,0.12);
+      color: var(--lecture-color);
+      border: 1px solid rgba(240,200,160,0.25);
+    }
+    .lec-btn-lit:hover {
+      background: rgba(240,200,160,0.22);
+      border-color: rgba(240,200,160,0.5);
+    }
+    .lec-btn-content {
+      background: rgba(46,139,139,0.12);
+      color: #5ab8b8;
+      border: 1px solid rgba(46,139,139,0.25);
+    }
+    .lec-btn-content:hover {
+      background: rgba(46,139,139,0.22);
+      border-color: rgba(46,139,139,0.5);
+    }
+    @media (max-width: 480px) {
+      .lecture-links { flex-direction: column; gap: 4px; }
+      .lec-btn { font-size: 0.65rem; padding: 3px 8px; }
+    }
+
     /* ── Breadcrumb nav ── */
     .breadcrumb {
       display: flex;
@@ -468,6 +508,7 @@
     title: `Lecture ${l.num}: ${l.title}`,
     meta: `${l.time} · ${l.loc}`,
     href: `lectures/lecture-${String(l.num).padStart(2,'0')}.html`,
+    contentHref: `lecture-content/lecture-${String(l.num).padStart(2,'0')}/index.html`,
     pts: null
   }));
 
@@ -579,27 +620,44 @@
         card.appendChild(noEv);
       } else {
         dayEvents.forEach(ev => {
-          const item = document.createElement(ev.href ? 'a' : 'div');
-          item.className = 'event-item';
-          if (ev.href) {
-            item.href = ev.href;
-            if (ev.href.startsWith('http')) item.target = '_blank';
-          }
+          if (ev.type === 'lecture') {
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `
+              <div class="event-dot lecture"></div>
+              <div class="event-info">
+                <div class="event-title">${ev.title}</div>
+                <div class="event-meta">${ev.meta}</div>
+              </div>
+              <div class="lecture-links">
+                <a href="${ev.href}" class="lec-btn lec-btn-lit">Literature</a>
+                <a href="${ev.contentHref}" class="lec-btn lec-btn-content">Content</a>
+              </div>
+            `;
+            card.appendChild(item);
+          } else {
+            const item = document.createElement(ev.href ? 'a' : 'div');
+            item.className = 'event-item';
+            if (ev.href) {
+              item.href = ev.href;
+              if (ev.href.startsWith('http')) item.target = '_blank';
+            }
 
-          let ptsHTML = '';
-          if (ev.pts) {
-            ptsHTML = `<span class="event-pts ${ev.type}">${ev.pts} pts</span>`;
-          }
+            let ptsHTML = '';
+            if (ev.pts) {
+              ptsHTML = `<span class="event-pts ${ev.type}">${ev.pts} pts</span>`;
+            }
 
-          item.innerHTML = `
-            <div class="event-dot ${ev.type}"></div>
-            <div class="event-info">
-              <div class="event-title">${ev.title}</div>
-              <div class="event-meta">${ev.meta}</div>
-            </div>
-            ${ptsHTML}
-          `;
-          card.appendChild(item);
+            item.innerHTML = `
+              <div class="event-dot ${ev.type}"></div>
+              <div class="event-info">
+                <div class="event-title">${ev.title}</div>
+                <div class="event-meta">${ev.meta}</div>
+              </div>
+              ${ptsHTML}
+            `;
+            card.appendChild(item);
+          }
         });
       }
 

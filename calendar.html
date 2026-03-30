@@ -203,6 +203,7 @@
     }
     .cal-event:hover { opacity: 0.85; transform: scale(1.02); }
     .cal-event.lecture { background: rgba(240,200,160,0.25); color: var(--lecture-color); border: 1px solid rgba(240,200,160,0.3); }
+    .cal-event.content { background: rgba(46,139,139,0.2); color: #5ab8b8; border: 1px solid rgba(46,139,139,0.3); }
     .cal-event.quiz { background: rgba(90,154,212,0.25); color: var(--quiz-color); border: 1px solid rgba(90,154,212,0.3); }
     .cal-event.midterm { background: rgba(212,114,122,0.3); color: var(--midterm-color); border: 1px solid rgba(212,114,122,0.4); font-weight: 700; }
     .cal-event.section { background: rgba(90,187,122,0.2); color: var(--section-color); border: 1px solid rgba(90,187,122,0.3); }
@@ -486,8 +487,10 @@
     addEvent(l.date, {
       type: 'lecture',
       label: `L${l.num}: ${l.title}`,
-      short: `L${l.num}`,
-      href: `lectures/lecture-${String(l.num).padStart(2,'0')}.html`
+      short: `L${l.num} Lit`,
+      href: `lectures/lecture-${String(l.num).padStart(2,'0')}.html`,
+      contentHref: `lecture-content/lecture-${String(l.num).padStart(2,'0')}/index.html`,
+      contentShort: `L${l.num} \u2197`
     });
   });
 
@@ -567,15 +570,31 @@
 
       const dayEvents = events[dateStr] || [];
       dayEvents.forEach(ev => {
-        const chip = document.createElement('a');
-        chip.className = `cal-event ${ev.type}`;
-        chip.textContent = ev.short;
-        chip.title = ev.label;
-        if (ev.href) {
-          chip.href = ev.href;
-          if (ev.href.startsWith('http')) chip.target = '_blank';
+        if (ev.type === 'lecture') {
+          const lit = document.createElement('a');
+          lit.className = 'cal-event lecture';
+          lit.textContent = ev.short;
+          lit.title = `${ev.label} — Literature`;
+          lit.href = ev.href;
+          cell.appendChild(lit);
+
+          const ctn = document.createElement('a');
+          ctn.className = 'cal-event content';
+          ctn.textContent = ev.contentShort;
+          ctn.title = `${ev.label} — Content`;
+          ctn.href = ev.contentHref;
+          cell.appendChild(ctn);
+        } else {
+          const chip = document.createElement('a');
+          chip.className = `cal-event ${ev.type}`;
+          chip.textContent = ev.short;
+          chip.title = ev.label;
+          if (ev.href) {
+            chip.href = ev.href;
+            if (ev.href.startsWith('http')) chip.target = '_blank';
+          }
+          cell.appendChild(chip);
         }
-        cell.appendChild(chip);
       });
 
       grid.appendChild(cell);
