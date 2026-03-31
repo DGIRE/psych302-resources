@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neural Dynamics Playground &mdash; Interactive Demo &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -142,9 +144,7 @@
       color: var(--text-muted);
       margin-bottom: 14px;
     }
-    .concept-list {
-      list-style: none;
-    }
+    .concept-list { list-style: none; }
     .concept-list li {
       padding: 8px 0;
       border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -158,33 +158,6 @@
       color: var(--accent);
       font-weight: 700;
       margin-right: 10px;
-    }
-
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
-    }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .demo-area p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
     }
 
     footer {
@@ -205,7 +178,7 @@
       .header-card h1 { font-size: 1.25rem; }
       .quick-links { flex-direction: column; }
     }
-  
+
     /* ── Extra-small phones ── */
     @media (max-width: 380px) {
       .header-card { padding: 24px 14px 20px; }
@@ -213,15 +186,13 @@
       .header-card p { font-size: 0.8rem; }
       .quick-link { font-size: 0.72rem; padding: 6px 12px; }
       .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
     }
     /* ── Phone landscape ── */
     @media (max-width: 812px) and (orientation: landscape) {
       .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
       .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
     }
-  
+
     /* ── Breadcrumb nav ── */
     .breadcrumb {
       display: flex;
@@ -286,10 +257,7 @@
       animation: fadeIn 0.2s ease-out;
     }
     .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
+    .search-box { max-width: 560px; margin: 0 auto; }
     .search-input {
       width: 100%;
       padding: 14px 20px;
@@ -320,42 +288,161 @@
       color: var(--text-secondary);
       transition: all 0.2s;
     }
-    .search-result:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
+    .search-result:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
     .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); background: rgba(255,255,255,0.05);
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
     }
     .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
     .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.5rem; cursor: pointer; padding: 8px; transition: color 0.2s;
     }
     .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
+    .search-hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: 16px; }
+
+    /* ─────────────────────────────────────────────────────────────────
+       ATTRACTOR DEMO — scoped styles
+    ───────────────────────────────────────────────────────────────── */
+    .attractor-shell {
+      position: relative;
+      width: 100%;
+      height: 620px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      background: #020617;
+      border: 1px solid rgba(99,102,241,0.25);
     }
 
+    /* Title bar inside the shell */
+    .attractor-titlebar {
+      flex-shrink: 0;
+      height: 44px;
+      background: rgba(15,23,42,0.98);
+      border-bottom: 1px solid rgba(51,65,85,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      z-index: 50;
+    }
+    .attractor-titlebar .atitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .attractor-titlebar .atitle svg { color: #6366f1; }
+    .attractor-titlebar .acontrols {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Main content row (canvas + brain panel) */
+    .attractor-content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* Info panel — absolutely positioned over the canvas */
+    #info-panel {
+      position: absolute !important;
+      top: 54px !important;
+      left: 8px !important;
+      resize: both;
+      overflow: auto;
+      min-width: 260px;
+      max-width: 300px;
+      min-height: 220px;
+      z-index: 60;
+    }
+
+    /* Drop indicator */
+    #drop-indicator { pointer-events: none; transition: opacity 0.2s; }
+
+    /* Preset card hover */
+    .preset-card:hover { transform: translateY(-2px); border-color: #6366f1; }
+
+    /* Tailwind-style toggle switch */
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider-switch {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155; transition: .3s; border-radius: 34px;
+    }
+    .slider-switch:before {
+      position: absolute; content: ""; height: 14px; width: 14px;
+      left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .slider-switch { background-color: #6366f1; }
+    input:checked + .slider-switch:before { transform: translateX(20px); }
+
+    /* Range input */
+    input[type=range] { -webkit-appearance: none; background: transparent; }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; height: 14px; width: 14px;
+      border-radius: 50%; background: #6366f1; cursor: pointer; margin-top: -5px;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px;
+    }
+
+    /* Drag handle cursor */
+    .drag-handle { cursor: grab; user-select: none; }
+    .drag-handle:active { cursor: grabbing; }
+
+    /* Glass utility */
+    .glass {
+      background: rgba(15,23,42,0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(51,65,85,0.5);
+    }
+
+    /* Brain panel */
+    .brain-panel {
+      width: 320px;
+      flex-shrink: 0;
+      border-left: 1px solid rgba(51,65,85,0.8);
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      z-index: 40;
+    }
+
+    /* Scrollbar hide */
+    .hidden-scrollbar::-webkit-scrollbar { display: none; }
+    .hidden-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Attractor button styles */
+    .atn-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 6px; font-size: 0.7rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; border: none;
+      font-family: inherit;
+    }
+    .atn-btn-primary { background: #4f46e5; color: #fff; }
+    .atn-btn-primary:hover { background: #6366f1; }
+    .atn-btn-secondary { background: rgba(51,65,85,0.8); color: #cbd5e1; border: 1px solid rgba(51,65,85,0.8); }
+    .atn-btn-secondary:hover { background: rgba(71,85,105,0.9); }
+
+    @media (max-width: 600px) {
+      .attractor-shell { height: 460px; }
+      .brain-panel { display: none; }
+      #info-panel { min-width: 220px; }
+    }
   </style>
 </head>
 <body>
@@ -394,11 +481,136 @@
       </ul>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F30A;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
-    </div>
+    <!-- ── ATTRACTOR DEMO ─────────────────────────────────────────── -->
+    <div class="attractor-shell">
+
+      <!-- Title bar with controls -->
+      <div class="attractor-titlebar">
+        <div class="atitle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Neural Attractor Explorer
+        </div>
+        <div class="acontrols">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(15,23,42,0.6);padding:3px 10px;border-radius:8px;border:1px solid rgba(51,65,85,0.5);">
+            <span style="font-size:0.62rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;">Dynamic Topology</span>
+            <label class="switch">
+              <input type="checkbox" id="dynamic-toggle" onchange="toggleDynamicTopology()">
+              <span class="slider-switch"></span>
+            </label>
+          </div>
+          <button onclick="togglePresetMenu()" class="atn-btn atn-btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+            Library
+          </button>
+          <button onclick="clearBalls()" class="atn-btn atn-btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Preset library overlay (fixed modal) -->
+      <div id="preset-menu" style="position:fixed;inset:0;background:rgba(2,6,23,0.92);backdrop-filter:blur(12px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;">
+        <div class="glass" style="max-width:560px;width:90%;padding:32px;border-radius:24px;border:1px solid rgba(71,85,105,0.6);box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+            <h2 style="font-size:1rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:3px;">Topography Library</h2>
+            <button onclick="togglePresetMenu()" style="background:none;border:none;cursor:pointer;color:#94a3b8;padding:6px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div id="preset-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"></div>
+        </div>
+      </div>
+
+      <!-- Info / configuration panel (draggable, absolutely positioned) -->
+      <aside id="info-panel" class="glass hidden-scrollbar" style="border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:flex;flex-direction:column;">
+        <div class="drag-handle" style="padding:10px 12px;background:rgba(30,41,59,0.95);border-bottom:1px solid rgba(51,65,85,0.6);display:flex;align-items:center;justify-content:space-between;border-radius:14px 14px 0 0;">
+          <span style="font-size:0.6rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:2px;">Configuration</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#475569"><path d="M15 9l-3-3-3 3M15 15l-3 3-3-3"/></svg>
+        </div>
+
+        <div style="padding:16px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:16px;" class="hidden-scrollbar">
+          <!-- Noise slider -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:0.62rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;">Neural Noise</span>
+              <span id="noise-val" style="font-size:0.62rem;color:#818cf8;font-family:monospace;">20.0</span>
+            </div>
+            <input type="range" id="noise-slider" min="0" max="100" value="20" step="1" oninput="updateNoiseLevel(this.value)" style="width:100%;">
+          </div>
+
+          <!-- Tail toggle -->
+          <div style="padding-top:12px;border-top:1px solid rgba(30,41,59,0.6);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.62rem;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:1px;">Persistence (Tail)</span>
+              <label class="switch">
+                <input type="checkbox" id="tail-toggle" onchange="toggleTail()">
+                <span class="slider-switch"></span>
+              </label>
+            </div>
+            <div id="tail-settings" style="display:none;background:rgba(2,6,23,0.6);padding:10px;border-radius:8px;border:1px solid rgba(30,41,59,0.6);">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:0.6rem;color:#94a3b8;font-weight:700;text-transform:uppercase;">Points History</span>
+                <span style="font-size:0.6rem;color:#64748b;font-family:monospace;font-style:italic;">Max 100k</span>
+              </div>
+              <input type="number" id="tail-length-input" value="2000" min="10" max="100000" onchange="updateTailLength(this.value)"
+                style="width:100%;background:#0f172a;border:1px solid rgba(51,65,85,0.6);border-radius:6px;padding:6px 8px;font-size:0.72rem;color:#818cf8;font-family:monospace;text-align:center;outline:none;">
+            </div>
+          </div>
+
+          <!-- Current preset badge -->
+          <div id="current-preset-info" style="background:rgba(67,56,202,0.2);padding:8px 10px;border-radius:8px;border:1px solid rgba(99,102,241,0.3);font-size:0.6rem;color:#a5b4fc;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:2px;font-style:italic;">
+            Standard Quadrant
+          </div>
+
+          <!-- System output -->
+          <div style="padding-top:12px;border-top:1px solid rgba(30,41,59,0.6);">
+            <h3 style="font-size:0.62rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;text-align:center;">System Output</h3>
+            <div id="status-display" style="padding:12px;border-radius:10px;border:1px solid rgba(51,65,85,0.4);background:rgba(2,6,23,0.8);transition:all 0.4s;min-height:56px;display:flex;flex-direction:column;justify-content:center;">
+              <p style="font-size:0.7rem;font-style:italic;color:#475569;font-family:monospace;text-align:center;">In Flux...</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content row: 3D landscape + brain panel -->
+      <div class="attractor-content">
+
+        <!-- Three.js canvas container -->
+        <div id="canvas-container" style="flex:1;position:relative;cursor:crosshair;overflow:hidden;">
+          <div id="drop-indicator" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:20;">
+            <div style="width:56px;height:56px;border:2px solid rgba(255,255,255,0.2);border-radius:50%;animation:ping 1s cubic-bezier(0,0,0.2,1) infinite;"></div>
+          </div>
+          <div style="position:absolute;bottom:8px;left:8px;font-size:0.55rem;color:#475569;font-family:monospace;text-transform:uppercase;letter-spacing:2px;background:rgba(2,6,23,0.6);padding:3px 8px;border-radius:4px;z-index:10;">
+            Double-Click Landscape to Inject State
+          </div>
+          <div id="entropy-meter" style="position:absolute;bottom:8px;right:8px;font-size:0.6rem;font-family:monospace;color:#64748b;background:rgba(2,6,23,0.6);padding:3px 8px;border-radius:4px;border:1px solid rgba(30,41,59,0.6);z-index:10;">
+            Entropy: 0.00
+          </div>
+        </div>
+
+        <!-- Brain visualization panel -->
+        <aside class="brain-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <h2 style="font-size:0.65rem;font-weight:700;color:#f1f5f9;text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#a78bfa"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Cortical Activation
+            </h2>
+          </div>
+
+          <div id="brain-wrap" style="flex:1;border-radius:16px;border:1px solid rgba(30,41,59,0.8);margin-bottom:8px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#020617;min-height:0;">
+            <canvas id="brain-canvas"></canvas>
+          </div>
+
+          <div id="network-analysis" style="height:100px;background:rgba(15,23,42,0.9);padding:12px;border-radius:12px;border:1px solid rgba(30,41,59,0.6);font-size:0.65rem;color:#94a3b8;overflow-y:auto;text-align:center;" class="hidden-scrollbar">
+            <div style="font-size:0.55rem;text-transform:uppercase;font-weight:700;color:#475569;margin-bottom:6px;letter-spacing:2px;">Neural Mapping Logic</div>
+            <div id="analysis-text" style="font-style:italic;color:#64748b;font-weight:300;line-height:1.5;">Procedural anatomical rendering with active masking. Nodes strictly confined to cortical space. Trajectory history represents state persistence.</div>
+          </div>
+        </aside>
+
+      </div><!-- .attractor-content -->
+    </div><!-- .attractor-shell -->
+    <!-- ── END ATTRACTOR DEMO ─────────────────────────────────────── -->
 
     <footer>
       PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
@@ -406,7 +618,6 @@
 
   </div>
 
-  
   <!-- Global Search -->
   <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -443,6 +654,452 @@
       }
     });
   })();
+  </script>
+
+  <!-- ── ATTRACTOR DEMO JAVASCRIPT ────────────────────────────────── -->
+  <script>
+    const LANDSCAPE_WIDTH = 10;
+    const GRID_SIZE = 64;
+    const GRAVITY = 25.0;
+    const FRICTION = 0.99;
+    const BALL_RADIUS = 0.12;
+    const SURFACE_OFFSET = 0.05;
+    let NOISE_AMPLITUDE = 20.0;
+    let SHOW_TAIL = false;
+    let TAIL_LENGTH = 2000;
+
+    const TOPOGRAPHY_PRESETS = [
+      {
+        name: "Standard Quadrant",
+        basins: [
+          { id: 0, x: -2.5, z: -2.5, depth: 1.6, radius: 2.2, color: '#3b82f6', label: 'Default Mode' },
+          { id: 1, x: 2.5,  z: 2.5,  depth: 1.4, radius: 1.8, color: '#ef4444', label: 'Limbic System' },
+          { id: 2, x: 2.5,  z: -2.5, depth: 1.9, radius: 2.0, color: '#10b981', label: 'Executive Task' },
+          { id: 3, x: -2.5, z: 2.5,  depth: 1.2, radius: 1.5, color: '#f59e0b', label: 'Primary Sensory' }
+        ]
+      },
+      {
+        name: "Global Workspace",
+        basins: [
+          { id: 0, x: 0,    z: 0,    depth: 3.2, radius: 5.0, color: '#818cf8', label: 'Global Integration' },
+          { id: 1, x: 3.5,  z: 3.5,  depth: 0.8, radius: 1.2, color: '#f43f5e', label: 'Salience' },
+          { id: 2, x: -3.5, z: -3.5, depth: 0.8, radius: 1.2, color: '#10b981', label: 'Task Focus' },
+          { id: 3, x: 0,    z: 3.5,  depth: 1.0, radius: 1.2, color: '#fbbf24', label: 'Sensory Input' }
+        ]
+      },
+      {
+        name: "Polarized States",
+        basins: [
+          { id: 0, x: -3.5, z: 0,    depth: 2.5, radius: 3.5, color: '#3b82f6', label: 'Introspective' },
+          { id: 1, x: 3.5,  z: 0,    depth: 2.5, radius: 3.5, color: '#ef4444', label: 'Extrospective' },
+          { id: 2, x: 0,    z: 3.5,  depth: 0.5, radius: 1.0, color: '#10b981', label: 'Focal Task' },
+          { id: 3, x: 0,    z: -3.5, depth: 0.5, radius: 1.0, color: '#f59e0b', label: 'Focal Task' }
+        ]
+      },
+      {
+        name: "Distributed Hubs",
+        basins: [
+          { id: 0, x: -2.2, z: -2.2, depth: 1.5, radius: 1.6, color: '#60a5fa', label: 'Salience Network' },
+          { id: 1, x: 2.2,  z: 2.2,  depth: 1.5, radius: 1.6, color: '#f87171', label: 'Dorsal Attention' },
+          { id: 2, x: 2.2,  z: -2.2, depth: 1.5, radius: 1.6, color: '#34d399', label: 'Frontoparietal' },
+          { id: 3, x: -2.2, z: 2.2,  depth: 1.5, radius: 1.6, color: '#fbbf24', label: 'Subcortical' }
+        ]
+      }
+    ];
+
+    let BASINS = JSON.parse(JSON.stringify(TOPOGRAPHY_PRESETS[0].basins));
+    let isDynamicTopology = false;
+    let scene, camera, renderer, landscape, wireMesh, basinRings = [];
+    let balls = [];
+    let activeBasinId = null;
+    let mouse = new THREE.Vector2();
+    let raycaster = new THREE.Raycaster();
+    let landscapeCam = { rotation: { x: 0.8, y: 0.8 }, dist: 12 };
+    let isDraggingTopography = false;
+    let brainCanvas, brainCtx, brainNodes = [];
+
+    function initDraggable() {
+      const panel = document.getElementById('info-panel');
+      const handle = panel.querySelector('.drag-handle');
+      let isDraggingPanel = false;
+      let startX, startY, panelL, panelT;
+      const shell = document.querySelector('.attractor-shell');
+      handle.onmousedown = (e) => {
+        isDraggingPanel = true;
+        startX = e.clientX; startY = e.clientY;
+        panelL = panel.offsetLeft; panelT = panel.offsetTop;
+      };
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingPanel) return;
+        const newL = panelL + e.clientX - startX;
+        const newT = panelT + e.clientY - startY;
+        panel.style.left = `${Math.max(0, newL)}px`;
+        panel.style.top  = `${Math.max(44, newT)}px`;
+        panel.style.right = 'auto';
+      });
+      window.addEventListener('mouseup', () => { isDraggingPanel = false; });
+    }
+
+    function initLandscape() {
+      const container = document.getElementById('canvas-container');
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 5000);
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+      const light = new THREE.DirectionalLight(0xffffff, 1.2);
+      light.position.set(10, 20, 10);
+      scene.add(light);
+      BASINS.forEach(b => { b.baseX = b.x; b.baseZ = b.z; });
+      updateLandscapeMesh();
+      container.addEventListener('mousedown', () => isDraggingTopography = true);
+      container.addEventListener('mousemove', (e) => {
+        if (isDraggingTopography) {
+          landscapeCam.rotation.y -= e.movementX * 0.007;
+          landscapeCam.rotation.x -= e.movementY * 0.007;
+          landscapeCam.rotation.x = Math.max(0.1, Math.min(landscapeCam.rotation.x, 1.5));
+        }
+      });
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        landscapeCam.dist = Math.max(4, Math.min(landscapeCam.dist + e.deltaY * 0.06, 150));
+      }, { passive: false });
+      container.addEventListener('dblclick', (e) => {
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(landscape);
+        if (intersects.length > 0) addBall(intersects[0].point.x, intersects[0].point.z);
+      });
+    }
+
+    function defineBrainPath(ctx, cx, cy) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 220, cy + 30);
+      ctx.bezierCurveTo(cx - 230, cy - 140, cx + 160, cy - 180, cx + 230, cy - 20);
+      ctx.bezierCurveTo(cx + 250, cy + 100, cx + 50, cy + 160, cx - 100, cy + 120);
+      ctx.bezierCurveTo(cx - 200, cy + 140, cx - 220, cy + 60, cx - 220, cy + 30);
+      ctx.closePath();
+      ctx.moveTo(cx + 210, cy + 100);
+      ctx.arc(cx + 140, cy + 100, 70, 0, Math.PI * 2);
+      ctx.closePath();
+    }
+
+    function initBrain() {
+      brainCanvas = document.getElementById('brain-canvas');
+      brainCtx = brainCanvas.getContext('2d');
+      const setupNodes = () => {
+        const wrap = document.getElementById('brain-wrap');
+        brainCanvas.width  = wrap.clientWidth;
+        brainCanvas.height = wrap.clientHeight;
+        const centerX = brainCanvas.width / 2;
+        const centerY = brainCanvas.height / 2;
+        brainNodes = [];
+        const tempCanvas = document.createElement('canvas');
+        const tCtx = tempCanvas.getContext('2d');
+        tempCanvas.width  = brainCanvas.width;
+        tempCanvas.height = brainCanvas.height;
+        for (let i = 0; i < 300; i++) {
+          const networkId = i % 4;
+          let validPos = false, rx, ry, attempts = 0;
+          while (!validPos && attempts < 100) {
+            rx = centerX + (Math.random() - 0.5) * 500;
+            ry = centerY + (Math.random() - 0.5) * 400;
+            defineBrainPath(tCtx, centerX, centerY);
+            if (tCtx.isPointInPath(rx, ry)) validPos = true;
+            attempts++;
+          }
+          brainNodes.push({ x: rx, y: ry, networkId, activation: 0, size: 3 + Math.random() * 5 });
+        }
+      };
+      setupNodes();
+      window.addEventListener('resize', setupNodes);
+    }
+
+    function updateNoiseLevel(val) {
+      NOISE_AMPLITUDE = parseFloat(val);
+      document.getElementById('noise-val').innerText = NOISE_AMPLITUDE.toFixed(1);
+    }
+
+    function toggleDynamicTopology() {
+      isDynamicTopology = document.getElementById('dynamic-toggle').checked;
+    }
+
+    function toggleTail() {
+      SHOW_TAIL = document.getElementById('tail-toggle').checked;
+      document.getElementById('tail-settings').style.display = SHOW_TAIL ? '' : 'none';
+      if (!SHOW_TAIL) balls.forEach(b => { if (b.tailLine) { scene.remove(b.tailLine); b.tailLine = null; } b.history = []; });
+    }
+
+    function updateTailLength(val) {
+      TAIL_LENGTH = Math.min(Math.max(parseInt(val) || 10, 10), 100000);
+    }
+
+    function togglePresetMenu() {
+      const menu = document.getElementById('preset-menu');
+      const isOpen = menu.style.opacity === '1';
+      if (isOpen) {
+        menu.style.opacity = '0';
+        menu.style.pointerEvents = 'none';
+      } else {
+        menu.style.opacity = '1';
+        menu.style.pointerEvents = 'auto';
+        renderPresetGrid();
+      }
+    }
+
+    function renderPresetGrid() {
+      const grid = document.getElementById('preset-grid');
+      grid.innerHTML = TOPOGRAPHY_PRESETS.map((p, idx) => `
+        <div onclick="loadPreset(${idx})" class="preset-card" style="background:rgba(15,23,42,0.95);border:1px solid rgba(71,85,105,0.5);padding:16px;border-radius:16px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;gap:10px;">
+          <div style="position:relative;height:80px;background:rgba(0,0,0,0.4);border-radius:10px;overflow:hidden;border:1px solid rgba(51,65,85,0.4);">
+            ${p.basins.map(b => `<div style="left:${50+(b.x/5*50)}%;top:${50+(b.z/5*50)}%;width:${b.radius*10}px;height:${b.radius*10}px;background:${b.color};box-shadow:0 0 ${b.depth*8}px ${b.color};border-radius:50%;position:absolute;transform:translate(-50%,-50%);opacity:0.8;"></div>`).join('')}
+          </div>
+          <div style="text-align:center;font-weight:700;font-size:0.65rem;color:#f1f5f9;text-transform:uppercase;letter-spacing:2px;">${p.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function loadPreset(idx) {
+      BASINS = JSON.parse(JSON.stringify(TOPOGRAPHY_PRESETS[idx].basins));
+      BASINS.forEach(b => { b.baseX = b.x; b.baseZ = b.z; });
+      document.getElementById('current-preset-info').innerText = TOPOGRAPHY_PRESETS[idx].name;
+      updateLandscapeMesh();
+      togglePresetMenu();
+    }
+
+    function getLandscapeHeight(x, z) {
+      let height = Math.sin(x * 0.4) * Math.cos(z * 0.4) * 0.25;
+      BASINS.forEach(b => {
+        const distSq = (x - b.x)**2 + (z - b.z)**2;
+        height -= b.depth * Math.exp(-distSq / (b.radius * 0.9));
+      });
+      return height;
+    }
+
+    function getGradient(x, z) {
+      const eps = 0.04;
+      const h  = getLandscapeHeight(x, z);
+      const hx = getLandscapeHeight(x + eps, z);
+      const hz = getLandscapeHeight(x, z + eps);
+      return { dx: (hx - h) / eps, dz: (hz - h) / eps };
+    }
+
+    function updateLandscapeMesh() {
+      if (landscape) scene.remove(landscape);
+      if (wireMesh)  scene.remove(wireMesh);
+      basinRings.forEach(r => scene.remove(r));
+      basinRings = [];
+      const geometry = new THREE.PlaneBufferGeometry(LANDSCAPE_WIDTH, LANDSCAPE_WIDTH, GRID_SIZE, GRID_SIZE);
+      const positions = geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i += 3) {
+        positions[i + 2] = getLandscapeHeight(positions[i], -positions[i + 1]);
+      }
+      geometry.computeVertexNormals();
+      landscape = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8, metalness: 0.2, flatShading: true }));
+      landscape.rotation.x = -Math.PI / 2;
+      scene.add(landscape);
+      wireMesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.15 }));
+      wireMesh.rotation.x = -Math.PI / 2;
+      scene.add(wireMesh);
+      BASINS.forEach(b => {
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(b.radius * 0.25, 0.02, 12, 48),
+          new THREE.MeshBasicMaterial({ color: b.color, transparent: true, opacity: 0.5 })
+        );
+        ring.position.set(b.x, getLandscapeHeight(b.x, b.z) + 0.1, b.z);
+        ring.rotation.x = Math.PI / 2;
+        scene.add(ring);
+        basinRings.push(ring);
+      });
+    }
+
+    function addBall(x, z) {
+      const ballColor = `hsl(${Math.random() * 360}, 85%, 70%)`;
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(BALL_RADIUS, 16, 16),
+        new THREE.MeshStandardMaterial({ color: ballColor, emissive: ballColor, emissiveIntensity: 1.0 })
+      );
+      const startY = getLandscapeHeight(x, z) + 1.5;
+      mesh.position.set(x, startY, z);
+      scene.add(mesh);
+      balls.push({ mesh, pos: new THREE.Vector3(x, startY, z), vel: new THREE.Vector3(0,0,0), history: [], tailLine: null });
+    }
+
+    function clearBalls() {
+      balls.forEach(b => { scene.remove(b.mesh); if (b.tailLine) scene.remove(b.tailLine); });
+      balls = [];
+      updateUI(null, [0,0,0,0]);
+    }
+
+    function updateUI(dominantId, weights) {
+      const status = document.getElementById('status-display');
+      const entropyMeter = document.getElementById('entropy-meter');
+      const sum = weights.reduce((a,b) => a+b, 0);
+      const entropy = sum > 0.1 ? (1 - (Math.max(...weights) / sum)).toFixed(2) : "0.00";
+      entropyMeter.innerText = `Entropy: ${entropy}`;
+      if (dominantId !== null && weights[dominantId] > 0.4) {
+        if (activeBasinId === dominantId) return;
+        activeBasinId = dominantId;
+        const b = BASINS[dominantId];
+        status.style.borderColor = b.color;
+        status.innerHTML = `<div style="display:flex;align-items:center;gap:8px;justify-content:center;font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;color:${b.color};">${b.label}</div>`;
+      } else {
+        activeBasinId = null;
+        status.style.borderColor = 'rgba(51,65,85,0.4)';
+        status.innerHTML = `<p style="font-size:0.7rem;font-style:italic;color:#475569;font-family:monospace;text-align:center;">Dynamics in flux...</p>`;
+      }
+    }
+
+    function drawBrain(weights) {
+      if (!brainCtx) return;
+      brainCtx.clearRect(0, 0, brainCanvas.width, brainCanvas.height);
+      const centerX = brainCanvas.width / 2;
+      const centerY = brainCanvas.height / 2;
+      brainCtx.save();
+      defineBrainPath(brainCtx, centerX, centerY);
+      brainCtx.lineWidth = 4;
+      brainCtx.strokeStyle = '#6366f1';
+      brainCtx.fillStyle = 'rgba(15,23,42,0.6)';
+      brainCtx.shadowBlur = 30;
+      brainCtx.shadowColor = '#6366f1';
+      brainCtx.fill();
+      brainCtx.stroke();
+      brainCtx.shadowBlur = 0;
+      brainCtx.lineWidth = 2;
+      brainCtx.globalAlpha = 0.3;
+      brainCtx.strokeStyle = '#ffffff';
+      brainCtx.beginPath();
+      brainCtx.moveTo(centerX - 160, centerY + 15);
+      brainCtx.quadraticCurveTo(centerX - 20, centerY + 45, centerX + 110, centerY - 15);
+      brainCtx.stroke();
+      brainCtx.beginPath();
+      brainCtx.moveTo(centerX - 10, centerY - 155);
+      brainCtx.quadraticCurveTo(centerX + 10, centerY - 70, centerX - 50, centerY + 15);
+      brainCtx.stroke();
+      brainCtx.restore();
+      brainNodes.forEach(node => {
+        const targetWeight = weights[node.networkId];
+        node.activation = node.activation * 0.95 + targetWeight * 0.05;
+        const b = BASINS[node.networkId];
+        const intensity = 0.15 + node.activation * 0.85;
+        const grad = brainCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.size * 9 * intensity);
+        grad.addColorStop(0, b.color + 'FF');
+        grad.addColorStop(0.4, b.color + '88');
+        grad.addColorStop(1, b.color + '00');
+        brainCtx.globalAlpha = intensity;
+        brainCtx.fillStyle = grad;
+        brainCtx.beginPath();
+        brainCtx.arc(node.x, node.y, node.size * 9 * intensity, 0, Math.PI * 2);
+        brainCtx.fill();
+        brainCtx.fillStyle = '#ffffff';
+        brainCtx.globalAlpha = 0.7 + node.activation * 0.3;
+        brainCtx.beginPath();
+        brainCtx.arc(node.x, node.y, node.size * 1.8 * intensity, 0, Math.PI * 2);
+        brainCtx.fill();
+      });
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const now = performance.now();
+      const delta = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      if (isDynamicTopology) {
+        BASINS.forEach((b, i) => {
+          b.x = b.baseX + Math.sin(now * 0.0006 + i) * 0.98;
+          b.z = b.baseZ + Math.cos(now * 0.0005 + i) * 0.98;
+        });
+        const pos = landscape.geometry.attributes.position.array;
+        for (let i = 0; i < pos.length; i += 3) { pos[i + 2] = getLandscapeHeight(pos[i], -pos[i + 1]); }
+        landscape.geometry.attributes.position.needsUpdate = true;
+        landscape.geometry.computeVertexNormals();
+        basinRings.forEach((ring, i) => {
+          ring.position.set(BASINS[i].x, getLandscapeHeight(BASINS[i].x, BASINS[i].z) + 0.1, BASINS[i].z);
+        });
+      }
+
+      camera.position.x = Math.sin(landscapeCam.rotation.y) * Math.cos(landscapeCam.rotation.x) * landscapeCam.dist;
+      camera.position.y = Math.sin(landscapeCam.rotation.x) * landscapeCam.dist;
+      camera.position.z = Math.cos(landscapeCam.rotation.y) * Math.cos(landscapeCam.rotation.x) * landscapeCam.dist;
+      camera.lookAt(0, 0, 0);
+
+      let totalBasinWeights = [0,0,0,0];
+      let leadId = null, maxW = 0;
+
+      balls.forEach(b => {
+        const grad = getGradient(b.pos.x, b.pos.z);
+        b.vel.x -= grad.dx * GRAVITY * delta;
+        b.vel.z -= grad.dz * GRAVITY * delta;
+        b.vel.x += (Math.random() - 0.5) * NOISE_AMPLITUDE * delta;
+        b.vel.z += (Math.random() - 0.5) * NOISE_AMPLITUDE * delta;
+        b.vel.multiplyScalar(FRICTION);
+        b.pos.x += b.vel.x * delta;
+        b.pos.z += b.vel.z * delta;
+        b.pos.y = getLandscapeHeight(b.pos.x, b.pos.z) + BALL_RADIUS + SURFACE_OFFSET;
+        const bound = LANDSCAPE_WIDTH / 2 - 0.1;
+        if (Math.abs(b.pos.x) > bound) { b.vel.x *= -0.5; b.pos.x = Math.sign(b.pos.x) * bound; }
+        if (Math.abs(b.pos.z) > bound) { b.vel.z *= -0.5; b.pos.z = Math.sign(b.pos.z) * bound; }
+        b.mesh.position.copy(b.pos);
+
+        let ballWeights = [0,0,0,0];
+        BASINS.forEach((basin, idx) => {
+          const dSq = (b.pos.x - basin.x)**2 + (b.pos.z - basin.z)**2;
+          const w = Math.exp(-dSq / (basin.radius * 2.5));
+          ballWeights[idx] = w;
+          totalBasinWeights[idx] = Math.max(totalBasinWeights[idx], w);
+          if (w > maxW) { maxW = w; leadId = idx; }
+        });
+
+        if (SHOW_TAIL) {
+          const currentPoint = { pos: b.pos.clone(), color: new THREE.Color('#ffffff') };
+          BASINS.forEach((basin, idx) => { currentPoint.color.lerp(new THREE.Color(basin.color), ballWeights[idx] * 0.98); });
+          b.history.push(currentPoint);
+          if (b.history.length > TAIL_LENGTH) b.history.shift();
+          if (!b.tailLine) {
+            const geometry = new THREE.BufferGeometry();
+            const material = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.95 });
+            b.tailLine = new THREE.Line(geometry, material);
+            scene.add(b.tailLine);
+          }
+          const pts = [], clrs = [];
+          b.history.forEach(pt => {
+            pts.push(pt.pos.x, pt.pos.y, pt.pos.z);
+            clrs.push(pt.color.r, pt.color.g, pt.color.b);
+          });
+          b.tailLine.geometry.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+          b.tailLine.geometry.setAttribute('color',    new THREE.Float32BufferAttribute(clrs, 3));
+          b.tailLine.geometry.attributes.position.needsUpdate = true;
+          b.tailLine.geometry.attributes.color.needsUpdate = true;
+        }
+      });
+
+      updateUI(leadId, totalBasinWeights);
+      drawBrain(totalBasinWeights);
+      renderer.render(scene, camera);
+    }
+
+    let lastTime = performance.now();
+    window.addEventListener('load', () => {
+      initLandscape();
+      initBrain();
+      initDraggable();
+      animate();
+      setTimeout(() => addBall(1, 1), 600);
+    });
+
+    window.addEventListener('mouseup', () => isDraggingTopography = false);
+    window.addEventListener('resize', () => {
+      const container = document.getElementById('canvas-container');
+      if (!container || !renderer) return;
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+    });
   </script>
 
 <script src="../../../analytics.js" defer></script>
