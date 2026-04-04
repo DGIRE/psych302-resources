@@ -164,7 +164,7 @@
       color: var(--text-primary);
       margin-bottom: 8px;
     }
-    .media-title svg { color: var(--accent); }
+    .media-title svg { color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; }
     .media-desc {
       font-size: 0.82rem;
       color: var(--text-secondary);
@@ -512,10 +512,40 @@
         Altered States Explorer
       </a>
     </div>
-<div class="placeholder-section">
-      <div class="placeholder-icon">&#x1F3A8;</div>
-      <h2>Lecture Content Coming Soon</h2>
-      <p>Slides, diagrams, in-class activities, and supporting media for this lecture will appear here as the course progresses.</p>
+<div class="section-card">
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text-primary);">Lecture Media</h2>
+
+      <!-- Video -->
+      <div class="media-item">
+        <div class="media-title">
+          <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          The Mind Like Fire Unbound — Lecture Video
+        </div>
+        <div class="media-desc">Watch this lecture on psychedelics and the predictive brain — how serotonergic and other psychedelic compounds disrupt hierarchical predictive processing, loosen priors, and produce the profound alterations of perception, selfhood, and meaning reported across therapeutic and contemplative contexts.</div>
+        <div class="media-embed" style="position:relative;width:100%;padding-bottom:56.25%;border-radius:10px;overflow:hidden;background:rgba(0,0,0,0.3);margin-bottom:8px;">
+          <iframe src="https://drive.google.com/file/d/1RW9U9vC1Wuxmvmz9i4_qiligsvMPKlBi/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="autoplay" allowfullscreen></iframe>
+        </div>
+        <a class="media-link" href="https://drive.google.com/file/d/1RW9U9vC1Wuxmvmz9i4_qiligsvMPKlBi/view?usp=sharing" target="_blank" rel="noopener">
+          <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open in Google Drive
+        </a>
+      </div>
+
+      <!-- Audio Deep Dive -->
+      <div class="media-item" style="margin-top:20px;">
+        <div class="media-title">
+          <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Deep Dive Audio — Psychedelics and the Predictive Brain
+        </div>
+        <div class="media-desc">An extended audio exploration of how psychedelics alter conscious experience through the lens of predictive processing — covering the REBUS model, therapeutic mechanisms, mystical experience, and what a loosened grip on priors might mean for the nature of the self.</div>
+        <div style="position:relative;width:100%;height:80px;border-radius:10px;overflow:hidden;background:rgba(0,0,0,0.3);margin-bottom:8px;">
+          <iframe src="https://drive.google.com/file/d/1DMHEbnbgY883Whqbxul3nvk8bY5XNVbN/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="autoplay"></iframe>
+        </div>
+        <a class="media-link" href="https://drive.google.com/file/d/1DMHEbnbgY883Whqbxul3nvk8bY5XNVbN/view?usp=sharing" target="_blank" rel="noopener">
+          <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open in Google Drive
+        </a>
+      </div>
     </div>
 
     <div class="lecture-nav"><a class="nav-prev" href="../lecture-16/index.html">
