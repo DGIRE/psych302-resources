@@ -1148,37 +1148,45 @@
     </div>
 
     <!-- ═══════════════════════════════════
-         SECTION 3: BALL DEMO
+         SECTION 3: FLASH LAG ILLUSION
          ═══════════════════════════════════ -->
-    <div class="section" id="ball-demo">
-      <h2>3. See the Difference: Dorsal vs. Ventral in Action</h2>
-      <p>Watch a ball fly across the screen. The <strong style="color:var(--dorsal-color);">dorsal stream</strong> immediately tracks its motion and location &mdash; you know <em>where</em> it is going. The <strong style="color:var(--ventral-color);">ventral stream</strong> takes longer but gradually resolves what the object <em>is</em>: its color, texture, pattern, and identity.</p>
+    <div class="section" id="flash-lag">
+      <h2>3. The Flash Lag Illusion</h2>
+      <p>A small ball moves smoothly across the screen. At the exact moment it crosses the center, a vertical green line flashes for a single video frame (~33 ms). Although the flash and the ball are physically at the <em>same location</em> at the same instant, you perceive the ball as <strong>ahead</strong> of the flash.</p>
 
       <div class="callout">
-        <p><strong>The key insight:</strong> The dorsal stream extracts motion and spatial information almost instantly via fast feedforward processing. The ventral stream requires time-consuming recurrent processing to build a detailed representation. You can track and dodge a ball before you consciously recognize what it looks like.</p>
+        <p><strong>What this reveals:</strong> Your visual system does not simply record the present moment. It <em>extrapolates</em> moving objects forward in time &mdash; predicting where they will be a fraction of a second later. The stationary flash receives no such predictive boost, so it appears to lag behind. This is a window into the brain's strategy of compensating for neural processing delays by continuously forecasting the near future.</p>
       </div>
 
-      <div class="btn-row">
-        <button class="btn" onclick="runBallDemo()" id="ball-btn">&#9654; Launch Ball</button>
-        <button class="btn" onclick="resetBallDemo()">&#8635; Reset</button>
+      <div style="display:flex; flex-wrap:wrap; gap:24px; margin-top:20px;">
+        <div style="flex:1; min-width:260px;">
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px; text-align:center;">30 fps &mdash; illusion clearly visible</p>
+          <video controls style="width:100%; border-radius:10px; background:#000;">
+            <source src="assets/flash_lag_illusion_small_30fps.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div style="flex:1; min-width:260px;">
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px; text-align:center;">5 fps &mdash; slowed to reveal true alignment</p>
+          <video controls style="width:100%; border-radius:10px; background:#000;">
+            <source src="assets/flash_lag_illusion_small_5fps.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
 
-      <div class="ball-demo-stage" id="ball-stage">
-        <span class="pathway-label dorsal-label">Dorsal Stream (~80ms) &mdash; Motion &amp; Location</span>
-        <span class="pathway-label ventral-label">Ventral Stream (~150ms) &mdash; Identity &amp; Detail</span>
-        <div class="divider-line"></div>
-        <span class="divider-label">Same object, two representations</span>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:16px;">At 5 fps the sequence slows enough to make the alignment unmistakable: ball and flash occupy the <em>same</em> horizontal position on the critical frame. Compare your <strong>perception</strong> at full speed to the <strong>reality</strong> revealed in slow motion.</p>
 
-        <!-- Dorsal ball: simple, fast-moving outline -->
-        <div class="demo-ball demo-ball-dorsal" id="ball-dorsal" style="left: -50px;"></div>
-
-        <!-- Ventral ball: starts as a blurry blob, resolves into detailed ball -->
-        <div class="demo-ball demo-ball-ventral" id="ball-ventral" style="left: -50px; background: rgba(150,150,150,0.3); border: 2px solid rgba(150,150,150,0.3);"></div>
+      <div style="margin-top:24px; text-align:center;">
+        <img src="assets/flash_lag_still_frame_small.png" alt="Flash lag illusion still frame — ball and flash co-located" style="max-width:100%; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">Still frame at the moment of the flash. Ball (blue) and flash (green line) are physically co-located &mdash; yet the ball appears displaced forward at normal playback speed.</p>
       </div>
 
-      <div class="info-panel" id="ball-info">
-        <p style="text-align:center; color: var(--text-muted);">Press "Launch Ball" to see how the dorsal stream tracks motion immediately while the ventral stream slowly resolves object detail.</p>
+      <div class="callout" style="margin-top:20px;">
+        <p><strong>Two leading explanations:</strong></p>
+        <p style="margin-top:10px;"><strong style="color:var(--dorsal-color);">Motion extrapolation</strong> &mdash; The visual system continuously projects moving objects forward by ~80 ms to compensate for inherent neural delays. The flash, having no trajectory to extrapolate, does not receive this positional boost, producing an apparent gap between ball and flash.</p>
+        <p style="margin-top:10px;"><strong style="color:var(--ventral-color);">Postdiction</strong> &mdash; Rather than predicting the future, the brain waits until ~80 ms <em>after</em> the flash and then retroactively assigns the ball&rsquo;s <em>later</em> position to the moment of the flash &mdash; effectively rewriting the past to construct a coherent percept. The flash triggers a &ldquo;snapshot,&rdquo; but the snapshot captures slightly future information.</p>
       </div>
+
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 14px;">Nijhawan (1994) &mdash; <em>Nature</em>; Eagleman &amp; Sejnowski (2000) &mdash; <em>Science</em></p>
     </div>
 
     <!-- ═══════════════════════════════════
