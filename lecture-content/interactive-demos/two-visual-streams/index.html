@@ -1274,10 +1274,10 @@
 
     <div class="section" id="flash-lag">
       <h2>3. The Flash Lag Illusion</h2>
-      <p>A small ball moves across the screen. At the exact moment it crosses the center, a vertical green line flashes for a single video frame. Although the flash and ball are physically at the <em>same location</em> at the same instant, you perceive the ball as <strong>ahead</strong> of the flash. Use the slider to explore how frame rate changes what you see.</p>
+      <p>A moving object that follows a predictable trajectory appears <strong>ahead</strong> of its actual position relative to a briefly flashed stimulus — even when both occupy the same location at the same instant. This is the <em>flash lag illusion</em>: a flash and a moving object that are physically co-located are perceived as displaced from one another (Nijhawan, 1994). Use the slider to observe how frame rate changes what you see and whether the physical reality becomes apparent.</p>
 
       <div class="callout">
-        <p><strong>What this reveals:</strong> Your visual system does not simply record the present moment. It <em>extrapolates</em> moving objects forward in time to compensate for neural processing delays (~80 ms). The stationary flash receives no such boost &mdash; so it appears to lag behind. The slower the frame rate, the larger the physical gap between frames, letting you directly observe when the flash and ball share the same frame vs. when the percept and reality diverge.</p>
+        <p><strong>Why does this happen?</strong> Neural processing introduces unavoidable delays between a stimulus hitting the retina and a conscious percept being formed. A moving stimulus following a predictable trajectory gives the visual system enough information to compensate for this delay; a brief flash does not. The result is a systematic perceptual misalignment between the two. Four main accounts have been proposed, each with distinct experimental predictions.</p>
       </div>
 
       <!-- ── Video player with fps slider ── -->
@@ -1312,11 +1312,17 @@
         </p>
       </div>
 
-      <!-- ── Two explanations ── -->
+      <!-- ── Four explanations ── -->
       <div class="callout" style="margin-top:20px;">
-        <p><strong>Two leading explanations:</strong></p>
-        <p style="margin-top:10px;"><strong style="color:var(--dorsal-color);">Motion extrapolation</strong> &mdash; The visual system continuously projects moving objects forward by ~80 ms to compensate for neural delays. The flash has no trajectory to extrapolate, so it receives no positional boost.</p>
-        <p style="margin-top:10px;"><strong style="color:var(--ventral-color);">Postdiction</strong> &mdash; The brain waits ~80 ms after the flash, then retroactively assigns the ball&rsquo;s <em>later</em> position to the moment of the flash &mdash; rewriting the past to construct a coherent percept.</p>
+        <p><strong>Proposed explanations</strong></p>
+
+        <p style="margin-top:12px;"><strong style="color:var(--dorsal-color);">1. Motion extrapolation</strong> (Nijhawan, 1994) &mdash; The visual system compensates for neural delays by predictively extrapolating a moving object&rsquo;s position forward in time. Moving stimuli benefit from this extrapolation; a brief flash does not, so it appears to lag. The magnitude of the illusion increases with the speed of the moving object.</p>
+
+        <p style="margin-top:12px;"><strong style="color:var(--dorsal-color);">2. Latency difference</strong> (Whitney &amp; Murakami) &mdash; Moving objects are processed faster than flashed objects. By the time the flashed stimulus reaches perceptual completion, the moving object has already advanced to a new position. On this account no predictive extrapolation is required &mdash; the displacement arises from a difference in processing speed alone.</p>
+
+        <p style="margin-top:12px;"><strong style="color:var(--ventral-color);">3. Postdiction</strong> (Eagleman &amp; Sejnowski, 2000) &mdash; Visual awareness is neither predictive nor strictly on-line, but <em>postdictive</em>: the percept attributed to the moment of the flash is determined by events occurring in the ~80 ms <em>following</em> the flash. The brain waits, integrates subsequent motion, and then retrospectively assigns a position to the flash. This framework aligns with backward masking and the color phi phenomenon.</p>
+
+        <p style="margin-top:12px;"><strong style="color:var(--subcortical-color);">4. Probabilistic integration</strong> &mdash; More recent work frames perception as predictive inference. Sensory information and prior trajectory representations are combined as probability distributions, potentially unifying the accounts above within a Bayesian framework.</p>
       </div>
 
       <!-- ── Reflection questions ── -->
@@ -1324,24 +1330,26 @@
         <h3>Questions for Reflection</h3>
         <div class="fl-q">
           <div class="fl-q-num">1</div>
-          <div class="fl-q-text">At which frame rate does the ball&rsquo;s motion first begin to look <em>discontinuous</em> or &ldquo;jumpy&rdquo; rather than smooth? What does this tell you about the minimum frame rate needed for the visual system to construct the impression of continuous motion?</div>
+          <div class="fl-q-text">At which frame rate does the ball&rsquo;s motion first begin to look <em>discontinuous</em> or &ldquo;jumpy&rdquo; rather than smooth? What does this tell you about the minimum temporal sampling rate needed for the visual system to construct the impression of continuous motion?</div>
         </div>
         <div class="fl-q">
           <div class="fl-q-num">2</div>
-          <div class="fl-q-text">At which frame rate can you first clearly see the green flash line and the ball occupying the <em>same frame</em> &mdash; confirming they are physically co-located? Compare this to the frame rate at which the illusion is strongest. What does the gap between these two values tell you about the temporal window of neural prediction?</div>
+          <div class="fl-q-text">At which frame rate can you first clearly see the green flash line and the ball occupying the <em>same frame</em>, confirming physical co-location? Compare this to the frame rate at which the illusion is strongest. What does the gap between these two values suggest about the temporal window of neural prediction or postdiction?</div>
         </div>
         <div class="fl-q">
           <div class="fl-q-num">3</div>
-          <div class="fl-q-text">The flash lasts exactly one frame regardless of frame rate. At 30 fps that is 33 ms; at 1 fps it is 1000 ms. How does the <em>perceptual salience</em> of the flash change as you slow down? Does making the flash more visible (longer duration) strengthen or weaken the illusion?</div>
+          <div class="fl-q-text">The flash lasts exactly one frame regardless of frame rate — 33 ms at 30 fps, 1000 ms at 1 fps. How does the <em>perceptual salience</em> of the flash change as you slow down? Does a longer, more visible flash strengthen or weaken the illusion, and what does this imply about the role of flash duration in the competing explanations?</div>
         </div>
         <div class="fl-q">
           <div class="fl-q-num">4</div>
-          <div class="fl-q-text">At very low frame rates (1&ndash;3 fps), does the illusion disappear entirely, or does something different happen? Consider what your visual system does when it can no longer extrapolate a smooth trajectory from so few position samples.</div>
+          <div class="fl-q-text">The <strong>latency difference</strong> account predicts the illusion arises from speed-of-processing differences, while <strong>postdiction</strong> predicts it depends on what happens in the 80 ms <em>after</em> the flash. At very low frame rates where individual frames are hundreds of milliseconds apart, which account do you think better describes what you observe, and why?</div>
         </div>
       </div>
 
       <p style="font-size:0.82rem; color:var(--text-muted); margin-top:14px;">
-        Nijhawan (1994) &mdash; <em>Nature</em>; Eagleman &amp; Sejnowski (2000) &mdash; <em>Science</em>
+        Nijhawan, R. (1994). Motion extrapolation in catching. <em>Nature</em>, 370, 256&ndash;257. &nbsp;&middot;&nbsp;
+        Eagleman, D. M. &amp; Sejnowski, T. J. (2000). Motion integration and postdiction in visual awareness. <em>Science</em>, 287, 2036&ndash;2038. &nbsp;&middot;&nbsp;
+        Whitney, D. &amp; Murakami, I. (1998). Latency difference, not spatial extrapolation. <em>Nature Neuroscience</em>, 1, 656&ndash;659.
       </p>
     </div>
 
