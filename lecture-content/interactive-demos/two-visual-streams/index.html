@@ -1150,44 +1150,243 @@
     <!-- ═══════════════════════════════════
          SECTION 3: FLASH LAG ILLUSION
          ═══════════════════════════════════ -->
+    <style>
+      /* ── Flash-lag slider widget ── */
+      .fl-player-wrap {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 20px 20px 16px;
+        margin-top: 20px;
+      }
+      .fl-rate-display {
+        text-align: center;
+        margin-bottom: 14px;
+      }
+      .fl-rate-fps {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--peak-gold);
+        line-height: 1;
+      }
+      .fl-rate-ms {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .fl-video {
+        width: 100%;
+        border-radius: 10px;
+        background: #000;
+        display: block;
+      }
+      /* slider track */
+      .fl-slider-row {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .fl-slider-label-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        padding: 0 2px;
+      }
+      .fl-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(to right, var(--dorsal-color), var(--ventral-color));
+        outline: none;
+        cursor: pointer;
+      }
+      .fl-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: var(--peak-gold);
+        border: 3px solid var(--twilight-deep);
+        box-shadow: 0 0 8px rgba(240,200,160,0.5);
+        cursor: pointer;
+      }
+      .fl-range::-moz-range-thumb {
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: var(--peak-gold);
+        border: 3px solid var(--twilight-deep);
+        cursor: pointer;
+      }
+      .fl-tick-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 2px;
+      }
+      .fl-tick {
+        font-size: 0.66rem;
+        color: var(--text-muted);
+        text-align: center;
+        flex: 1;
+        white-space: nowrap;
+      }
+      /* reflection questions */
+      .fl-questions {
+        margin-top: 24px;
+        border-top: 1px solid rgba(255,255,255,0.07);
+        padding-top: 20px;
+      }
+      .fl-questions h3 {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+      .fl-q {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 14px;
+        align-items: flex-start;
+      }
+      .fl-q-num {
+        flex-shrink: 0;
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        background: rgba(240,200,160,0.12);
+        border: 1px solid rgba(240,200,160,0.3);
+        color: var(--peak-gold);
+        font-size: 0.72rem;
+        font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        margin-top: 1px;
+      }
+      .fl-q-text {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+    </style>
+
     <div class="section" id="flash-lag">
       <h2>3. The Flash Lag Illusion</h2>
-      <p>A small ball moves smoothly across the screen. At the exact moment it crosses the center, a vertical green line flashes for a single video frame (~33 ms). Although the flash and the ball are physically at the <em>same location</em> at the same instant, you perceive the ball as <strong>ahead</strong> of the flash.</p>
+      <p>A small ball moves across the screen. At the exact moment it crosses the center, a vertical green line flashes for a single video frame. Although the flash and ball are physically at the <em>same location</em> at the same instant, you perceive the ball as <strong>ahead</strong> of the flash. Use the slider to explore how frame rate changes what you see.</p>
 
       <div class="callout">
-        <p><strong>What this reveals:</strong> Your visual system does not simply record the present moment. It <em>extrapolates</em> moving objects forward in time &mdash; predicting where they will be a fraction of a second later. The stationary flash receives no such predictive boost, so it appears to lag behind. This is a window into the brain's strategy of compensating for neural processing delays by continuously forecasting the near future.</p>
+        <p><strong>What this reveals:</strong> Your visual system does not simply record the present moment. It <em>extrapolates</em> moving objects forward in time to compensate for neural processing delays (~80 ms). The stationary flash receives no such boost &mdash; so it appears to lag behind. The slower the frame rate, the larger the physical gap between frames, letting you directly observe when the flash and ball share the same frame vs. when the percept and reality diverge.</p>
       </div>
 
-      <div style="display:flex; flex-wrap:wrap; gap:24px; margin-top:20px;">
-        <div style="flex:1; min-width:260px;">
-          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px; text-align:center;">30 fps &mdash; illusion clearly visible</p>
-          <video controls style="width:100%; border-radius:10px; background:#000;">
-            <source src="assets/flash_lag_illusion_small_30fps.mp4" type="video/mp4">
-          </video>
+      <!-- ── Video player with fps slider ── -->
+      <div class="fl-player-wrap">
+        <div class="fl-rate-display">
+          <div class="fl-rate-fps" id="fl-fps-label">30 fps</div>
+          <div class="fl-rate-ms" id="fl-ms-label">33 ms per frame</div>
         </div>
-        <div style="flex:1; min-width:260px;">
-          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px; text-align:center;">5 fps &mdash; slowed to reveal true alignment</p>
-          <video controls style="width:100%; border-radius:10px; background:#000;">
-            <source src="assets/flash_lag_illusion_small_5fps.mp4" type="video/mp4">
-          </video>
+
+        <video id="fl-video" class="fl-video" controls playsinline>
+          <source id="fl-source" src="assets/flash_lag_illusion_small_30fps.mp4" type="video/mp4">
+        </video>
+
+        <div class="fl-slider-row">
+          <div class="fl-slider-label-row">
+            <span>&#9654; faster (illusion stronger)</span>
+            <span>slower (reality revealed) &#9664;</span>
+          </div>
+          <input type="range" id="fl-range" class="fl-range"
+                 min="0" max="11" step="1" value="0">
+          <div class="fl-tick-row" id="fl-ticks"></div>
         </div>
       </div>
 
-      <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:16px;">At 5 fps the sequence slows enough to make the alignment unmistakable: ball and flash occupy the <em>same</em> horizontal position on the critical frame. Compare your <strong>perception</strong> at full speed to the <strong>reality</strong> revealed in slow motion.</p>
-
-      <div style="margin-top:24px; text-align:center;">
-        <img src="assets/flash_lag_still_frame_small.png" alt="Flash lag illusion still frame — ball and flash co-located" style="max-width:100%; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
-        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">Still frame at the moment of the flash. Ball (blue) and flash (green line) are physically co-located &mdash; yet the ball appears displaced forward at normal playback speed.</p>
+      <!-- ── Still frame ── -->
+      <div style="margin-top:20px; text-align:center;">
+        <img src="assets/flash_lag_still_frame_small.png"
+             alt="Flash lag illusion still frame — ball and flash co-located"
+             style="max-width:100%; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">
+          Still frame at the moment of the flash. Ball (blue) and flash (green line) are physically co-located &mdash; yet at full speed the ball appears displaced forward.
+        </p>
       </div>
 
+      <!-- ── Two explanations ── -->
       <div class="callout" style="margin-top:20px;">
         <p><strong>Two leading explanations:</strong></p>
-        <p style="margin-top:10px;"><strong style="color:var(--dorsal-color);">Motion extrapolation</strong> &mdash; The visual system continuously projects moving objects forward by ~80 ms to compensate for inherent neural delays. The flash, having no trajectory to extrapolate, does not receive this positional boost, producing an apparent gap between ball and flash.</p>
-        <p style="margin-top:10px;"><strong style="color:var(--ventral-color);">Postdiction</strong> &mdash; Rather than predicting the future, the brain waits until ~80 ms <em>after</em> the flash and then retroactively assigns the ball&rsquo;s <em>later</em> position to the moment of the flash &mdash; effectively rewriting the past to construct a coherent percept. The flash triggers a &ldquo;snapshot,&rdquo; but the snapshot captures slightly future information.</p>
+        <p style="margin-top:10px;"><strong style="color:var(--dorsal-color);">Motion extrapolation</strong> &mdash; The visual system continuously projects moving objects forward by ~80 ms to compensate for neural delays. The flash has no trajectory to extrapolate, so it receives no positional boost.</p>
+        <p style="margin-top:10px;"><strong style="color:var(--ventral-color);">Postdiction</strong> &mdash; The brain waits ~80 ms after the flash, then retroactively assigns the ball&rsquo;s <em>later</em> position to the moment of the flash &mdash; rewriting the past to construct a coherent percept.</p>
       </div>
 
-      <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 14px;">Nijhawan (1994) &mdash; <em>Nature</em>; Eagleman &amp; Sejnowski (2000) &mdash; <em>Science</em></p>
+      <!-- ── Reflection questions ── -->
+      <div class="fl-questions">
+        <h3>Questions for Reflection</h3>
+        <div class="fl-q">
+          <div class="fl-q-num">1</div>
+          <div class="fl-q-text">At which frame rate does the ball&rsquo;s motion first begin to look <em>discontinuous</em> or &ldquo;jumpy&rdquo; rather than smooth? What does this tell you about the minimum frame rate needed for the visual system to construct the impression of continuous motion?</div>
+        </div>
+        <div class="fl-q">
+          <div class="fl-q-num">2</div>
+          <div class="fl-q-text">At which frame rate can you first clearly see the green flash line and the ball occupying the <em>same frame</em> &mdash; confirming they are physically co-located? Compare this to the frame rate at which the illusion is strongest. What does the gap between these two values tell you about the temporal window of neural prediction?</div>
+        </div>
+        <div class="fl-q">
+          <div class="fl-q-num">3</div>
+          <div class="fl-q-text">The flash lasts exactly one frame regardless of frame rate. At 30 fps that is 33 ms; at 1 fps it is 1000 ms. How does the <em>perceptual salience</em> of the flash change as you slow down? Does making the flash more visible (longer duration) strengthen or weaken the illusion?</div>
+        </div>
+        <div class="fl-q">
+          <div class="fl-q-num">4</div>
+          <div class="fl-q-text">At very low frame rates (1&ndash;3 fps), does the illusion disappear entirely, or does something different happen? Consider what your visual system does when it can no longer extrapolate a smooth trajectory from so few position samples.</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-top:14px;">
+        Nijhawan (1994) &mdash; <em>Nature</em>; Eagleman &amp; Sejnowski (2000) &mdash; <em>Science</em>
+      </p>
     </div>
+
+    <script>
+    (function() {
+      // fps steps: left = fast (30), right = slow (1)
+      var FPS_STEPS = [30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+      var video  = document.getElementById('fl-video');
+      var source = document.getElementById('fl-source');
+      var range  = document.getElementById('fl-range');
+      var fpsLbl = document.getElementById('fl-fps-label');
+      var msLbl  = document.getElementById('fl-ms-label');
+      var ticks  = document.getElementById('fl-ticks');
+
+      // Build tick labels
+      FPS_STEPS.forEach(function(fps) {
+        var d = document.createElement('span');
+        d.className = 'fl-tick';
+        var ms = Math.round(1000 / fps);
+        d.textContent = fps + ' fps\n' + ms + ' ms';
+        d.style.whiteSpace = 'pre';
+        ticks.appendChild(d);
+      });
+
+      function switchTo(idx) {
+        var fps = FPS_STEPS[idx];
+        var ms  = Math.round(1000 / fps);
+        fpsLbl.textContent = fps + ' fps';
+        msLbl.textContent  = ms + ' ms per frame';
+        var wasPlaying = !video.paused;
+        var t = video.currentTime;
+        source.src = 'assets/flash_lag_illusion_small_' + fps + 'fps.mp4';
+        video.load();
+        video.currentTime = 0;
+        if (wasPlaying) {
+          video.play().catch(function(){});
+        }
+      }
+
+      range.addEventListener('input', function() {
+        switchTo(parseInt(this.value, 10));
+      });
+    })();
+    </script>
 
     <!-- ═══════════════════════════════════
          SECTION 4: SIGNAL TIMELINE
