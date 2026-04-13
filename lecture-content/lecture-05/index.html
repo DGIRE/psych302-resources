@@ -593,6 +593,64 @@
       border: none;
     }
 
+    /* ── Backward Masking Demo ── */
+    .masking-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 14px;
+    }
+
+    .masking-slider-wrap {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .masking-slider {
+      max-width: 600px;
+    }
+
+    .masking-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 7px;
+      box-sizing: border-box;
+    }
+
+    .masking-labels span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      flex: 1;
+    }
+
+    .masking-readout {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin: 4px 0 0;
+      text-align: center;
+    }
+
+    .masking-readout strong {
+      color: var(--accent);
+    }
+
+    .masking-video-wrap {
+      width: 100%;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .masking-video-wrap video {
+      width: 100%;
+      display: block;
+    }
+
   </style>
 </head>
 <body>
@@ -752,6 +810,47 @@
         <p style="font-size:0.76rem; color:var(--text-muted); text-align:center; margin-top:6px;">Both squares share the same x-position at the moment of the flash — physical reality vs. perceptual experience.</p>
       </div>
 
+    </div>
+
+    <!-- ── Section: Backward Masking Demo ── -->
+    <div class="section-card">
+      <h2>Backward Masking &mdash; Feedforward &amp; Feedback Pathways</h2>
+
+      <div class="media-item">
+        <div class="media-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;color:var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Stimulus-Onset Asynchrony (SOA) Explorer
+        </div>
+        <p class="media-desc">
+          A word is flashed for a single frame (~33&thinsp;ms) and immediately followed by a high-contrast noise mask at a variable delay — the <strong>stimulus-onset asynchrony (SOA)</strong>. At short SOAs the mask extinguishes conscious recognition almost completely; at longer SOAs the target survives. This pattern selectively disrupts <strong>recurrent feedback activity</strong> from higher visual areas back to early cortex (V1/V2) while leaving the initial <strong>feedforward sweep</strong> largely intact. The result demonstrates that <em>conscious</em> perception depends critically on those feedback loops — not merely on the first wave of activity ascending the visual hierarchy (Lamme &amp; Roelfsema, 2000).
+        </p>
+
+        <!-- SOA Slider -->
+        <div class="masking-controls">
+          <div class="masking-slider-wrap">
+            <input type="range" class="viewer-slider masking-slider" id="maskingSlider" min="0" max="4" step="1" value="0">
+          </div>
+          <div class="masking-labels">
+            <span>0 ms</span><span>33 ms</span><span>67 ms</span><span>100 ms</span><span>167 ms</span>
+          </div>
+          <p class="masking-readout">SOA: <strong id="maskingSOA">0 ms</strong> &nbsp;&mdash;&nbsp; Target: <strong id="maskingAnimal" style="color:var(--text-muted);letter-spacing:0.1em;">?????</strong></p>
+          <button class="control-btn" id="maskingPlayBtn" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Play
+          </button>
+        </div>
+
+        <!-- Video -->
+        <div class="masking-video-wrap">
+          <video id="maskingVideo" preload="auto">
+            <source id="maskingSource" src="assets/backwards_mask_0_frames_gap-v2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <p style="font-size:0.76rem; color:var(--text-muted); text-align:center; margin-top:8px;">
+          Drag the slider to set the SOA, then press <strong style="color:var(--text-secondary);">Play</strong>. Can you identify the animal? The answer reveals when the video ends.
+        </p>
+      </div>
     </div>
 
     <!-- ── Section: Brain Activity Simulation ── -->
@@ -928,6 +1027,57 @@
 
     updateButtonStates();
   })();
+  // ── Backward Masking Demo ──────────────────────────────────────────────────
+  (function () {
+    var maskFiles = [
+      { soa: '0 ms',   animal: 'OCTOPUS', src: 'assets/backwards_mask_0_frames_gap-v2.mp4' },
+      { soa: '33 ms',  animal: 'LEMUR',   src: 'assets/backwards_mask_1_frame_gap-v2.mp4'  },
+      { soa: '67 ms',  animal: 'JAGUAR',  src: 'assets/backwards_mask_2_frames_gap-v2.mp4' },
+      { soa: '100 ms', animal: 'FERRET',  src: 'assets/backwards_mask_3_frames_gap-v2.mp4' },
+      { soa: '167 ms', animal: 'NARWHAL', src: 'assets/backwards_mask_5_frames_gap-v2.mp4' },
+    ];
+
+    var slider   = document.getElementById('maskingSlider');
+    var video    = document.getElementById('maskingVideo');
+    var source   = document.getElementById('maskingSource');
+    var soaLabel = document.getElementById('maskingSOA');
+    var animal   = document.getElementById('maskingAnimal');
+    var playBtn  = document.getElementById('maskingPlayBtn');
+
+    function setFill(el) {
+      var pct = (parseInt(el.value) / parseInt(el.max)) * 100;
+      el.style.background =
+        'linear-gradient(to right, var(--accent) ' + pct + '%, rgba(255,255,255,0.1) ' + pct + '%)';
+    }
+
+    function loadTrack(idx) {
+      var m = maskFiles[idx];
+      soaLabel.textContent   = m.soa;
+      animal.textContent     = '?????';
+      animal.style.color     = 'var(--text-muted)';
+      source.src             = m.src;
+      video.load();
+      setFill(slider);
+    }
+
+    slider.addEventListener('input', function () { loadTrack(parseInt(this.value)); });
+
+    playBtn.addEventListener('click', function () {
+      animal.textContent = '?????';
+      animal.style.color = 'var(--text-muted)';
+      video.currentTime  = 0;
+      video.play();
+    });
+
+    video.addEventListener('ended', function () {
+      var m = maskFiles[parseInt(slider.value)];
+      animal.textContent = m.animal;
+      animal.style.color = 'var(--accent)';
+    });
+
+    // initialise
+    loadTrack(0);
+  }());
   </script>
 
 <script src="../../analytics.js" defer></script>
