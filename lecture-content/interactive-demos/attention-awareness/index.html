@@ -508,73 +508,82 @@
     }
 
     /* ═══════════════════════
-       SECTION 4: INATTENTIONAL BLINDNESS
+       SECTION 4: CONSCIOUS RECOGNITION
        ═══════════════════════ */
-    .ib-stage {
-      position: relative;
+    .quiroga-slider-wrap {
       width: 100%;
-      height: 360px;
-      background: #111;
-      border-radius: 14px;
-      margin: 16px 0;
-      overflow: hidden;
-      cursor: default;
-      user-select: none;
+      margin: 12px 0 4px;
     }
-    .ib-ball {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      transition: none;
+    .quiroga-slider {
+      width: 100%;
+      max-width: 560px;
+      accent-color: var(--preconscious-color);
+      cursor: pointer;
     }
-    .ib-ball.white { background: #e8e8e8; }
-    .ib-ball.black { background: #444; }
-    .ib-gorilla {
-      position: absolute;
-      width: 36px;
-      height: 44px;
-      background: rgba(80,75,70,0.7);
-      border-radius: 10px 10px 8px 8px;
+    .quiroga-labels {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      color: rgba(120,110,100,0.6);
-      font-weight: 800;
-      transition: none;
-      z-index: 2;
+      justify-content: space-between;
+      max-width: 560px;
+      margin-top: 4px;
     }
-    .ib-counter {
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.78rem;
+    .quiroga-labels span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
       font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      background: rgba(0,0,0,0.5);
-      padding: 4px 14px;
-      border-radius: 8px;
-      z-index: 10;
-    }
-    .ib-instruction {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       text-align: center;
-      z-index: 10;
+      width: 25%;
     }
-    .ib-instruction h3 {
-      color: #fff;
-      font-size: 1.1rem;
-      margin-bottom: 6px;
+    .quiroga-readout {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      margin: 10px 0 8px;
     }
-    .ib-instruction p {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.82rem;
+    .quiroga-video-wrap {
+      width: 100%;
+      max-width: 680px;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 10px 0;
+      border: 1px solid rgba(200,154,240,0.15);
     }
+    .quiroga-video-wrap video {
+      width: 100%;
+      display: block;
+    }
+    .quiroga-results {
+      list-style: none;
+      margin: 10px 0 16px;
+      padding: 0;
+    }
+    .quiroga-results li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      padding: 7px 0 7px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+    }
+    .quiroga-results li:last-child { border-bottom: none; }
+    .quiroga-results li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--preconscious-color);
+      font-size: 0.75rem;
+      top: 8px;
+    }
+    .paper-ref {
+      background: rgba(46,109,164,0.08);
+      border: 1px solid rgba(46,109,164,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .paper-ref strong { color: var(--text-secondary); }
 
     /* ═══════════════════════
        SECTION 4: CHANGE BLINDNESS
@@ -896,6 +905,7 @@
         <span class="reading-tag">Dehaene et al. 2006</span>
         <span class="reading-tag">Simons 2000</span>
         <span class="reading-tag">Freiberger &amp; Cerf 2022</span>
+        <span class="reading-tag">Quiroga et al. 2008</span>
       </div>
     </div>
 
@@ -904,7 +914,7 @@
       <a href="#levels">Processing Levels</a>
       <a href="#ignition">Ignition Simulator</a>
       <a href="#erp-signatures">ERP Signatures</a>
-      <a href="#inattentional">Inattentional Blindness</a>
+      <a href="#conscious-recognition">Recognition Threshold</a>
       <a href="#change-blindness">Change Blindness</a>
       <a href="#attentional-blink">Attentional Blink</a>
       <a href="#comparison">Comparison</a>
@@ -1195,31 +1205,54 @@
     </div>
 
     <!-- ═══════════════════════════════════
-         SECTION 4: INATTENTIONAL BLINDNESS
+         SECTION 4: CONSCIOUS RECOGNITION THRESHOLD
          ═══════════════════════════════════ -->
-    <div class="section" id="inattentional">
-      <h2>4. Inattentional Blindness</h2>
-      <p>Simons &amp; Chabris (1999) showed that when attention is fully engaged on a task, people fail to notice a clearly visible, unexpected event &mdash; even a person in a gorilla suit walking through the scene. This is <strong>inattentional blindness</strong>: the stimulus is strong (it's right there!), but attention is consumed elsewhere.</p>
+    <div class="section" id="conscious-recognition">
+      <h2>4. Conscious Recognition Threshold</h2>
+      <p>Quian Quiroga et al. (2008) recorded single-neuron activity in the human medial temporal lobe (MTL) while patients viewed familiar faces, animals, and landmarks flashed for as little as 33 ms &mdash; immediately followed by a backward mask. The key finding: MTL neurons fired in a striking <strong>all-or-none</strong> pattern that tracked the subject's conscious recognition, not the physical duration of the stimulus.</p>
 
       <div class="callout">
-        <p><strong>Connection to Dehaene's model:</strong> In inattentional blindness the gorilla stimulus is strong (not subliminal), but attention is fully deployed to the counting task. The gorilla remains in a <em>preconscious</em> state &mdash; it has sufficient signal strength to reach consciousness, but without attentional amplification, it never ignites in the global workspace.</p>
+        <p><strong>The paradigm:</strong> Each image appeared for 33, 66, 132, or 264 ms, then was immediately replaced by a scrambled-tile mask. Subjects pressed a key to report whether they recognized what they saw. The same brief flash that was recognized on one trial could be missed on another &mdash; and neurons tracked this variability perfectly, firing only on recognized trials.</p>
       </div>
+
+      <h3>Key Results</h3>
+      <ul class="quiroga-results">
+        <li><strong>All-or-none firing:</strong> MTL neurons went from near-silent baseline to firing at ~50 Hz on recognized trials, and produced virtually no spikes on non-recognized trials &mdash; even for the same image, same duration, same subject.</li>
+        <li><strong>Duration insensitivity:</strong> Responses to 33 ms, 66 ms, and 132 ms presentations were statistically indistinguishable. Only the 264 ms condition produced a significantly higher firing rate.</li>
+        <li><strong>Sustained response:</strong> Firing began ~300 ms after stimulus onset and lasted up to 1,000 ms &mdash; far outlasting a stimulus that was on screen for as little as 33 ms.</li>
+        <li><strong>Single-trial prediction:</strong> The firing of a single neuron was sufficient to predict, above chance, whether the image had been recognized on that trial (median ROC area = 0.71).</li>
+        <li><strong>Connection to Dehaene's model:</strong> Conscious recognition corresponds to ignition in the global workspace. The MTL response here reflects the downstream consequence of that ignition &mdash; a percept strong enough and attended enough to be broadcast globally, then encoded into memory.</li>
+      </ul>
+
+      <!-- SOA Demo -->
+      <h3>Try the Stimulus Sequence</h3>
+      <p style="margin-bottom:4px;">Use the slider to set the image presentation duration, then press Play. Can you recognize each image?</p>
+
+      <div class="quiroga-slider-wrap">
+        <input type="range" class="viewer-slider quiroga-slider" id="quiroSlider" min="0" max="3" step="1" value="0">
+      </div>
+      <div class="quiroga-labels">
+        <span>33 ms</span><span>66 ms</span><span>132 ms</span><span>264 ms</span>
+      </div>
+      <p class="quiroga-readout">Presentation duration: <strong id="quiroSOA">33 ms</strong></p>
 
       <div class="btn-row">
-        <button class="btn" onclick="startIB()" id="ib-btn">&#9654; Start the Task</button>
-        <button class="btn" onclick="resetIB()">&#8635; Reset</button>
+        <button class="btn" id="quiroPlayBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play
+        </button>
       </div>
 
-      <div class="ib-stage" id="ib-stage">
-        <div class="ib-instruction" id="ib-instruction">
-          <h3>Count the White Passes</h3>
-          <p>Watch the white balls carefully.<br>Count every time a white ball bounces off another white ball.<br>Ignore the dark balls. Press Start when ready.</p>
-        </div>
-        <div class="ib-counter" id="ib-counter" style="display:none;">White passes: <span id="ib-count">0</span></div>
+      <div class="quiroga-video-wrap">
+        <video id="quiroVideo" preload="auto">
+          <source id="quiroSource" src="assets/Blink%20Stim%20-%2033.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       </div>
 
-      <div class="info-panel" id="ib-info">
-        <p style="text-align:center; color: var(--text-muted);">This is a simplified demonstration of the inattentional blindness paradigm. Press "Start the Task" and count carefully!</p>
+      <p style="font-size:0.74rem;color:var(--text-muted);margin-top:6px;">Each trial: image shown for the selected duration → backward mask (total 500 ms) → 1 s blank. Five images cycle per video. Images are public-domain photographs (Einstein, Lincoln, Statue of Liberty, elephant, lion).</p>
+
+      <div class="paper-ref">
+        <strong>Source:</strong> Quian Quiroga R, Mukamel R, Isham EA, Malach R, Fried I (2008). Human single-neuron responses at the threshold of conscious recognition. <em>PNAS</em>, 105(9), 3599–3604. <a href="https://doi.org/10.1073/pnas.0707043105" target="_blank" rel="noopener" style="color:var(--accent);">doi:10.1073/pnas.0707043105</a>
       </div>
     </div>
 
@@ -1773,159 +1806,62 @@
     // ═══════════════════════════════════
     // SECTION 4: INATTENTIONAL BLINDNESS
     // ═══════════════════════════════════
-    let ibRunning = false;
-    let ibAnimId = null;
-    let ibBalls = [];
-    let ibGorilla = null;
-    let ibPassCount = 0;
-    let ibPhase = 'idle'; // idle, running, reveal, done
+    // ═══════════════════════════════════
+    // SECTION 4: CONSCIOUS RECOGNITION (Quiroga et al. 2008)
+    // ═══════════════════════════════════
+    (function () {
+      var quiroFiles = [
+        { soa: '33 ms',  src: 'assets/Blink%20Stim%20-%2033.mp4'  },
+        { soa: '66 ms',  src: 'assets/Blink%20Stim%20-%2066.mp4'  },
+        { soa: '132 ms', src: 'assets/Blink%20Stim%20-%20132.mp4' },
+        { soa: '264 ms', src: 'assets/Blink%20Stim%20-%20264.mp4' },
+      ];
+      var slider  = document.getElementById('quiroSlider');
+      var video   = document.getElementById('quiroVideo');
+      var source  = document.getElementById('quiroSource');
+      var soaLbl  = document.getElementById('quiroSOA');
+      var playBtn = document.getElementById('quiroPlayBtn');
 
-    function createIBBalls() {
-      const stage = document.getElementById('ib-stage');
-      const stageW = stage.offsetWidth;
-      const stageH = stage.offsetHeight;
-
-      // Create 3 white and 3 black balls
-      ibBalls = [];
-      const colors = ['white','white','white','black','black','black'];
-      colors.forEach((color, i) => {
-        const el = document.createElement('div');
-        el.className = 'ib-ball ' + color;
-        const x = 60 + Math.random() * (stageW - 120);
-        const y = 60 + Math.random() * (stageH - 120);
-        const vx = (1.5 + Math.random() * 1.5) * (Math.random() < 0.5 ? 1 : -1);
-        const vy = (1.5 + Math.random() * 1.5) * (Math.random() < 0.5 ? 1 : -1);
-        el.style.left = x + 'px';
-        el.style.top = y + 'px';
-        stage.appendChild(el);
-        ibBalls.push({ el, x, y, vx, vy, color, r: 14 });
-      });
-    }
-
-    function startIB() {
-      if (ibRunning) return;
-      resetIB();
-      ibRunning = true;
-      ibPhase = 'running';
-      ibPassCount = 0;
-      document.getElementById('ib-btn').textContent = 'Running...';
-      document.getElementById('ib-instruction').style.display = 'none';
-      document.getElementById('ib-counter').style.display = 'block';
-      document.getElementById('ib-count').textContent = '0';
-
-      const stage = document.getElementById('ib-stage');
-      createIBBalls();
-
-      // Gorilla appears at ~6s, crosses slowly, disappears at ~10s
-      let gorillaTimer = null;
-      const stageH = stage.offsetHeight;
-      const gorillaStartTime = 6000;
-      const gorillaDuration = 4000;
-
-      const startTime = performance.now();
-      let gorillaAdded = false;
-      let gorillaEl = null;
-
-      function animate(now) {
-        if (!ibRunning) return;
-        const elapsed = now - startTime;
-        const stageW = stage.offsetWidth;
-        const stageH2 = stage.offsetHeight;
-
-        // Move balls
-        ibBalls.forEach(b => {
-          b.x += b.vx;
-          b.y += b.vy;
-          if (b.x < b.r || b.x > stageW - b.r) { b.vx *= -1; b.x = Math.max(b.r, Math.min(stageW - b.r, b.x)); }
-          if (b.y < 40 + b.r || b.y > stageH2 - b.r) { b.vy *= -1; b.y = Math.max(40 + b.r, Math.min(stageH2 - b.r, b.y)); }
-          b.el.style.left = (b.x - b.r) + 'px';
-          b.el.style.top = (b.y - b.r) + 'px';
-        });
-
-        // Check white-white collisions for pass counting
-        for (let i = 0; i < ibBalls.length; i++) {
-          for (let j = i + 1; j < ibBalls.length; j++) {
-            const a = ibBalls[i], bBall = ibBalls[j];
-            if (a.color !== 'white' || bBall.color !== 'white') continue;
-            const dx = a.x - bBall.x;
-            const dy = a.y - bBall.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < (a.r + bBall.r + 4)) {
-              // Bounce
-              const nx = dx / dist;
-              const ny = dy / dist;
-              const dvx = a.vx - bBall.vx;
-              const dvy = a.vy - bBall.vy;
-              const dvn = dvx * nx + dvy * ny;
-              if (dvn > 0) {
-                a.vx -= dvn * nx;
-                a.vy -= dvn * ny;
-                bBall.vx += dvn * nx;
-                bBall.vy += dvn * ny;
-                ibPassCount++;
-                document.getElementById('ib-count').textContent = ibPassCount;
-              }
-            }
-          }
-        }
-
-        // Gorilla
-        if (elapsed >= gorillaStartTime && !gorillaAdded) {
-          gorillaAdded = true;
-          gorillaEl = document.createElement('div');
-          gorillaEl.className = 'ib-gorilla';
-          gorillaEl.textContent = 'UE';
-          gorillaEl.style.top = (stageH2 / 2 - 22) + 'px';
-          gorillaEl.style.left = '-45px';
-          stage.appendChild(gorillaEl);
-          ibGorilla = gorillaEl;
-        }
-
-        if (gorillaEl && elapsed >= gorillaStartTime && elapsed < gorillaStartTime + gorillaDuration) {
-          const gp = (elapsed - gorillaStartTime) / gorillaDuration;
-          gorillaEl.style.left = (-45 + gp * (stageW + 90)) + 'px';
-        } else if (gorillaEl && elapsed >= gorillaStartTime + gorillaDuration) {
-          gorillaEl.style.display = 'none';
-        }
-
-        // End after 14 seconds
-        if (elapsed < 14000) {
-          ibAnimId = requestAnimationFrame(animate);
-        } else {
-          finishIB();
-        }
+      function updateSliderFill() {
+        var pct = (slider.value / (slider.max - slider.min)) * 100;
+        slider.style.background = 'linear-gradient(to right, var(--preconscious-color) ' + pct + '%, rgba(255,255,255,0.1) ' + pct + '%)';
       }
 
-      ibAnimId = requestAnimationFrame(animate);
-    }
+      function loadVideo(idx) {
+        var entry = quiroFiles[idx];
+        soaLbl.textContent = entry.soa;
+        source.src = entry.src;
+        video.load();
+        playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play';
+        updateSliderFill();
+      }
 
-    function finishIB() {
-      ibRunning = false;
-      ibPhase = 'reveal';
-      document.getElementById('ib-btn').textContent = '\u25B6 Start the Task';
+      slider.addEventListener('input', function () {
+        loadVideo(parseInt(slider.value));
+      });
 
-      const info = document.getElementById('ib-info');
-      info.innerHTML = `
-        <p><strong>Done!</strong> You counted <strong>${ibPassCount}</strong> white passes.</p>
-        <p style="margin-top:8px;"><strong>Did you notice anything unusual?</strong> A dark figure labeled "UE" (unexpected event) walked slowly across the entire scene from left to right. It was smaller and subtler than the original gorilla &mdash; but it was still clearly present for several seconds. About <strong>50% of participants</strong> in Simons &amp; Chabris's original study missed a person in a gorilla suit. If you missed the figure here, that's inattentional blindness in action &mdash; your attention was so consumed by counting that a visible stimulus never reached consciousness.</p>
-        <p style="margin-top:8px;">In Dehaene's terms, the gorilla was <strong>preconscious</strong>: it had strong signal strength but lacked attentional amplification, so it never achieved ignition in the global workspace.</p>
-      `;
-    }
+      playBtn.addEventListener('click', function () {
+        if (video.paused) {
+          video.play();
+          playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pause';
+        } else {
+          video.pause();
+          playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play';
+        }
+      });
 
-    function resetIB() {
-      if (ibAnimId) cancelAnimationFrame(ibAnimId);
-      ibRunning = false;
-      ibPhase = 'idle';
-      document.getElementById('ib-btn').textContent = '\u25B6 Start the Task';
-      const stage = document.getElementById('ib-stage');
-      // Remove all balls and gorilla
-      stage.querySelectorAll('.ib-ball, .ib-gorilla').forEach(el => el.remove());
-      ibBalls = [];
-      ibGorilla = null;
-      document.getElementById('ib-instruction').style.display = '';
-      document.getElementById('ib-counter').style.display = 'none';
-      document.getElementById('ib-info').innerHTML = '<p style="text-align:center; color: var(--text-muted);">This is a simplified demonstration of the inattentional blindness paradigm. Press "Start the Task" and count carefully!</p>';
-    }
+      video.addEventListener('ended', function () {
+        playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play';
+      });
+
+      // Init
+      loadVideo(0);
+    }());
+
+    // placeholder so downstream variable declarations don't break
+    var _ibDummy = null;
+
+    // (IB createIBBalls removed — replaced by Quiroga recognition threshold demo above)
 
     // ═══════════════════════════════════
     // SECTION 4: CHANGE BLINDNESS
