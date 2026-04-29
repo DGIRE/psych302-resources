@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brain Injury &amp; Recovery Simulator &mdash; PSYCH 302 Interactive Demo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --twilight-deep: #0c1525;
       --twilight-mid: #1a2744;
       --twilight-blue: #2a3f6b;
-      --mist-purple: #4a3a6b;
       --alpenglow: #d4727a;
       --alpenglow-warm: #e8917a;
       --peak-gold: #f0c8a0;
-      --snow-pink: #f2d4d0;
-      --sky-coral: #c85a6a;
       --text-primary: #f0e8e5;
       --text-secondary: #b8a8b8;
       --text-muted: #7a6a82;
@@ -31,184 +32,25 @@
     }
     .page-bg {
       position: fixed; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
+      background:
+        radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
-    .container {
+    .outer-wrap {
       position: relative; z-index: 1;
-      max-width: 700px; width: 100%; margin: 0 auto; padding: 20px;
+      max-width: 1200px; width: 100%; margin: 0 auto; padding: 20px 20px 0;
     }
-    
-    /* ── Breadcrumb nav ── */
+    /* Breadcrumb */
     .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 32px;
-      font-size: 0.78rem;
-      animation: fadeIn 0.3s ease-out;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+      margin-bottom: 24px; font-size: 0.78rem; animation: pgFadeIn 0.3s ease-out;
     }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      font-weight: 500;
-    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
     .breadcrumb a:hover { color: var(--alpenglow); }
-    .breadcrumb .bc-sep {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
-    .breadcrumb .bc-current {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-
-    
-    /* ── Global Search ── */
-    .search-fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(26,39,68,0.95);
-      backdrop-filter: blur(12px);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .search-fab:hover {
-      border-color: var(--alpenglow);
-      color: var(--alpenglow);
-      transform: scale(1.08);
-    }
-    .search-fab svg { width: 20px; height: 20px; }
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(12,21,37,0.92);
-      backdrop-filter: blur(16px);
-      padding: 60px 20px 20px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-    .search-input {
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-input:focus { border-color: var(--alpenglow); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-results {
-      max-width: 560px;
-      margin: 16px auto 0;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-    .search-result {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .search-result:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
-    .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
-    .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-    }
-    .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
-    }
-
-    .stub-hero {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .stub-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-    .stub-hero h1 {
-      font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .stub-hero .overline {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
-      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
-    }
-    .stub-hero p {
-      font-size: 0.88rem; color: var(--text-secondary); max-width: 480px;
-      margin: 12px auto 0; line-height: 1.6;
-    }
-    .coming-badge {
-      display: inline-block; margin-top: 20px;
-      padding: 6px 16px; border-radius: 100px;
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase;
-      background: rgba(240,200,160,0.08);
-      border: 1px solid rgba(240,200,160,0.2);
-      color: var(--peak-gold);
-    }
-    .back-links {
-      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;
-    }
+    .breadcrumb .bc-sep { color: rgba(255,255,255,0.15); font-size: 0.7rem; user-select: none; }
+    .breadcrumb .bc-current { color: var(--text-secondary); font-weight: 600; }
+    /* Back links */
+    .back-links { display: flex; gap: 10px; flex-wrap: wrap; margin: 24px 0 0; }
     .back-links a {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 8px 16px; border-radius: 8px;
@@ -217,37 +59,89 @@
       color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
       text-decoration: none; transition: all 0.25s;
     }
-    .back-links a:hover {
-      border-color: var(--alpenglow); background: rgba(212,114,122,0.06); color: var(--alpenglow);
+    .back-links a:hover { border-color: var(--alpenglow); background: rgba(212,114,122,0.06); color: var(--alpenglow); }
+    /* Search */
+    .search-fab {
+      position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px;
+      border-radius: 50%; border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(26,39,68,0.95); backdrop-filter: blur(12px);
+      color: var(--text-secondary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
-    footer {
-      text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 40px 0 20px;
+    .search-fab:hover { border-color: var(--alpenglow); color: var(--alpenglow); transform: scale(1.08); }
+    .search-fab svg { width: 20px; height: 20px; }
+    .search-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(12,21,37,0.92); backdrop-filter: blur(16px);
+      padding: 60px 20px 20px;
     }
+    .search-overlay.active { display: block; }
+    .search-box { max-width: 560px; margin: 0 auto; }
+    .search-input {
+      width: 100%; padding: 14px 20px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+      color: var(--text-primary); font-family: inherit; font-size: 1rem;
+      outline: none; transition: border-color 0.3s;
+    }
+    .search-input:focus { border-color: var(--alpenglow); }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-results { max-width: 560px; margin: 16px auto 0; max-height: 60vh; overflow-y: auto; }
+    .search-result {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      border-radius: 8px; text-decoration: none; color: var(--text-secondary); transition: all 0.2s;
+    }
+    .search-result:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+    .search-result .sr-type {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); background: rgba(255,255,255,0.05);
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
+    .search-close {
+      position: absolute; top: 16px; right: 20px; background: none; border: none;
+      color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 8px; transition: color 0.2s;
+    }
+    .search-close:hover { color: var(--alpenglow); }
+    .search-hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: 16px; }
+    /* Footer */
+    footer { text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 40px 0 20px; }
     footer a { color: var(--alpenglow); text-decoration: none; }
     footer a:hover { color: var(--alpenglow-warm); }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Animate-in shims */
+    .animate-in { animation-fill-mode: both; }
+    .fade-in { animation-name: twFadeIn; }
+    .zoom-in-95 { animation-name: twZoomIn95; }
+    .slide-in-from-bottom-4 { animation-name: twSlideInBottom; }
+    .duration-700 { animation-duration: 700ms; }
+    .duration-300 { animation-duration: 300ms; }
+    @keyframes twFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes twZoomIn95 { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes twSlideInBottom { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
+    /* Range slider */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
+      background: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.5);
+      cursor: pointer; margin-top: -6px;
     }
-    @media (max-width: 600px) {
-      .stub-hero { padding: 48px 20px; }
-      .stub-hero h1 { font-size: 1.15rem; }
-      .back-links { flex-direction: column; align-items: center; }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 8px; background: #0f172a;
+      border-radius: 10px; border: 1px solid #334155;
     }
+    @keyframes pgFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .back-links { flex-direction: column; } }
   </style>
 </head>
 <body>
   <div class="page-bg"></div>
-  <div class="container">
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Brain Injury &amp; Recovery Simulator</span></nav>
+  <div class="outer-wrap">
+    <nav class="breadcrumb">
+      <a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span>
+      <a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span>
+      <span class="bc-current">Brain Injury &amp; Recovery Simulator</span>
+    </nav>
 
-    <div class="stub-hero">
-      <div class="stub-icon">&#x1FA79;</div>
-      <div class="overline">Lecture 10 &mdash; Interactive Demo</div>
-      <h1>Brain Injury &amp; Recovery Simulator</h1>
-      <p>Simulate lesions to different brain areas and observe the functional consequences. Explore neuroplasticity, diaschisis, and rehabilitation principles.</p>
-      <span class="coming-badge">Coming Soon</span>
-    </div>
+    <div id="root"></div>
 
     <div class="back-links">
       <a href="../../../lectures/lecture-10.html">
@@ -259,13 +153,11 @@
         Lecture 10 Content
       </a>
     </div>
-
     <footer>
       PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
     </footer>
   </div>
-  
-  <!-- Global Search -->
+
   <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </button>
@@ -277,32 +169,502 @@
     <div class="search-results" id="searchResults"></div>
     <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
   </div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    /* ── Inline SVG icon components ── */
+    const Activity = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    );
+    const Brain = ({ size=24, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.5 2a2.5 2.5 0 0 1 5 0v.15A7 7 0 0 1 19 9v1a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V9A7 7 0 0 1 9.5 2.15V2z"/>
+        <path d="M5 10a5 5 0 0 0 5 5v4"/>
+        <path d="M19 10a5 5 0 0 1-5 5v4"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <path d="M9 22h6"/>
+      </svg>
+    );
+    const Zap = ({ size=20, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+    );
+    const Layers = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+      </svg>
+    );
+    const Scale = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="3" x2="12" y2="21"/>
+        <path d="M3 9l9-6 9 6"/>
+        <path d="M3 15l5 3-5 3"/>
+        <path d="M21 15l-5 3 5 3"/>
+      </svg>
+    );
+    const Info = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+    );
+    const TrendingUp = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+        <polyline points="17 6 23 6 23 12"/>
+      </svg>
+    );
+    const Eye = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    );
+    const MapIcon = ({ size=18, className='' }) => (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+        <line x1="8" y1="2" x2="8" y2="18"/>
+        <line x1="16" y1="6" x2="16" y2="22"/>
+      </svg>
+    );
+
+    /* ── Data ── */
+    const CONSCIOUSNESS_LEVELS = [
+      { id:'coma', title:'Coma', wakefulness:'None', awareness:'None',
+        description:'A state of deep unresponsiveness. The eyes remain closed and the patient cannot be awakened.',
+        clinicalSign:'No sleep-wake cycles.', color:'bg-slate-800' },
+      { id:'vs', title:'Vegetative State (UWS)', wakefulness:'Present', awareness:'None',
+        description:'Unresponsive Wakefulness Syndrome. Patients open their eyes and have sleep-wake cycles but show no purposeful behavior.',
+        clinicalSign:'Reflexive movements only.', color:'bg-indigo-900' },
+      { id:'mcs', title:'Minimally Conscious (MCS)', wakefulness:'Present', awareness:'Partial / Fluctuating',
+        description:'Inconsistent but reproducible evidence of awareness. May follow simple commands or reach for objects.',
+        clinicalSign:'Visual pursuit, emotional responses.', color:'bg-blue-700' },
+      { id:'lis', title:'Locked-In Syndrome', wakefulness:'Full', awareness:'Full',
+        description:'Full consciousness but near-total paralysis of voluntary muscles — usually only vertical eye movement remains.',
+        clinicalSign:'Cognitively intact, "trapped" in body.', color:'bg-emerald-700' }
+    ];
+
+    const PLASTICITY_STAGES = [
+      { id:'healthy', label:'Healthy White Matter', fa:0.75, md:0.70, status:'Dense, parallel myelinated bundles.', visual:'Ordered' },
+      { id:'tbi',     label:'Acute TBI (Axonal Injury)', fa:0.35, md:0.90, status:'Sheared axons, edema, disrupted diffusion.', visual:'Disordered' },
+      { id:'recovery',label:'Plasticity / Regrowth', fa:0.55, md:0.75, status:'Increased FA in posterior regions, axonal sprouting.', visual:'Reorganizing' }
+    ];
+
+    /* ── DiffusionVoxel canvas ── */
+    const DiffusionVoxel = ({ anisotropy }) => {
+      const canvasRef = useRef(null);
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let raf;
+        const W = canvas.width, H = canvas.height;
+        const particles = Array.from({ length: 40 }, () => ({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2
+        }));
+        const render = () => {
+          ctx.clearRect(0, 0, W, H);
+          if (anisotropy > 0.4) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.setLineDash([5, 10]);
+            for (let x = 40; x < W; x += 55) {
+              ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+            }
+            ctx.setLineDash([]);
+          }
+          particles.forEach(p => {
+            p.x += p.vx * (1 - anisotropy);
+            p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+            ctx.fillStyle = '#60a5fa';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          raf = requestAnimationFrame(render);
+        };
+        render();
+        return () => cancelAnimationFrame(raf);
+      }, [anisotropy]);
+
+      return (
+        <div className="relative bg-slate-900 rounded-xl overflow-hidden border border-slate-700 w-full" style={{maxWidth:'300px',aspectRatio:'1',margin:'0 auto'}}>
+          <canvas ref={canvasRef} width={300} height={300} style={{width:'100%',height:'100%'}} />
+          <div className="absolute top-2 left-2 px-2 py-1 rounded text-slate-300 font-mono"
+               style={{background:'rgba(0,0,0,0.5)',fontSize:'10px'}}>
+            VOXEL SIMULATION (Diffusion)
+          </div>
+        </div>
+      );
+    };
+
+    /* ── Page header block ── */
+    const PageHeader = () => (
+      <div className="mb-8 pb-6 border-b border-slate-800">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 rounded-lg shadow-lg" style={{background:'rgba(212,114,122,0.15)',border:'1px solid rgba(212,114,122,0.3)'}}>
+            <Brain size={28} className="text-white" style={{opacity:0.85}} />
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest" style={{color:'var(--alpenglow)',letterSpacing:'3px'}}>Lecture 10 &mdash; Interactive Demo</p>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Brain Injury &amp; Recovery Simulator</h1>
+          </div>
+        </div>
+        <p className="text-sm" style={{color:'var(--text-secondary)',maxWidth:'600px',lineHeight:'1.6',marginTop:'8px'}}>
+          Explore DTI mechanics, neuroplasticity trajectories, and the spectrum of consciousness disorders. Based on Voss et al. (2006), Laureys, and Bengtsson et al. (2005).
+        </p>
+      </div>
+    );
+
+    /* ── App ── */
+    const App = () => {
+      const [activeTab, setActiveTab] = useState('dti');
+      const [anisotropy, setAnisotropy] = useState(0.7);
+      const [selectedConsciousness, setSelectedConsciousness] = useState(CONSCIOUSNESS_LEVELS[0]);
+      const [plasticityStage, setPlasticityStage] = useState(PLASTICITY_STAGES[0]);
+
+      const tabs = [
+        { id:'dti',          label:'DTI Mechanics',   Icon:Activity },
+        { id:'plasticity',   label:'Neuroplasticity', Icon:TrendingUp },
+        { id:'consciousness',label:'Consciousness Lab',Icon:Eye },
+        { id:'voss',         label:'Clinical Cases',  Icon:MapIcon }
+      ];
+
+      return (
+        <div style={{fontFamily:"'Inter',sans-serif"}}>
+          <PageHeader />
+
+          {/* Tab bar */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {tabs.map(({ id, label, Icon }) => (
+              <button key={id} onClick={() => setActiveTab(id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  activeTab === id
+                    ? 'text-white shadow-lg'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                style={activeTab === id
+                  ? {background:'rgba(212,114,122,0.25)',border:'1px solid rgba(212,114,122,0.5)',color:'#f2d4d0'}
+                  : {background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                <Icon size={16} /> {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Content */}
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+
+            {/* ── TAB 1: DTI ── */}
+            {activeTab === 'dti' && (
+              <div className="grid grid-cols-1 gap-8" style={{gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))'}}>
+                <div className="space-y-6">
+                  <div className="p-6 rounded-2xl border" style={{background:'rgba(26,39,68,0.7)',borderColor:'rgba(255,255,255,0.08)'}}>
+                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-white">
+                      <Layers size={18} className="text-blue-400" /> Fractional Anisotropy (FA)
+                    </h2>
+                    <p className="text-sm mb-6" style={{color:'var(--text-secondary)',lineHeight:'1.6'}}>
+                      DTI measures the degree to which water diffusion is restricted. In white matter,
+                      diffusion is <strong className="text-white">anisotropic</strong> — it flows primarily
+                      along the axon. In gray matter or CSF it is <strong className="text-white">isotropic</strong> (random).
+                    </p>
+                    <div className="space-y-6">
+                      <div>
+                        <label className="flex justify-between text-xs font-bold uppercase tracking-widest mb-2"
+                               style={{color:'rgba(255,255,255,0.35)',letterSpacing:'2px'}}>
+                          <span>Anisotropy Level (FA)</span>
+                          <span className="text-blue-400">{anisotropy.toFixed(2)}</span>
+                        </label>
+                        <input type="range" min="0" max="0.95" step="0.05"
+                          value={anisotropy}
+                          onChange={e => setAnisotropy(parseFloat(e.target.value))}
+                          className="w-full cursor-pointer"
+                          style={{accentColor:'#3b82f6'}} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className={`p-4 rounded-xl border transition-all ${anisotropy < 0.3 ? 'border-blue-500 bg-blue-500/10' : 'opacity-40'}`}
+                             style={anisotropy >= 0.3 ? {borderColor:'rgba(255,255,255,0.06)',background:'rgba(255,255,255,0.02)'} : {}}>
+                          <div className="text-xs font-bold text-white mb-1">ISOTROPIC</div>
+                          <p className="text-xs" style={{color:'var(--text-secondary)'}}>FA ≈ 0. Gray matter or edema. Water moves freely in all directions.</p>
+                        </div>
+                        <div className={`p-4 rounded-xl border transition-all ${anisotropy > 0.6 ? 'border-blue-500 bg-blue-500/10' : 'opacity-40'}`}
+                             style={anisotropy <= 0.6 ? {borderColor:'rgba(255,255,255,0.06)',background:'rgba(255,255,255,0.02)'} : {}}>
+                          <div className="text-xs font-bold text-white mb-1">ANISOTROPIC</div>
+                          <p className="text-xs" style={{color:'var(--text-secondary)'}}>FA ≈ 1. Corpus Callosum. Water follows the "tubes" of the axons.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 rounded-2xl border" style={{background:'rgba(26,39,68,0.7)',borderColor:'rgba(255,255,255,0.08)'}}>
+                    <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-white">
+                      <Info size={16} className="text-blue-400" /> Why DTI?
+                    </h3>
+                    <ul className="space-y-3 text-sm" style={{color:'var(--text-secondary)'}}>
+                      <li className="flex gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{background:'var(--alpenglow)'}} />
+                        <span>Conventional MRI detects structural damage (bleeds, tumors, gross atrophy).</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{background:'var(--alpenglow)'}} />
+                        <span>DTI detects <strong className="text-white">microstructural</strong> damage — shearing of individual axons — common in concussion and TBI.</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center justify-center gap-6">
+                  <DiffusionVoxel anisotropy={anisotropy} />
+                  <div className="p-4 rounded-xl text-center text-sm leading-relaxed"
+                       style={{maxWidth:'300px',background:'rgba(59,130,246,0.08)',border:'1px solid rgba(59,130,246,0.25)',color:'#bfdbfe'}}>
+                    {anisotropy > 0.6
+                      ? "High FA: Reflects healthy, myelinated axonal tracts. Water is 'tunneled' along the fibers."
+                      : anisotropy < 0.2
+                        ? "Low FA: Water is moving randomly. Suggests gray matter or significant tissue degradation."
+                        : "Moderate FA: Common in regions with crossing fibers or partial tissue damage."}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── TAB 2: PLASTICITY ── */}
+            {activeTab === 'plasticity' && (
+              <div className="space-y-8">
+                <div className="p-6 rounded-2xl border" style={{background:'rgba(26,39,68,0.7)',borderColor:'rgba(255,255,255,0.08)'}}>
+                  <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
+                    <TrendingUp size={18} className="text-blue-400" /> Remodeling the White Matter
+                  </h2>
+                  <div className="grid grid-cols-1 gap-4 mb-8" style={{gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))'}}>
+                    {PLASTICITY_STAGES.map(stage => (
+                      <button key={stage.id} onClick={() => setPlasticityStage(stage)}
+                        className={`p-4 rounded-xl border text-left transition-all ${
+                          plasticityStage.id === stage.id ? 'border-blue-500' : ''
+                        }`}
+                        style={plasticityStage.id === stage.id
+                          ? {background:'rgba(59,130,246,0.12)',borderColor:'#3b82f6'}
+                          : {background:'rgba(255,255,255,0.03)',borderColor:'rgba(255,255,255,0.07)'}}>
+                        <div className="text-sm font-bold text-white mb-1">{stage.label}</div>
+                        <div className="text-xs" style={{color:'var(--text-secondary)'}}>{stage.visual}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-8 p-6 rounded-xl border" style={{gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',background:'rgba(12,21,37,0.6)',borderColor:'rgba(255,255,255,0.06)'}}>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-end pb-2" style={{borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
+                        <span className="text-xs font-bold uppercase tracking-widest" style={{color:'rgba(255,255,255,0.3)'}}>Clinical Status</span>
+                        <span className="text-sm font-medium text-blue-400">{plasticityStage.status}</span>
+                      </div>
+                      {[{label:'Fractional Anisotropy (FA)', val:plasticityStage.fa, color:'#3b82f6'},
+                        {label:'Mean Diffusivity (MD)', val:plasticityStage.md, color:'#f97316'}].map(m => (
+                        <div key={m.label} className="flex justify-between items-center">
+                          <span className="text-sm" style={{color:'var(--text-primary)'}}>{m.label}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="h-2 rounded-full overflow-hidden" style={{width:'128px',background:'#0f172a'}}>
+                              <div className="h-full rounded-full transition-all" style={{width:`${m.val*100}%`,background:m.color,transitionDuration:'1s'}} />
+                            </div>
+                            <span className="text-xs font-mono text-slate-400">{m.val}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-4 rounded-lg border" style={{background:'rgba(26,39,68,0.5)',borderColor:'rgba(255,255,255,0.07)'}}>
+                      <h4 className="text-xs font-bold uppercase tracking-widest mb-2" style={{color:'rgba(255,255,255,0.3)'}}>Key Concept</h4>
+                      <p className="text-sm leading-relaxed" style={{color:'var(--text-secondary)'}}>
+                        {plasticityStage.id === 'healthy' && "Normal brain: FA is high in central tracts like the Corpus Callosum due to tight myelin packing."}
+                        {plasticityStage.id === 'tbi' && "Injury: Shearing causes swelling and leakage. FA drops because barriers to water movement are destroyed."}
+                        {plasticityStage.id === 'recovery' && "Neuroplasticity: Over months or years, axonal sprouting and remyelination can increase FA, as seen in the Voss (2006) case study."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-2xl" style={{background:'rgba(99,102,241,0.08)',border:'1px solid rgba(99,102,241,0.25)'}}>
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-lg mt-1 shrink-0" style={{background:'#6366f1'}}>
+                      <Zap size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold mb-1" style={{color:'#c7d2fe'}}>Plasticity in Action: Musicians</h3>
+                      <p className="text-sm leading-relaxed" style={{color:'rgba(199,210,254,0.75)'}}>
+                        Research (Bengtsson et al., 2005) shows that extensive piano practice during childhood
+                        correlates with higher FA in the pyramidal tract. Training literally reshapes the
+                        density and organization of white matter pathways — the structural signature of learning.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── TAB 3: CONSCIOUSNESS ── */}
+            {activeTab === 'consciousness' && (
+              <div className="space-y-8">
+                <div className="p-6 rounded-2xl border" style={{background:'rgba(26,39,68,0.7)',borderColor:'rgba(255,255,255,0.08)'}}>
+                  <h2 className="text-xl font-bold mb-8 flex items-center gap-2 text-white">
+                    <Scale size={18} className="text-blue-400" /> The Spectrum of Consciousness
+                  </h2>
+
+                  <div className="relative mb-12">
+                    <div className="absolute top-4 left-0 w-full h-0.5 rounded-full" style={{background:'rgba(255,255,255,0.08)'}} />
+                    <div className="flex justify-between relative z-10">
+                      {CONSCIOUSNESS_LEVELS.map(level => (
+                        <button key={level.id} onClick={() => setSelectedConsciousness(level)}
+                          className="flex flex-col items-center gap-3 transition-all duration-300" style={{minWidth:'60px'}}>
+                          <div className={`w-8 h-8 rounded-full transition-all ${
+                            selectedConsciousness.id === level.id ? 'scale-125' : ''
+                          }`}
+                          style={selectedConsciousness.id === level.id
+                            ? {background:'var(--alpenglow)',border:'3px solid var(--twilight-deep)',boxShadow:'0 0 14px rgba(212,114,122,0.55)'}
+                            : {background:'#334155',border:'3px solid var(--twilight-deep)'}} />
+                          <span className="text-center font-bold" style={{
+                            fontSize:'10px',letterSpacing:'0.5px',textTransform:'uppercase',lineHeight:'1.3',
+                            color: selectedConsciousness.id === level.id ? 'var(--text-primary)' : 'var(--text-muted)'
+                          }}>{level.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-8 animate-in fade-in zoom-in-95 duration-300"
+                       style={{gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))'}}>
+                    <div className={`p-6 rounded-2xl border border-slate-700 flex flex-col justify-between ${selectedConsciousness.color}`}
+                         style={{minHeight:'220px'}}>
+                      <div>
+                        <h3 className="text-2xl font-bold text-white mb-2">{selectedConsciousness.title}</h3>
+                        <p className="text-sm leading-relaxed mb-6" style={{color:'rgba(255,255,255,0.75)'}}>{selectedConsciousness.description}</p>
+                      </div>
+                      <div className="p-4 rounded-xl" style={{background:'rgba(0,0,0,0.25)',border:'1px solid rgba(255,255,255,0.1)'}}>
+                        <div className="text-xs font-bold uppercase mb-3" style={{color:'rgba(255,255,255,0.5)',letterSpacing:'2px'}}>Diagnostic Criteria</div>
+                        <div className="grid grid-cols-2 gap-4">
+                          {[{label:'WAKEFULNESS',val:selectedConsciousness.wakefulness},{label:'AWARENESS',val:selectedConsciousness.awareness}].map(d => (
+                            <div key={d.label}>
+                              <div className="text-xs" style={{color:'rgba(255,255,255,0.4)'}}>{d.label}</div>
+                              <div className="text-sm font-bold text-white">{d.val}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="p-5 rounded-2xl border" style={{background:'rgba(12,21,37,0.7)',borderColor:'rgba(255,255,255,0.07)'}}>
+                        <h4 className="text-xs font-bold uppercase tracking-widest mb-3" style={{color:'rgba(255,255,255,0.3)'}}>Clinical Hallmark</h4>
+                        <p className="text-sm text-slate-300 italic">"{selectedConsciousness.clinicalSign}"</p>
+                      </div>
+                      <div className="p-5 rounded-2xl border" style={{background:'rgba(12,21,37,0.7)',borderColor:'rgba(255,255,255,0.07)'}}>
+                        <h4 className="text-xs font-bold uppercase tracking-widest mb-3" style={{color:'rgba(255,255,255,0.3)'}}>The Challenge of "UWS"</h4>
+                        <p className="text-sm leading-relaxed" style={{color:'var(--text-secondary)'}}>
+                          Up to 20% of patients diagnosed with Vegetative State may have <strong className="text-white">"Covert Consciousness"</strong>, detectable only via fMRI or EEG by asking them to imagine complex tasks (Adrian Owen et al.).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── TAB 4: VOSS CASE STUDY ── */}
+            {activeTab === 'voss' && (
+              <div className="p-8 rounded-3xl border max-w-4xl mx-auto" style={{background:'rgba(26,39,68,0.7)',borderColor:'rgba(255,255,255,0.08)'}}>
+                <div className="flex flex-col gap-8" style={{flexDirection:'column'}}>
+                  <div className="flex flex-col md:flex-row gap-8 items-start">
+                    <div className="shrink-0">
+                      <div className="w-20 h-20 rounded-2xl flex items-center justify-center"
+                           style={{background:'rgba(16,185,129,0.12)',border:'1px solid rgba(16,185,129,0.35)'}}>
+                        <Activity size={40} className="text-emerald-400" />
+                      </div>
+                    </div>
+                    <div className="space-y-6 flex-1">
+                      <div>
+                        <h2 className="text-3xl font-bold text-white mb-2">The 19-Year Awakening</h2>
+                        <p className="font-medium" style={{color:'#34d399'}}>Voss et al., 2006 — J. Clinical Investigation</p>
+                      </div>
+                      <div className="space-y-4 text-sm leading-relaxed" style={{color:'var(--text-secondary)'}}>
+                        <p>
+                          In 2003, Terry Wallis, who had been in a <strong className="text-white">Minimally Conscious State (MCS)</strong> for 19 years following a truck accident, suddenly regained the ability to speak and communicate.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {[
+                            { title:'The Finding', text:'DTI scans revealed increased FA in the posteromedial cortex (precuneus/cuneus) compared to healthy controls and other MCS patients.' },
+                            { title:'The Conclusion', text:'This was likely axonal regrowth — the brain literally building new structural bridges or strengthening dormant connections over two decades.' }
+                          ].map(c => (
+                            <div key={c.title} className="p-4 rounded-xl border" style={{background:'rgba(12,21,37,0.6)',borderColor:'rgba(255,255,255,0.07)'}}>
+                              <h4 className="text-white text-sm font-bold mb-2">{c.title}</h4>
+                              <p className="text-xs leading-relaxed" style={{color:'var(--text-secondary)'}}>{c.text}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <p>
+                          This case challenged the medical dogma that brain damage after one year is "permanent." It showed that even in the chronic phase, the brain remains a <strong className="text-white">dynamic, plastic organ</strong> capable of reorganization — and that DTI can capture these changes that conventional MRI cannot.
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-3">
+                        {['#Neuroplasticity','#DTI_Tractography','#MCS_Recovery','#VossEtAl2006'].map(t => (
+                          <span key={t} className="px-3 py-1 rounded-full text-xs font-mono"
+                                style={{background:'rgba(255,255,255,0.06)',color:'var(--text-secondary)',border:'1px solid rgba(255,255,255,0.08)'}}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Connection to course */}
+                  <div className="p-5 rounded-xl mt-2" style={{background:'rgba(212,114,122,0.07)',border:'1px solid rgba(212,114,122,0.2)'}}>
+                    <h4 className="text-sm font-bold mb-2" style={{color:'var(--alpenglow)'}}>Connection to Mesulam &amp; Global Workspace Theory</h4>
+                    <p className="text-sm leading-relaxed" style={{color:'rgba(240,200,160,0.8)'}}>
+                      Mesulam argues that large-scale brain networks are defined by their long-range structural connections. 
+                      The Voss case illustrates this directly: new axonal growth in white matter tracts restored the 
+                      connectivity that underlies global broadcast, enabling a non-linear transition back toward conscious awareness.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+
   <script>
   (function() {
-    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
+    var idx = [{"title":"Lecture 1: What Is the Mind?","url":"lectures/lecture-01.html","type":"Literature"},{"title":"Lecture 1 Content: What Is the Mind?","url":"lecture-content/lecture-01/index.html","type":"Content"},{"title":"Lecture 2: Neurons & Circuits","url":"lectures/lecture-02.html","type":"Literature"},{"title":"Lecture 2 Content: Neurons & Circuits","url":"lecture-content/lecture-02/index.html","type":"Content"},{"title":"Lecture 3: Brain Networks","url":"lectures/lecture-03.html","type":"Literature"},{"title":"Lecture 3 Content: Brain Networks","url":"lecture-content/lecture-03/index.html","type":"Content"},{"title":"Lecture 4: Language & Brain Maps","url":"lectures/lecture-04.html","type":"Literature"},{"title":"Lecture 4 Content: Language & Brain Maps","url":"lecture-content/lecture-04/index.html","type":"Content"},{"title":"Lecture 5: Visual Perception","url":"lectures/lecture-05.html","type":"Literature"},{"title":"Lecture 5 Content: Visual Perception","url":"lecture-content/lecture-05/index.html","type":"Content"},{"title":"Lecture 6: Attention","url":"lectures/lecture-06.html","type":"Literature"},{"title":"Lecture 6 Content: Attention","url":"lecture-content/lecture-06/index.html","type":"Content"},{"title":"Lecture 7: Emotional Brain","url":"lectures/lecture-07.html","type":"Literature"},{"title":"Lecture 7 Content: Emotional Brain","url":"lecture-content/lecture-07/index.html","type":"Content"},{"title":"Lecture 8: Memory","url":"lectures/lecture-08.html","type":"Literature"},{"title":"Lecture 8 Content: Memory","url":"lecture-content/lecture-08/index.html","type":"Content"},{"title":"Lecture 9: Cognitive Control","url":"lectures/lecture-09.html","type":"Literature"},{"title":"Lecture 9 Content: Cognitive Control","url":"lecture-content/lecture-09/index.html","type":"Content"},{"title":"Lecture 10: Brain Injury & Recovery","url":"lectures/lecture-10.html","type":"Literature"},{"title":"Lecture 10 Content: Brain Injury & Recovery","url":"lecture-content/lecture-10/index.html","type":"Content"},{"title":"Demo: Brain Network Explorer","url":"lecture-content/interactive-demos/brain-network-explorer/index.html","type":"Demo"},{"title":"Demo: Two Visual Streams","url":"lecture-content/interactive-demos/two-visual-streams/index.html","type":"Demo"},{"title":"Demo: Attention Awareness","url":"lecture-content/interactive-demos/attention-awareness/index.html","type":"Demo"},{"title":"Demo: Neural Dynamics","url":"lecture-content/interactive-demos/neural-dynamics/index.html","type":"Demo"},{"title":"Demo: Predictive Coding","url":"lecture-content/interactive-demos/predictive-coding/index.html","type":"Demo"},{"title":"Demo: Memory Systems Lab","url":"lecture-content/interactive-demos/memory-systems/index.html","type":"Demo"},{"title":"Demo: Cognitive Control Dashboard","url":"lecture-content/interactive-demos/cognitive-control/index.html","type":"Demo"},{"title":"Demo: Brain Injury & Recovery Simulator","url":"lecture-content/interactive-demos/brain-injury/index.html","type":"Demo"},{"title":"Demo: Agency & Free Will Lab","url":"lecture-content/interactive-demos/agency-free-will/index.html","type":"Demo"},{"title":"Demo: Global Workspace Simulator","url":"lecture-content/interactive-demos/global-workspace/index.html","type":"Demo"},{"title":"Demo: Social Brain Explorer","url":"lecture-content/interactive-demos/social-brain/index.html","type":"Demo"},{"title":"Demo: Altered States Explorer","url":"lecture-content/interactive-demos/altered-states/index.html","type":"Demo"},{"title":"Course Literature","url":"course-literature.html","type":"Hub"},{"title":"Course Navigation","url":"course-navigation.html","type":"Hub"},{"title":"Interactive Demos","url":"interactive-demos.html","type":"Hub"},{"title":"Syllabus","url":"syllabus.html","type":"Hub"},{"title":"Today's Lecture","url":"today.html","type":"Hub"}];
     var base = "../../../";
     window.doSearch = function(q) {
       var res = document.getElementById('searchResults');
       if (!q || q.length < 2) { res.innerHTML = ''; return; }
       var lq = q.toLowerCase();
-      var matches = idx.filter(function(item) {
-        return item.title.toLowerCase().indexOf(lq) !== -1 || item.type.toLowerCase().indexOf(lq) !== -1;
-      }).slice(0, 12);
-      res.innerHTML = matches.map(function(m) {
-        return '<a class="search-result" href="' + base + m.url + '"><span class="sr-type">' + m.type + '</span><span class="sr-title">' + m.title + '</span></a>';
+      var matches = idx.filter(function(i){ return i.title.toLowerCase().indexOf(lq) !== -1 || i.type.toLowerCase().indexOf(lq) !== -1; }).slice(0,12);
+      res.innerHTML = matches.map(function(m){
+        return '<a class="search-result" href="'+base+m.url+'"><span class="sr-type">'+m.type+'</span><span class="sr-title">'+m.title+'</span></a>';
       }).join('');
     };
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('searchOverlay').classList.add('active');
-        document.getElementById('searchInput').focus();
-      }
+      if ((e.ctrlKey||e.metaKey) && e.key==='k') { e.preventDefault(); document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
     });
   })();
   </script>
-
-<script src="../../../analytics.js" defer></script>
+  <script src="../../../analytics.js" defer></script>
 </body>
 </html>
