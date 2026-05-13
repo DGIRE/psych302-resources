@@ -539,6 +539,15 @@
             <input type="range" id="noise-slider" min="0" max="100" value="20" step="1" oninput="updateNoiseLevel(this.value)" style="width:100%;">
           </div>
 
+          <!-- Momentum slider -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:0.62rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;">Momentum</span>
+              <span id="momentum-val" style="font-size:0.62rem;color:#818cf8;font-family:monospace;">0.990</span>
+            </div>
+            <input type="range" id="momentum-slider" min="0.80" max="0.999" value="0.99" step="0.001" oninput="updateMomentum(this.value)" style="width:100%;">
+          </div>
+
           <!-- Tail toggle -->
           <div style="padding-top:12px;border-top:1px solid rgba(30,41,59,0.6);">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -661,7 +670,7 @@
     const LANDSCAPE_WIDTH = 10;
     const GRID_SIZE = 64;
     const GRAVITY = 25.0;
-    const FRICTION = 0.99;
+    let FRICTION = 0.99;
     const BALL_RADIUS = 0.12;
     const SURFACE_OFFSET = 0.05;
     let NOISE_AMPLITUDE = 20.0;
@@ -672,37 +681,44 @@
       {
         name: "Standard Quadrant",
         basins: [
-          { id: 0, x: -2.5, z: -2.5, depth: 1.6, radius: 2.2, color: '#3b82f6', label: 'Default Mode' },
-          { id: 1, x: 2.5,  z: 2.5,  depth: 1.4, radius: 1.8, color: '#ef4444', label: 'Limbic System' },
-          { id: 2, x: 2.5,  z: -2.5, depth: 1.9, radius: 2.0, color: '#10b981', label: 'Executive Task' },
-          { id: 3, x: -2.5, z: 2.5,  depth: 1.2, radius: 1.5, color: '#f59e0b', label: 'Primary Sensory' }
+          { id: 0, x: -2.5, z: -2.5, depth: 1.6, radius: 2.2, color: '#3b82f6', label: 'Default Mode',    type: 'well' },
+          { id: 1, x: 2.5,  z: 2.5,  depth: 1.4, radius: 1.8, color: '#ef4444', label: 'Limbic System',   type: 'well' },
+          { id: 2, x: 2.5,  z: -2.5, depth: 1.9, radius: 2.0, color: '#10b981', label: 'Executive Task',  type: 'well' },
+          { id: 3, x: -2.5, z: 2.5,  depth: 1.2, radius: 1.5, color: '#f59e0b', label: 'Primary Sensory', type: 'well' }
+        ]
+      },
+      {
+        name: "Limit Cycle Orbit",
+        basins: [
+          { id: 0, x: 0, z: 0, depth: 2.5, radius: 1.8,                  color: '#3b82f6', label: 'Focal Sink',   type: 'well' },
+          { id: 1, x: 0, z: 0, depth: 2.2, radius: 3.5, ringWidth: 0.35, color: '#a855f7', label: 'Limit Cycle',  type: 'ring' }
         ]
       },
       {
         name: "Global Workspace",
         basins: [
-          { id: 0, x: 0,    z: 0,    depth: 3.2, radius: 5.0, color: '#818cf8', label: 'Global Integration' },
-          { id: 1, x: 3.5,  z: 3.5,  depth: 0.8, radius: 1.2, color: '#f43f5e', label: 'Salience' },
-          { id: 2, x: -3.5, z: -3.5, depth: 0.8, radius: 1.2, color: '#10b981', label: 'Task Focus' },
-          { id: 3, x: 0,    z: 3.5,  depth: 1.0, radius: 1.2, color: '#fbbf24', label: 'Sensory Input' }
+          { id: 0, x: 0,    z: 0,    depth: 3.2, radius: 5.0, color: '#818cf8', label: 'Global Integration', type: 'well' },
+          { id: 1, x: 3.5,  z: 3.5,  depth: 0.8, radius: 1.2, color: '#f43f5e', label: 'Salience',           type: 'well' },
+          { id: 2, x: -3.5, z: -3.5, depth: 0.8, radius: 1.2, color: '#10b981', label: 'Task Focus',         type: 'well' },
+          { id: 3, x: 0,    z: 3.5,  depth: 1.0, radius: 1.2, color: '#fbbf24', label: 'Sensory Input',      type: 'well' }
         ]
       },
       {
         name: "Polarized States",
         basins: [
-          { id: 0, x: -3.5, z: 0,    depth: 2.5, radius: 3.5, color: '#3b82f6', label: 'Introspective' },
-          { id: 1, x: 3.5,  z: 0,    depth: 2.5, radius: 3.5, color: '#ef4444', label: 'Extrospective' },
-          { id: 2, x: 0,    z: 3.5,  depth: 0.5, radius: 1.0, color: '#10b981', label: 'Focal Task' },
-          { id: 3, x: 0,    z: -3.5, depth: 0.5, radius: 1.0, color: '#f59e0b', label: 'Focal Task' }
+          { id: 0, x: -3.5, z: 0,    depth: 2.5, radius: 3.5, color: '#3b82f6', label: 'Introspective', type: 'well' },
+          { id: 1, x: 3.5,  z: 0,    depth: 2.5, radius: 3.5, color: '#ef4444', label: 'Extrospective', type: 'well' },
+          { id: 2, x: 0,    z: 3.5,  depth: 0.5, radius: 1.0, color: '#10b981', label: 'Focal Task',    type: 'well' },
+          { id: 3, x: 0,    z: -3.5, depth: 0.5, radius: 1.0, color: '#f59e0b', label: 'Focal Task',    type: 'well' }
         ]
       },
       {
         name: "Distributed Hubs",
         basins: [
-          { id: 0, x: -2.2, z: -2.2, depth: 1.5, radius: 1.6, color: '#60a5fa', label: 'Salience Network' },
-          { id: 1, x: 2.2,  z: 2.2,  depth: 1.5, radius: 1.6, color: '#f87171', label: 'Dorsal Attention' },
-          { id: 2, x: 2.2,  z: -2.2, depth: 1.5, radius: 1.6, color: '#34d399', label: 'Frontoparietal' },
-          { id: 3, x: -2.2, z: 2.2,  depth: 1.5, radius: 1.6, color: '#fbbf24', label: 'Subcortical' }
+          { id: 0, x: -2.2, z: -2.2, depth: 1.5, radius: 1.6, color: '#60a5fa', label: 'Salience Network', type: 'well' },
+          { id: 1, x: 2.2,  z: 2.2,  depth: 1.5, radius: 1.6, color: '#f87171', label: 'Dorsal Attention', type: 'well' },
+          { id: 2, x: 2.2,  z: -2.2, depth: 1.5, radius: 1.6, color: '#34d399', label: 'Frontoparietal',   type: 'well' },
+          { id: 3, x: -2.2, z: 2.2,  depth: 1.5, radius: 1.6, color: '#fbbf24', label: 'Subcortical',      type: 'well' }
         ]
       }
     ];
@@ -723,7 +739,6 @@
       const handle = panel.querySelector('.drag-handle');
       let isDraggingPanel = false;
       let startX, startY, panelL, panelT;
-      const shell = document.querySelector('.attractor-shell');
       handle.onmousedown = (e) => {
         isDraggingPanel = true;
         startX = e.clientX; startY = e.clientY;
@@ -805,9 +820,9 @@
         for (let i = 0; i < 300; i++) {
           const networkId = i % 4;
           let validPos = false, rx, ry, attempts = 0;
-          while (!validPos && attempts < 100) {
-            rx = centerX + (Math.random() - 0.5) * 500;
-            ry = centerY + (Math.random() - 0.5) * 400;
+          while (!validPos && attempts < 150) {
+            rx = centerX + (Math.random() - 0.5) * 550;
+            ry = centerY + (Math.random() - 0.5) * 450;
             defineBrainPath(tCtx, centerX, centerY);
             if (tCtx.isPointInPath(rx, ry)) validPos = true;
             attempts++;
@@ -822,6 +837,11 @@
     function updateNoiseLevel(val) {
       NOISE_AMPLITUDE = parseFloat(val);
       document.getElementById('noise-val').innerText = NOISE_AMPLITUDE.toFixed(1);
+    }
+
+    function updateMomentum(val) {
+      FRICTION = parseFloat(val);
+      document.getElementById('momentum-val').innerText = FRICTION.toFixed(3);
     }
 
     function toggleDynamicTopology() {
@@ -856,7 +876,12 @@
       grid.innerHTML = TOPOGRAPHY_PRESETS.map((p, idx) => `
         <div onclick="loadPreset(${idx})" class="preset-card" style="background:rgba(15,23,42,0.95);border:1px solid rgba(71,85,105,0.5);padding:16px;border-radius:16px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;gap:10px;">
           <div style="position:relative;height:80px;background:rgba(0,0,0,0.4);border-radius:10px;overflow:hidden;border:1px solid rgba(51,65,85,0.4);">
-            ${p.basins.map(b => `<div style="left:${50+(b.x/5*50)}%;top:${50+(b.z/5*50)}%;width:${b.radius*10}px;height:${b.radius*10}px;background:${b.color};box-shadow:0 0 ${b.depth*8}px ${b.color};border-radius:50%;position:absolute;transform:translate(-50%,-50%);opacity:0.8;"></div>`).join('')}
+            ${p.basins.map(b => {
+              if (b.type === 'ring') {
+                return `<div style="left:50%;top:50%;width:${b.radius*14}px;height:${b.radius*14}px;border:${(b.ringWidth||0.35)*8}px solid ${b.color};border-radius:50%;position:absolute;transform:translate(-50%,-50%);opacity:0.7;box-shadow:0 0 12px ${b.color};"></div>`;
+              }
+              return `<div style="left:${50+(b.x/5*50)}%;top:${50+(b.z/5*50)}%;width:${b.radius*10}px;height:${b.radius*10}px;background:${b.color};box-shadow:0 0 ${b.depth*8}px ${b.color};border-radius:50%;position:absolute;transform:translate(-50%,-50%);opacity:0.8;"></div>`;
+            }).join('')}
           </div>
           <div style="text-align:center;font-weight:700;font-size:0.65rem;color:#f1f5f9;text-transform:uppercase;letter-spacing:2px;">${p.name}</div>
         </div>
@@ -872,10 +897,16 @@
     }
 
     function getLandscapeHeight(x, z) {
-      let height = Math.sin(x * 0.4) * Math.cos(z * 0.4) * 0.25;
+      let height = Math.sin(x * 0.4) * Math.cos(z * 0.4) * 0.2;
       BASINS.forEach(b => {
-        const distSq = (x - b.x)**2 + (z - b.z)**2;
-        height -= b.depth * Math.exp(-distSq / (b.radius * 0.9));
+        if (b.type === 'ring') {
+          const dist = Math.sqrt(x * x + z * z);
+          const influence = Math.exp(-Math.pow(dist - b.radius, 2) / (b.ringWidth || 0.4));
+          height -= b.depth * influence;
+        } else {
+          const distSq = (x - b.x)**2 + (z - b.z)**2;
+          height -= b.depth * Math.exp(-distSq / (b.radius * 1.5));
+        }
       });
       return height;
     }
@@ -906,10 +937,18 @@
       wireMesh.rotation.x = -Math.PI / 2;
       scene.add(wireMesh);
       BASINS.forEach(b => {
-        const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(b.radius * 0.25, 0.02, 12, 48),
-          new THREE.MeshBasicMaterial({ color: b.color, transparent: true, opacity: 0.5 })
-        );
+        let ring;
+        if (b.type === 'ring') {
+          ring = new THREE.Mesh(
+            new THREE.TorusGeometry(b.radius, 0.03, 12, 128),
+            new THREE.MeshBasicMaterial({ color: b.color, transparent: true, opacity: 0.5 })
+          );
+        } else {
+          ring = new THREE.Mesh(
+            new THREE.TorusGeometry(b.radius * 0.25, 0.02, 12, 48),
+            new THREE.MeshBasicMaterial({ color: b.color, transparent: true, opacity: 0.5 })
+          );
+        }
         ring.position.set(b.x, getLandscapeHeight(b.x, b.z) + 0.1, b.z);
         ring.rotation.x = Math.PI / 2;
         scene.add(ring);
@@ -932,7 +971,7 @@
     function clearBalls() {
       balls.forEach(b => { scene.remove(b.mesh); if (b.tailLine) scene.remove(b.tailLine); });
       balls = [];
-      updateUI(null, [0,0,0,0]);
+      updateUI(null, Array(BASINS.length).fill(0));
     }
 
     function updateUI(dominantId, weights) {
@@ -982,9 +1021,10 @@
       brainCtx.stroke();
       brainCtx.restore();
       brainNodes.forEach(node => {
-        const targetWeight = weights[node.networkId];
+        const networkId = node.networkId % BASINS.length;
+        const targetWeight = weights[networkId] || 0;
         node.activation = node.activation * 0.95 + targetWeight * 0.05;
-        const b = BASINS[node.networkId];
+        const b = BASINS[networkId];
         const intensity = 0.15 + node.activation * 0.85;
         const grad = brainCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.size * 9 * intensity);
         grad.addColorStop(0, b.color + 'FF');
@@ -1028,7 +1068,7 @@
       camera.position.z = Math.cos(landscapeCam.rotation.y) * Math.cos(landscapeCam.rotation.x) * landscapeCam.dist;
       camera.lookAt(0, 0, 0);
 
-      let totalBasinWeights = [0,0,0,0];
+      let totalBasinWeights = Array(BASINS.length).fill(0);
       let leadId = null, maxW = 0;
 
       balls.forEach(b => {
@@ -1046,10 +1086,16 @@
         if (Math.abs(b.pos.z) > bound) { b.vel.z *= -0.5; b.pos.z = Math.sign(b.pos.z) * bound; }
         b.mesh.position.copy(b.pos);
 
-        let ballWeights = [0,0,0,0];
+        let ballWeights = Array(BASINS.length).fill(0);
         BASINS.forEach((basin, idx) => {
-          const dSq = (b.pos.x - basin.x)**2 + (b.pos.z - basin.z)**2;
-          const w = Math.exp(-dSq / (basin.radius * 2.5));
+          let w;
+          if (basin.type === 'ring') {
+            const dist = Math.sqrt(b.pos.x**2 + b.pos.z**2);
+            w = Math.exp(-Math.pow(dist - basin.radius, 2) / (basin.ringWidth || 0.4));
+          } else {
+            const dSq = (b.pos.x - basin.x)**2 + (b.pos.z - basin.z)**2;
+            w = Math.exp(-dSq / (basin.radius * 2.8));
+          }
           ballWeights[idx] = w;
           totalBasinWeights[idx] = Math.max(totalBasinWeights[idx], w);
           if (w > maxW) { maxW = w; leadId = idx; }
@@ -1057,7 +1103,17 @@
 
         if (SHOW_TAIL) {
           const currentPoint = { pos: b.pos.clone(), color: new THREE.Color('#ffffff') };
-          BASINS.forEach((basin, idx) => { currentPoint.color.lerp(new THREE.Color(basin.color), ballWeights[idx] * 0.98); });
+          BASINS.forEach((basin, idx) => {
+            let w;
+            if (basin.type === 'ring') {
+              const dist = Math.sqrt(b.pos.x**2 + b.pos.z**2);
+              w = Math.exp(-Math.pow(dist - basin.radius, 2) / (basin.ringWidth || 0.4));
+            } else {
+              const dSq = (b.pos.x - basin.x)**2 + (b.pos.z - basin.z)**2;
+              w = Math.exp(-dSq / (basin.radius * 2.8));
+            }
+            currentPoint.color.lerp(new THREE.Color(basin.color), w * 0.98);
+          });
           b.history.push(currentPoint);
           if (b.history.length > TAIL_LENGTH) b.history.shift();
           if (!b.tailLine) {
