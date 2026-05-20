@@ -1,307 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Brain Explorer &mdash; PSYCH 302 Interactive Demo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --twilight-deep: #0c1525;
-      --twilight-mid: #1a2744;
-      --twilight-blue: #2a3f6b;
-      --mist-purple: #4a3a6b;
-      --alpenglow: #d4727a;
-      --alpenglow-warm: #e8917a;
-      --peak-gold: #f0c8a0;
-      --snow-pink: #f2d4d0;
-      --sky-coral: #c85a6a;
-      --text-primary: #f0e8e5;
-      --text-secondary: #b8a8b8;
-      --text-muted: #7a6a82;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--twilight-deep);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    .page-bg {
-      position: fixed; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 100% 40% at 50% 0%, rgba(212,114,122,0.06) 0%, transparent 60%),
-        linear-gradient(180deg, #10182a 0%, #0c1525 100%);
-    }
-    .container {
-      position: relative; z-index: 1;
-      max-width: 700px; width: 100%; margin: 0 auto; padding: 20px;
-    }
-    
-    /* ── Breadcrumb nav ── */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 32px;
-      font-size: 0.78rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      font-weight: 500;
-    }
-    .breadcrumb a:hover { color: var(--alpenglow); }
-    .breadcrumb .bc-sep {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
-    .breadcrumb .bc-current {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Brain Explorer &mdash; PSYCH 302 Interactive Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-crimson { box-shadow: 0 0 20px rgba(244, 63, 94, 0.25); }
+        .glow-teal    { box-shadow: 0 0 20px rgba(20, 184, 166, 0.25); }
+        .glow-indigo  { box-shadow: 0 0 20px rgba(99, 102, 241, 0.25); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.9); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-    
-    /* ── Global Search ── */
-    .search-fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(26,39,68,0.95);
-      backdrop-filter: blur(12px);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .search-fab:hover {
-      border-color: var(--alpenglow);
-      color: var(--alpenglow);
-      transform: scale(1.08);
-    }
-    .search-fab svg { width: 20px; height: 20px; }
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(12,21,37,0.92);
-      backdrop-filter: blur(16px);
-      padding: 60px 20px 20px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-    .search-input {
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-input:focus { border-color: var(--alpenglow); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-results {
-      max-width: 560px;
-      margin: 16px auto 0;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-    .search-result {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .search-result:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
-    .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
-    .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-    }
-    .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
-    }
-
-    .stub-hero {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 16px;
-      margin-bottom: 24px;
-      animation: fadeIn 0.6s ease-out;
-    }
-    .stub-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-    .stub-hero h1 {
-      font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, #f0e8e5 0%, #f0c8a0 50%, #d4727a 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .stub-hero .overline {
-      font-size: 0.68rem; font-weight: 600; letter-spacing: 3.5px;
-      text-transform: uppercase; color: var(--alpenglow); margin-bottom: 8px;
-    }
-    .stub-hero p {
-      font-size: 0.88rem; color: var(--text-secondary); max-width: 480px;
-      margin: 12px auto 0; line-height: 1.6;
-    }
-    .coming-badge {
-      display: inline-block; margin-top: 20px;
-      padding: 6px 16px; border-radius: 100px;
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase;
-      background: rgba(240,200,160,0.08);
-      border: 1px solid rgba(240,200,160,0.2);
-      color: var(--peak-gold);
-    }
-    .back-links {
-      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px;
-    }
-    .back-links a {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
-      text-decoration: none; transition: all 0.25s;
-    }
-    .back-links a:hover {
-      border-color: var(--alpenglow); background: rgba(212,114,122,0.06); color: var(--alpenglow);
-    }
-    footer {
-      text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 40px 0 20px;
-    }
-    footer a { color: var(--alpenglow); text-decoration: none; }
-    footer a:hover { color: var(--alpenglow-warm); }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 600px) {
-      .stub-hero { padding: 48px 20px; }
-      .stub-hero h1 { font-size: 1.15rem; }
-      .back-links { flex-direction: column; align-items: center; }
-    }
-  </style>
+        /* ── Site chrome ── */
+        :root {
+            --alpenglow: #d4727a;
+            --alpenglow-warm: #e8917a;
+            --text-muted: #7a6a82;
+            --text-secondary: #b8a8b8;
+        }
+        .breadcrumb {
+            display: flex; align-items: center; flex-wrap: wrap;
+            gap: 6px; font-size: 0.78rem;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        .breadcrumb a {
+            color: var(--text-muted); text-decoration: none;
+            transition: color 0.2s; font-weight: 500;
+        }
+        .breadcrumb a:hover { color: var(--alpenglow); }
+        .breadcrumb .bc-sep { color: rgba(255,255,255,0.15); font-size: 0.7rem; user-select: none; }
+        .breadcrumb .bc-current { color: var(--text-secondary); font-weight: 600; }
+        .back-links {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            justify-content: center; margin: 32px auto 0;
+            max-width: 1280px; padding: 0 1rem 0;
+        }
+        .back-links a {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary); font-size: 0.78rem; font-weight: 600;
+            text-decoration: none; transition: all 0.25s;
+        }
+        .back-links a:hover {
+            border-color: var(--alpenglow);
+            background: rgba(212,114,122,0.06);
+            color: var(--alpenglow);
+        }
+        .site-footer {
+            text-align: center; color: var(--text-muted);
+            font-size: 0.75rem; padding: 40px 0 20px;
+        }
+        .site-footer a { color: var(--alpenglow); text-decoration: none; }
+        .site-footer a:hover { color: var(--alpenglow-warm); }
+        .search-fab {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(26,39,68,0.95); backdrop-filter: blur(12px);
+            color: var(--text-secondary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 3000; transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .search-fab:hover { border-color: var(--alpenglow); color: var(--alpenglow); transform: scale(1.08); }
+        .search-fab svg { width: 20px; height: 20px; }
+        .search-overlay {
+            display: none; position: fixed; inset: 0; z-index: 4000;
+            background: rgba(12,21,37,0.92); backdrop-filter: blur(16px);
+            padding: 60px 20px 20px; animation: fadeInUp 0.2s ease-out;
+        }
+        .search-overlay.active { display: block; }
+        .search-box { max-width: 560px; margin: 0 auto; }
+        .search-input {
+            width: 100%; padding: 14px 20px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06); color: #f0e8e5;
+            font-family: inherit; font-size: 1rem; outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus { border-color: var(--alpenglow); }
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-results { max-width: 560px; margin: 16px auto 0; max-height: 60vh; overflow-y: auto; }
+        .search-result {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 8px; text-decoration: none;
+            color: var(--text-secondary); transition: all 0.2s;
+        }
+        .search-result:hover { background: rgba(255,255,255,0.06); color: #f0e8e5; }
+        .search-result .sr-type {
+            font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-muted);
+            background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+        }
+        .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
+        .search-close {
+            position: absolute; top: 16px; right: 20px;
+            background: none; border: none; color: var(--text-muted);
+            font-size: 1.5rem; cursor: pointer; padding: 8px; transition: color 0.2s;
+        }
+        .search-close:hover { color: var(--alpenglow); }
+        .search-hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: 16px; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body>
-  <div class="page-bg"></div>
-  <div class="container">
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Social Brain Explorer</span></nav>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 
-    <div class="stub-hero">
-      <div class="stub-icon">&#x1F91D;</div>
-      <div class="overline">Lecture 15 &mdash; Interactive Demo</div>
-      <h1>Social Brain Explorer</h1>
-      <p>Map the social brain network: temporo-parietal junction, medial prefrontal cortex, and mirror neuron circuits. Explore theory of mind, empathy, and shared representations.</p>
-      <span class="coming-badge">Coming Soon</span>
+    <!-- Breadcrumb -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-2">
+        <nav class="breadcrumb">
+            <a href="../../../index.html">Home</a>
+            <span class="bc-sep">&#8250;</span>
+            <a href="../../../interactive-demos.html">Demos</a>
+            <span class="bc-sep">&#8250;</span>
+            <span class="bc-current">Social Brain Explorer</span>
+        </nav>
     </div>
 
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-indigo-600/20 border border-indigo-500/30 rounded-xl">
+                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-300 via-teal-300 to-rose-300 bg-clip-text text-transparent">THE COGNITIVE SYNTHESIS SUITE</h1>
+                        <p class="text-xs text-slate-400 font-medium">Predictive, Emotional &amp; Social Brains</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-gap-1 lg:space-x-2">
+                    <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-indigo-600 text-white">Overview</button>
+                    <button onclick="switchTab('brain')" id="btn-brain" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200">Interactive Atlas</button>
+                    <button onclick="switchTab('lab')" id="btn-lab" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200">Inference Lab</button>
+                    <button onclick="switchTab('sandbox')" id="btn-sandbox" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200">ToM Simulator</button>
+                    <button onclick="switchTab('assessment')" id="btn-assessment" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200">Self-Assessment</button>
+                    <button onclick="switchTab('vault')" id="btn-vault" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200">Literature Vault</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: OVERVIEW -->
+        <section id="tab-overview" class="tab-content block space-y-8 animate-fadeIn">
+            <div class="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 p-8 md:p-12">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(99,102,241,0.1),transparent_50%)]"></div>
+                <div class="relative max-w-3xl space-y-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Coursework Synthesis &amp; Integrative Guide</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                        Decoding the Human Social Interface: <span class="bg-gradient-to-r from-indigo-400 to-teal-400 bg-clip-text text-transparent">From Emotion Networks to Theory of Mind</span>
+                    </h2>
+                    <p class="text-slate-300 text-lg leading-relaxed">
+                        How does the nervous system translate raw visual cues into high-level judgments of another person's intent, mood, and belief? This interactive portal brings together three seminal theories of cognitive neuroscience to explain the neural architecture of social understanding.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-2xl p-6 border-rose-500/10 hover:border-rose-500/30 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs text-rose-400 font-bold uppercase tracking-wider">PILLAR 1: EMOTIONAL ARCHITECTURE</span>
+                            <h3 class="text-xl font-bold text-white mt-1">Network Model of Emotion</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            <strong>Luiz Pessoa (2017)</strong> dismantles the idea of isolated "emotion modules" like the limbic system. Instead, he demonstrates that emotion is an emergent property of large-scale, functionally integrated cortical-subcortical networks that link perception, motivation, and action.
+                        </p>
+                    </div>
+                    <button onclick="switchTab('brain')" class="mt-6 text-xs text-rose-400 font-semibold flex items-center gap-1.5 hover:gap-2.5 transition-all">Explore Brain Networks &rarr;</button>
+                </div>
+                <div class="glass-panel rounded-2xl p-6 border-teal-500/10 hover:border-teal-500/30 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs text-teal-400 font-bold uppercase tracking-wider">PILLAR 2: THE SOCIAL BRAIN</span>
+                            <h3 class="text-xl font-bold text-white mt-1">Neural Basis of Social Knowledge</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            <strong>Ralph Adolphs (2009)</strong> details how our brains construct representations of others. He differentiates between fast perceptual encoding (e.g., face processing, gaze tracking) and high-level social inference (using simulation/empathy and abstract Theory of Mind).
+                        </p>
+                    </div>
+                    <button onclick="switchTab('brain')" class="mt-6 text-xs text-teal-400 font-semibold flex items-center gap-1.5 hover:gap-2.5 transition-all">Explore Social Systems &rarr;</button>
+                </div>
+                <div class="glass-panel rounded-2xl p-6 border-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">PILLAR 3: PREDICTIVE COMPUTATIONS</span>
+                            <h3 class="text-xl font-bold text-white mt-1">Theory of Mind as Active Inference</h3>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            <strong>Andy Clark (2013)</strong> models the brain as a hierarchical prediction machine. In the social realm, Theory of Mind is the ultimate generative model: we predict others' physical actions by inferring their hidden internal states (beliefs, emotions, and intentions).
+                        </p>
+                    </div>
+                    <button onclick="switchTab('lab')" class="mt-6 text-xs text-indigo-400 font-semibold flex items-center gap-1.5 hover:gap-2.5 transition-all">Launch Predictive Lab &rarr;</button>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-8 border-slate-800 space-y-6">
+                <div class="flex items-center gap-3">
+                    <span class="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-indigo-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    </span>
+                    <h3 class="text-2xl font-bold text-white">The Unified Framework: Predictive Social Networks</h3>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="space-y-4 text-slate-300 text-sm leading-relaxed">
+                        <p>To truly grasp how the social brain works, we must blend these three perspectives together. Traditional neuroscience treated social cognition (Adolphs), affective neuroscience (Pessoa), and computational cognitive science (Clark) as distinct kingdoms.</p>
+                        <p>However, their synthesis reveals a beautiful, unified mechanism:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                            <li><strong class="text-rose-400">Pessoa's functionally integrated networks</strong> (like the amygdala-cortex loops) provide the physical and anatomical infrastructure. They allow cognitive predictions to instantly influence autonomic/emotional states.</li>
+                            <li><strong class="text-teal-400">Adolphs' hierarchy of social processing</strong> describes the evolutionary specialization of these networks for other minds—mapping from raw biological motion (STS) to internal simulation (somatosensory cortex) and high-level mentalizing (mPFC, TPJ).</li>
+                            <li><strong class="text-indigo-400">Clark's predictive coding</strong> serves as the computational engine. It explains how these networks exchange top-down predictions of others' behavioral states with bottom-up social error signals to dynamically align minds during social interactions.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900/80 rounded-xl p-6 border border-slate-800 flex flex-col justify-center space-y-4">
+                        <h4 class="text-sm font-semibold text-white uppercase tracking-wider text-center">Interactive Pedagogical Flow</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2 bg-slate-950/60 rounded-lg border border-slate-800">
+                                <span class="w-7 h-7 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+                                <span class="text-xs text-slate-300"><strong>Brain Atlas Tab:</strong> Explore anatomical structures and their multi-system functions.</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 bg-slate-950/60 rounded-lg border border-slate-800">
+                                <span class="w-7 h-7 bg-teal-500/10 text-teal-400 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+                                <span class="text-xs text-slate-300"><strong>Inference Lab Tab:</strong> Manipulate priors and precision values to calculate Bayesian updates.</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 bg-slate-950/60 rounded-lg border border-slate-800">
+                                <span class="w-7 h-7 bg-indigo-500/10 text-indigo-400 rounded-full flex items-center justify-center font-bold text-xs">3</span>
+                                <span class="text-xs text-slate-300"><strong>ToM Simulator Tab:</strong> Step through interactive social agents navigating predictive tasks.</span>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-slate-400 italic">Use the navigation bar at the top to dive into the modules!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: INTERACTIVE BRAIN ATLAS -->
+        <section id="tab-brain" class="tab-content hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel rounded-2xl p-6 border-slate-800">
+                <div class="max-w-3xl">
+                    <h2 class="text-2xl font-bold text-white mb-2">The Multi-Dimensional Brain Map</h2>
+                    <p class="text-slate-300 text-sm">This interactive map demonstrates how major brain regions act as computational hubs. Click on any colored node below to inspect its role through the lens of all three papers: <strong>Emotion Networks (Pessoa)</strong>, <strong>Social Knowledge (Adolphs)</strong>, and <strong>Predictive Processing (Clark)</strong>.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-7 glass-panel rounded-2xl p-6 border-slate-800 flex flex-col items-center justify-center min-h-[480px] relative">
+                    <div class="absolute top-4 left-4 bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-lg">
+                        <span class="text-xs text-slate-400">Interactive Schematic: Click Highlights to Select</span>
+                    </div>
+                    <svg viewBox="0 0 800 500" class="w-full max-w-2xl h-auto" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 400,80 C 250,80 150,150 120,220 C 100,260 90,300 110,340 C 130,380 180,420 250,420 C 270,420 280,410 300,410 C 320,410 330,425 350,425 C 380,425 400,400 420,400 C 450,400 470,420 500,420 C 530,420 540,410 560,410 C 580,410 600,425 630,425 C 680,425 710,390 710,330 C 710,250 650,150 580,110 C 520,80 450,80 400,80 Z" fill="#0f172a" stroke="#334155" stroke-width="3" opacity="0.8" />
+                        <path d="M 370,300 Q 350,320 380,350 Q 410,320 370,300" fill="#f43f5e" opacity="0.1" />
+                        <ellipse cx="450" cy="270" rx="35" ry="25" fill="#a78bfa" opacity="0.1" />
+                        <path d="M 320,380 C 450,420 550,380 580,350" fill="none" stroke="#475569" stroke-dasharray="5,5" stroke-width="2" />
+                        <g opacity="0.4" stroke="#4f46e5" stroke-width="1.5">
+                            <line x1="220" y1="200" x2="360" y2="330" />
+                            <line x1="560" y1="180" x2="220" y2="200" />
+                            <line x1="480" y1="310" x2="360" y2="330" />
+                            <line x1="450" y1="270" x2="340" y2="250" />
+                            <line x1="450" y1="270" x2="360" y2="330" />
+                            <line x1="220" y1="200" x2="380" y2="320" />
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('amygdala')">
+                            <circle id="node-amygdala" cx="360" cy="330" r="16" fill="#f43f5e" stroke="#fff" stroke-width="2" />
+                            <text x="360" y="365" text-anchor="middle" fill="#f43f5e" class="text-xs font-bold pointer-events-none select-none" font-size="12">Amygdala</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('mpfc')">
+                            <circle id="node-mpfc" cx="220" cy="200" r="16" fill="#10b981" stroke="#fff" stroke-width="2" />
+                            <text x="220" y="175" text-anchor="middle" fill="#10b981" class="text-xs font-bold pointer-events-none select-none" font-size="12">mPFC</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('tpj')">
+                            <circle id="node-tpj" cx="560" cy="180" r="16" fill="#6366f1" stroke="#fff" stroke-width="2" />
+                            <text x="560" y="155" text-anchor="middle" fill="#6366f1" class="text-xs font-bold pointer-events-none select-none" font-size="12">TPJ</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('insula')">
+                            <circle id="node-insula" cx="340" cy="250" r="14" fill="#ec4899" stroke="#fff" stroke-width="2" />
+                            <text x="300" y="254" text-anchor="end" fill="#ec4899" class="text-xs font-bold pointer-events-none select-none" font-size="12">Insula</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('sts')">
+                            <circle id="node-sts" cx="480" cy="310" r="14" fill="#06b6d4" stroke="#fff" stroke-width="2" />
+                            <text x="480" y="340" text-anchor="middle" fill="#06b6d4" class="text-xs font-bold pointer-events-none select-none" font-size="12">STS</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('vs')">
+                            <circle id="node-vs" cx="380" cy="300" r="12" fill="#f59e0b" stroke="#fff" stroke-width="2" />
+                            <text x="400" y="295" text-anchor="start" fill="#f59e0b" class="text-xs font-bold pointer-events-none select-none" font-size="12">Ventral Striatum</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('somato')">
+                            <circle id="node-somato" cx="440" cy="140" r="14" fill="#84cc16" stroke="#fff" stroke-width="2" />
+                            <text x="440" y="115" text-anchor="middle" fill="#84cc16" class="text-xs font-bold pointer-events-none select-none" font-size="12">Somatosensory</text>
+                        </g>
+                        <g class="cursor-pointer group" onclick="selectBrainRegion('pulvinar')">
+                            <circle id="node-pulvinar" cx="450" cy="270" r="12" fill="#a78bfa" stroke="#fff" stroke-width="2" />
+                            <text x="450" y="250" text-anchor="middle" fill="#a78bfa" class="text-xs font-bold pointer-events-none select-none" font-size="12">Pulvinar</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="lg:col-span-5 flex flex-col space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border-slate-800 bg-gradient-to-r from-slate-900 to-indigo-950/20">
+                        <div class="flex items-center justify-between">
+                            <h3 id="selected-region-name" class="text-2xl font-extrabold text-white">Amygdala</h3>
+                            <span id="selected-region-tag" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20">Subcortical Hub</span>
+                        </div>
+                        <p id="selected-region-desc" class="text-sm text-slate-300 mt-2 leading-relaxed">Historically classified as a simple "threat detector" or "fear center," the amygdala is now understood to act as an essential gateway linking high-level perceptual streams to emotional and action circuits.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl border-slate-800 overflow-hidden flex-1">
+                        <div class="flex border-b border-slate-800 bg-slate-900/50">
+                            <button onclick="switchInfoTab('pessoa')" id="infobtn-pessoa" class="region-tab-btn flex-1 py-3 text-xs font-bold tracking-wider uppercase border-b-2 border-rose-500 text-rose-400">Pessoa (Networks)</button>
+                            <button onclick="switchInfoTab('adolphs')" id="infobtn-adolphs" class="region-tab-btn flex-1 py-3 text-xs font-bold tracking-wider uppercase border-b-2 border-transparent text-slate-400 hover:text-white">Adolphs (Social)</button>
+                            <button onclick="switchInfoTab('clark')" id="infobtn-clark" class="region-tab-btn flex-1 py-3 text-xs font-bold tracking-wider uppercase border-b-2 border-transparent text-slate-400 hover:text-white">Clark (Prediction)</button>
+                        </div>
+                        <div class="p-6 space-y-4 text-sm leading-relaxed min-h-[250px] relative">
+                            <div id="infocontent-pessoa" class="region-info-content block space-y-3">
+                                <div class="flex items-center gap-2 text-rose-400 font-semibold text-xs uppercase tracking-wider">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                    Large-Scale Network Integration
+                                </div>
+                                <p id="region-pessoa-text" class="text-slate-300">The amygdala is a central node in the "Salience Network," bridging cognitive, sensory, and visceral systems. Pessoa details its massive anatomical connectivity to visual areas, prefrontal regions, and hypothalamus, making it a "functional hub" that coordinates whole-brain responses based on motivation.</p>
+                                <div class="p-3 bg-rose-950/10 border border-rose-500/10 rounded-lg text-xs italic text-slate-400">"Functional specialization is not located in a single region, but emerges from its pattern of interactions." — Pessoa, 2017</div>
+                            </div>
+                            <div id="infocontent-adolphs" class="region-info-content hidden space-y-3">
+                                <div class="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase tracking-wider">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    Social Knowledge &amp; Perception
+                                </div>
+                                <p id="region-adolphs-text" class="text-slate-300">Adolphs places the amygdala at the center of rapid social appraisal. It is triggered by social stimuli (especially eyes/fear) to evaluate trustworthiness and social value, feeding this information forward to trigger automatic bodily states or deliberate cognitive evaluations.</p>
+                                <div class="p-3 bg-teal-950/10 border border-teal-500/10 rounded-lg text-xs italic text-slate-400">"The amygdala plays a critical role in directing attention to socially salient features of faces, like the eyes." — Adolphs, 2009</div>
+                            </div>
+                            <div id="infocontent-clark" class="region-info-content hidden space-y-3">
+                                <div class="flex items-center gap-2 text-indigo-400 font-semibold text-xs uppercase tracking-wider">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 00-3.86.517l-.318.158a6 6 01-3.86.517L6.05 15.21a2 2 00-1.806.547M8 4h8l-1 1v5.172a2 2 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 009 10.172V5L8 4z"></path></svg>
+                                    Error Minimization &amp; Precision
+                                </div>
+                                <p id="region-clark-text" class="text-slate-300">In predictive terms, the amygdala modulates the "precision weighting" of sensory prediction errors. An anxious emotional state increases visual error gain, signaling that social details contain vital, threat-relevant information, causing priors to shift toward defense.</p>
+                                <div class="p-3 bg-indigo-950/10 border border-indigo-500/10 rounded-lg text-xs italic text-slate-400">"Attention can be understood as tuning the gain (precision) of prediction errors." — Clark, 2013</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: INFERENCE LAB -->
+        <section id="tab-lab" class="tab-content hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel rounded-2xl p-6 border-slate-800">
+                <h2 class="text-2xl font-bold text-white mb-2">Predictive Processing Simulation</h2>
+                <p class="text-slate-300 text-sm">In Andy Clark's (2013) active inference model, the brain balances top-down <strong>Prior Predictions</strong> (shaped by emotional network states, Pessoa) with bottom-up <strong>Sensory Likelihoods</strong> (decoded by perceptual systems, Adolphs).<br><br><strong>Interactive Challenge:</strong> Adjust the sliders to see how an observer computes a social partner's ambiguous face. Bayesian formula: <span class="text-indigo-400 font-mono">Posterior = (Prior × Precision1 + Sensory × Precision2) / (Precision1 + Precision2)</span>.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 glass-panel rounded-2xl p-6 border-slate-800 space-y-6">
+                    <h3 class="text-lg font-bold text-white border-b border-slate-800 pb-3 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-indigo-500"></span>Model Parameters</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs"><span class="text-slate-400 font-semibold uppercase">Observer's Prior Expectation</span><span id="val-prior" class="text-indigo-400 font-mono font-bold">0.0</span></div>
+                        <input type="range" id="slide-prior" min="-5" max="5" step="0.5" value="1.5" class="w-full accent-indigo-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+                        <div class="flex justify-between text-[10px] text-slate-500 italic"><span>"They are hostile" (-5)</span><span>Neutral</span><span>"They are friendly" (+5)</span></div>
+                        <p class="text-[11px] text-slate-400 leading-normal">Shaped by baseline emotional states. High anxiety and active amygdala pathways (Pessoa) push priors toward the hostile spectrum.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs"><span class="text-slate-400 font-semibold uppercase">Prior Belief Strength (Precision)</span><span id="val-prior-p" class="text-indigo-400 font-mono font-bold">2.0</span></div>
+                        <input type="range" id="slide-prior-p" min="0.5" max="5" step="0.5" value="2.0" class="w-full accent-indigo-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+                        <div class="flex justify-between text-[10px] text-slate-500 italic"><span>Flexible Belief</span><span>Rigid Expectation</span></div>
+                        <p class="text-[11px] text-slate-400 leading-normal">How strongly the observer clings to their initial expectations. Rigidity indicates high top-down predictive constraints.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs"><span class="text-slate-400 font-semibold uppercase">Sensory Facial Cue (Likelihood)</span><span id="val-sensory" class="text-teal-400 font-mono font-bold">0.0</span></div>
+                        <input type="range" id="slide-sensory" min="-5" max="5" step="0.5" value="-2.0" class="w-full accent-teal-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+                        <div class="flex justify-between text-[10px] text-slate-500 italic"><span>Frowning Face (-5)</span><span>Ambiguous</span><span>Smiling Face (+5)</span></div>
+                        <p class="text-[11px] text-slate-400 leading-normal">The raw, bottom-up sensory data decoded by face-perceiving areas (STS/FFA) as described in Adolphs (2009).</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs"><span class="text-slate-400 font-semibold uppercase">Sensory Precision (Attention Gain)</span><span id="val-sensory-p" class="text-teal-400 font-mono font-bold">1.5</span></div>
+                        <input type="range" id="slide-sensory-p" min="0.5" max="5" step="0.5" value="1.5" class="w-full accent-teal-500 bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+                        <div class="flex justify-between text-[10px] text-slate-500 italic"><span>Noisy / Ignored</span><span>Highly Focused Attention</span></div>
+                        <p class="text-[11px] text-slate-400 leading-normal">Clark explains that attention increases sensory gain, elevating sensory precision and allowing sensory details to overpower top-down priors.</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-8 flex flex-col space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border-slate-800 flex-1 flex flex-col">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center justify-between"><span>Bayesian Social Integration Curves</span><span class="text-xs text-slate-400">Posterior represents the updated brain state</span></h3>
+                        <div class="relative bg-slate-950/80 border border-slate-900 rounded-xl p-4 flex-1 min-h-[300px] flex items-center justify-center">
+                            <canvas id="bayesianCanvas" class="w-full h-full max-h-[340px]"></canvas>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                            <div class="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg"><span class="block text-xs font-semibold text-indigo-400">Prior Expectation</span><span class="text-[10px] text-slate-400">Top-Down Predictor</span></div>
+                            <div class="p-2 bg-teal-500/10 border border-teal-500/20 rounded-lg"><span class="block text-xs font-semibold text-teal-400">Sensory Likelihood</span><span class="text-[10px] text-slate-400">Bottom-up Face Cue</span></div>
+                            <div class="p-2 bg-rose-500/10 border border-rose-500/20 rounded-lg"><span class="block text-xs font-semibold text-rose-400">Posterior (Inference)</span><span class="text-[10px] text-slate-400">Resulting Social Judgement</span></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="glass-panel rounded-xl p-4 border-slate-800 flex flex-col justify-between">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Calculated Prediction Error</span>
+                            <div id="output-pe" class="text-2xl font-extrabold text-white mt-1">2.35</div>
+                            <p class="text-[11px] text-slate-400 mt-1">Difference between predicted state and incoming sensory signal.</p>
+                        </div>
+                        <div class="glass-panel rounded-xl p-4 border-slate-800 flex flex-col justify-between">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Precision-Weighted PE</span>
+                            <div id="output-wpe" class="text-2xl font-extrabold text-rose-400 mt-1">4.20</div>
+                            <p class="text-[11px] text-slate-400 mt-1">Error amplified by attention. Directs learning or autonomic shifts.</p>
+                        </div>
+                        <div class="glass-panel rounded-xl p-4 border-slate-800 flex flex-col justify-between">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Constructed Social Judgment</span>
+                            <div id="output-judgment" class="text-sm font-bold text-teal-400 mt-1">Slightly Hostile</div>
+                            <p class="text-[11px] text-slate-400 mt-1">How the brain ultimately labels the partner's intention.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: THEORY OF MIND SIMULATOR -->
+        <section id="tab-sandbox" class="tab-content hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel rounded-2xl p-6 border-slate-800">
+                <div class="max-w-3xl">
+                    <h2 class="text-2xl font-bold text-white mb-2">Theory of Mind as a Generative Model</h2>
+                    <p class="text-slate-300 text-sm">Andy Clark's (2013) paper introduces a profound idea: predicting simple bodily movements is too difficult if we only look at muscles and kinematics. The human brain solves this by constructing a higher-level generative model of another person's mind. By predicting their beliefs and intentions, we can instantly generate top-down predictions of their bodily movements.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 glass-panel rounded-2xl p-6 border-slate-800 flex flex-col justify-between min-h-[450px]">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+                            <div><span class="text-xs text-indigo-400 uppercase font-bold">Scenario Simulator</span><h3 class="text-xl font-bold text-white mt-1">Case of the Ambiguous Room</h3></div>
+                            <span class="px-2.5 py-1 text-xs rounded bg-slate-900 border border-slate-800 text-slate-300 font-mono">Stage <span id="sandbox-stage-num">1</span> of 4</span>
+                        </div>
+                        <div class="bg-slate-950/60 rounded-xl border border-slate-900 p-6 min-h-[200px] flex flex-col justify-center items-center relative overflow-hidden">
+                            <div id="stage-viz" class="w-full max-w-md h-32 flex justify-around items-end relative border-b-2 border-slate-800 pb-2"></div>
+                        </div>
+                        <div class="mt-6 space-y-2">
+                            <span class="text-xs text-rose-400 font-bold uppercase tracking-wider">Predictive Brain Task:</span>
+                            <p id="sandbox-prompt" class="text-slate-200 text-sm leading-relaxed font-medium">An agent named Alex enters the room. Alex is walking slowly toward the desk. There is a stack of papers and a hot cup of coffee on the desk. How does your predictive brain model this?</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <span class="text-xs text-slate-400 italic">Select your top-down expectation to test active inference:</span>
+                            <div id="sandbox-choices" class="flex flex-wrap gap-2 w-full sm:w-auto"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 flex flex-col space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border-slate-800 flex-1 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <h4 class="text-sm font-bold text-white uppercase tracking-wider border-b border-slate-800 pb-2">Predictive Mechanics</h4>
+                            <div class="p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-1"><span class="text-[10px] text-indigo-400 uppercase font-bold">Observer's Social Prior</span><div id="tom-prior-text" class="text-xs font-semibold text-white">"Alex is highly tired and looking to relax."</div></div>
+                            <div class="p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-1"><span class="text-[10px] text-teal-400 uppercase font-bold">Predicted Action Cue</span><div id="tom-pred-text" class="text-xs font-semibold text-white">"Predict Alex will reach for the warm coffee."</div></div>
+                            <div class="p-3 bg-slate-950/80 border border-slate-900 rounded-lg space-y-1"><span class="text-[10px] text-rose-400 uppercase font-bold">Theoretical Integration</span><p id="tom-theory-text" class="text-xs text-slate-300">Adolphs (2009) highlights how the brain uses its mirror and somatosensory systems to run simulations of other bodies. Clark (2013) asserts that this simulation is literally a top-down prediction of sensory data!</p></div>
+                        </div>
+                        <button onclick="resetSandbox()" class="mt-6 w-full py-2.5 rounded-xl border border-slate-800 hover:bg-slate-800 text-xs font-bold transition-all text-slate-300 hover:text-white">Reset Simulation Flow</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: SELF-ASSESSMENT -->
+        <section id="tab-assessment" class="tab-content hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel rounded-2xl p-6 border-slate-800">
+                <h2 class="text-2xl font-bold text-white mb-2">Integrated Conceptual Quiz</h2>
+                <p class="text-slate-300 text-sm">This quiz tests your understanding of how these three papers cross-pollinate. Review your answers to unlock deep-dive rationales quoting from the papers.</p>
+            </div>
+            <div class="max-w-4xl mx-auto glass-panel rounded-2xl p-8 border-slate-800 space-y-8">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-2"><span class="px-2.5 py-1 text-xs rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono font-bold">Question <span id="quiz-q-num">1</span> of 5</span></div>
+                    <h3 id="quiz-question" class="text-lg md:text-xl font-bold text-white">How does Luiz Pessoa's (2017) concept of "functionally integrated systems" directly support the simulation theories of empathy discussed in Ralph Adolphs' (2009) paper?</h3>
+                    <div id="quiz-choices" class="grid grid-cols-1 gap-3"></div>
+                </div>
+                <div id="quiz-feedback" class="hidden p-5 rounded-xl border space-y-3">
+                    <div class="flex items-center gap-2"><span id="quiz-result-badge" class="px-2.5 py-0.5 text-xs font-bold rounded">CORRECT</span></div>
+                    <p id="quiz-feedback-text" class="text-sm leading-relaxed text-slate-300">Feedback details go here.</p>
+                </div>
+                <div class="flex justify-between items-center border-t border-slate-800 pt-6">
+                    <span class="text-xs text-slate-400">Score: <span id="quiz-score" class="font-bold text-white">0</span>/5</span>
+                    <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold transition-all">Submit Answer</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: LITERATURE VAULT -->
+        <section id="tab-vault" class="tab-content hidden space-y-8 animate-fadeIn">
+            <div class="space-y-8">
+                <div class="glass-panel rounded-2xl p-8 border-rose-500/10 bg-gradient-to-r from-slate-900 to-rose-950/10 space-y-6">
+                    <div class="flex items-start justify-between">
+                        <div class="space-y-1"><span class="text-xs text-rose-400 font-bold uppercase tracking-wider">PAPER 1 SUMMARY</span><h3 class="text-2xl font-extrabold text-white">A Network Model of the Emotional Brain</h3><p class="text-sm text-slate-400 font-medium">Luiz Pessoa (2017) &bull; <em>Trends in Cognitive Sciences</em></p></div>
+                        <span class="px-3 py-1 rounded bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold">Affective Neuroscience</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-slate-300">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-white">Core Argument</h4>
+                            <p>Pessoa challenges the historical partitioning of the brain into "emotional" and "cognitive" regions. He suggests that affective processing is an emergent property of large-scale network interactions spanning the whole brain, with the amygdala serving as a critical anatomical hub.</p>
+                            <h4 class="font-bold text-white">Anatomical &amp; Functional Principles</h4>
+                            <p>The brain organizes emotion through <strong>Functionally Integrated Systems</strong>: multi-synaptic pathways connecting cortical visual systems, somatosensory loops, memory circuits (hippocampus), autonomic control (hypothalamus), and deep brainstem hubs.</p>
+                        </div>
+                        <div class="space-y-3 bg-slate-950/40 p-5 rounded-xl border border-slate-900">
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider">Key Synthesizing Quote</h4>
+                            <p class="text-xs italic text-slate-300">"The impact of emotion is wide-ranging, and emotion is interlocked with perception, cognition, motivation, and action. Functional specialization is not located in a single region, but emerges from its pattern of interactions."</p>
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider pt-2">Relevance to Social &amp; Predictive Brains</h4>
+                            <p class="text-xs">Shows how social assessments (such as recognizing a face) aren't cold cognitive calculations. Because the visual pathways are directly intertwined with amygdala-ventral striatal loops, our emotional state can instantly tune our perception.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl p-8 border-teal-500/10 bg-gradient-to-r from-slate-900 to-teal-950/10 space-y-6">
+                    <div class="flex items-start justify-between">
+                        <div class="space-y-1"><span class="text-xs text-teal-400 font-bold uppercase tracking-wider">PAPER 2 SUMMARY</span><h3 class="text-2xl font-extrabold text-white">The Social Brain: Neural Basis of Social Knowledge</h3><p class="text-sm text-slate-400 font-medium">Ralph Adolphs (2009) &bull; <em>Annual Review of Psychology</em></p></div>
+                        <span class="px-3 py-1 rounded bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-bold">Social Cognition</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-slate-300">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-white">Core Argument</h4>
+                            <p>Adolphs reviews how the human brain represents other people's internal thoughts, feelings, and attributes. He distinguishes between social perception (perceiving behavior, movements, and faces) and social knowledge (complex inferences about long-term traits, norms, and relationships).</p>
+                            <h4 class="font-bold text-white">The Simulation-Theory vs. Theory-Theory Division</h4>
+                            <p>The brain utilizes two distinct strategies: <strong>Simulation</strong> — recreating the sensory/visceral state of others using our own motor/somatosensory systems; and <strong>Theory of Mind (Mentalizing)</strong> — abstract conceptual modeling of others' beliefs, mediated by TPJ and medial PFC.</p>
+                        </div>
+                        <div class="space-y-3 bg-slate-950/40 p-5 rounded-xl border border-slate-900">
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider">Key Synthesizing Quote</h4>
+                            <p class="text-xs italic text-slate-300">"Social cognition is distinguished by psychological processes that allow us to make inferences about what is going on inside other people—their intentions, feelings, and thoughts."</p>
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider pt-2">Relevance to Social &amp; Predictive Brains</h4>
+                            <p class="text-xs">Outlines the specialized cortical nodes (mPFC, TPJ, STS) that are mapped to social interactions. It provides the targets for the top-down predictions described by predictive processing.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-2xl p-8 border-indigo-500/10 bg-gradient-to-r from-slate-900 to-indigo-950/10 space-y-6">
+                    <div class="flex items-start justify-between">
+                        <div class="space-y-1"><span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">PAPER 3 SUMMARY</span><h3 class="text-2xl font-extrabold text-white">Whatever Next? Predictive Brains, Situated Agents, and Cognitive Science</h3><p class="text-sm text-slate-400 font-medium">Andy Clark (2013) &bull; <em>Behavioral and Brain Sciences</em></p></div>
+                        <span class="px-3 py-1 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold">Computational Cognition</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed text-slate-300">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-white">Core Argument</h4>
+                            <p>Clark proposes that brains are essentially prediction engines. Action and perception are not distinct tasks; they are dual facets of a single computational objective: minimizing prediction error within a bidirectional hierarchy of generative predictions and feedback signals.</p>
+                            <h4 class="font-bold text-white">The Precision-Weighting Engine</h4>
+                            <p>Prediction errors are weighted by "precision values" (attention). Highly precise errors drive deep updates in the hierarchy, while low precision errors are ignored, allowing priors to dominate.</p>
+                        </div>
+                        <div class="space-y-3 bg-slate-950/40 p-5 rounded-xl border border-slate-900">
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider">Key Synthesizing Quote</h4>
+                            <p class="text-xs italic text-slate-300">"Perception and action are intertwined. The brain is an active prediction machine constantly attempting to match incoming sensory inputs with top-down expectations."</p>
+                            <h4 class="font-bold text-white text-xs uppercase tracking-wider pt-2">Relevance to Social &amp; Predictive Brains</h4>
+                            <p class="text-xs">Formulates the entire basis of Theory of Mind. It explains why we represent others' abstract intentions: doing so provides an elegant computational solution to predicting incredibly chaotic physical visual inputs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Back-links -->
     <div class="back-links">
-      <a href="../../../lectures/lecture-15.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 15 Literature
-      </a>
-      <a href="../../lecture-15/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        Lecture 15 Content
-      </a>
+        <a href="../../../lectures/lecture-15.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            Lecture 15 Literature
+        </a>
+        <a href="../../lecture-15/index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Lecture 15 Content
+        </a>
     </div>
 
-    <footer>
-      PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
     </footer>
-  </div>
-  
-  <!-- Global Search -->
-  <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <div class="search-overlay" id="searchOverlay">
-    <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
-    <div class="search-box">
-      <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
+
+    <!-- Global Search -->
+    <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <div class="search-overlay" id="searchOverlay">
+        <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');">&times;</button>
+        <div class="search-box">
+            <input class="search-input" id="searchInput" type="text" placeholder="Search lectures, demos, topics..." autocomplete="off" oninput="doSearch(this.value)">
+        </div>
+        <div class="search-results" id="searchResults"></div>
+        <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
     </div>
-    <div class="search-results" id="searchResults"></div>
-    <p class="search-hint">Press Escape to close &middot; Ctrl+K to open</p>
-  </div>
-  <script>
-  (function() {
-    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
-    var base = "../../../";
-    window.doSearch = function(q) {
-      var res = document.getElementById('searchResults');
-      if (!q || q.length < 2) { res.innerHTML = ''; return; }
-      var lq = q.toLowerCase();
-      var matches = idx.filter(function(item) {
-        return item.title.toLowerCase().indexOf(lq) !== -1 || item.type.toLowerCase().indexOf(lq) !== -1;
-      }).slice(0, 12);
-      res.innerHTML = matches.map(function(m) {
-        return '<a class="search-result" href="' + base + m.url + '"><span class="sr-type">' + m.type + '</span><span class="sr-title">' + m.title + '</span></a>';
-      }).join('');
-    };
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('searchOverlay').classList.add('active');
-        document.getElementById('searchInput').focus();
-      }
-    });
-  })();
-  </script>
+    <script>
+    (function() {
+        var idx = [{"title":"Lecture 1: What Is the Mind?","url":"lectures/lecture-01.html","type":"Literature"},{"title":"Lecture 1 Content: What Is the Mind?","url":"lecture-content/lecture-01/index.html","type":"Content"},{"title":"Lecture 2: Neurons &amp; Circuits","url":"lectures/lecture-02.html","type":"Literature"},{"title":"Lecture 2 Content: Neurons &amp; Circuits","url":"lecture-content/lecture-02/index.html","type":"Content"},{"title":"Lecture 3: Brain Networks","url":"lectures/lecture-03.html","type":"Literature"},{"title":"Lecture 3 Content: Brain Networks","url":"lecture-content/lecture-03/index.html","type":"Content"},{"title":"Lecture 4: Language &amp; Brain Maps","url":"lectures/lecture-04.html","type":"Literature"},{"title":"Lecture 4 Content: Language &amp; Brain Maps","url":"lecture-content/lecture-04/index.html","type":"Content"},{"title":"Lecture 5: Visual Perception","url":"lectures/lecture-05.html","type":"Literature"},{"title":"Lecture 5 Content: Visual Perception","url":"lecture-content/lecture-05/index.html","type":"Content"},{"title":"Lecture 6: Attention","url":"lectures/lecture-06.html","type":"Literature"},{"title":"Lecture 6 Content: Attention","url":"lecture-content/lecture-06/index.html","type":"Content"},{"title":"Lecture 7: Emotional Brain","url":"lectures/lecture-07.html","type":"Literature"},{"title":"Lecture 7 Content: Emotional Brain","url":"lecture-content/lecture-07/index.html","type":"Content"},{"title":"Lecture 8: Memory","url":"lectures/lecture-08.html","type":"Literature"},{"title":"Lecture 8 Content: Memory","url":"lecture-content/lecture-08/index.html","type":"Content"},{"title":"Lecture 9: Cognitive Control","url":"lectures/lecture-09.html","type":"Literature"},{"title":"Lecture 9 Content: Cognitive Control","url":"lecture-content/lecture-09/index.html","type":"Content"},{"title":"Lecture 10: Brain Injury &amp; Recovery","url":"lectures/lecture-10.html","type":"Literature"},{"title":"Lecture 10 Content: Brain Injury &amp; Recovery","url":"lecture-content/lecture-10/index.html","type":"Content"},{"title":"Lecture 11: Agency","url":"lectures/lecture-11.html","type":"Literature"},{"title":"Lecture 11 Content: Agency","url":"lecture-content/lecture-11/index.html","type":"Content"},{"title":"Lecture 12: Global Workspace","url":"lectures/lecture-12.html","type":"Literature"},{"title":"Lecture 12 Content: Global Workspace","url":"lecture-content/lecture-12/index.html","type":"Content"},{"title":"Lecture 13: Dynamic Brain","url":"lectures/lecture-13.html","type":"Literature"},{"title":"Lecture 13 Content: Dynamic Brain","url":"lecture-content/lecture-13/index.html","type":"Content"},{"title":"Lecture 14: Predictive Brain","url":"lectures/lecture-14.html","type":"Literature"},{"title":"Lecture 14 Content: Predictive Brain","url":"lecture-content/lecture-14/index.html","type":"Content"},{"title":"Lecture 15: Social Brain","url":"lectures/lecture-15.html","type":"Literature"},{"title":"Lecture 15 Content: Social Brain","url":"lecture-content/lecture-15/index.html","type":"Content"},{"title":"Lecture 16: Split Brain","url":"lectures/lecture-16.html","type":"Literature"},{"title":"Lecture 16 Content: Split Brain","url":"lecture-content/lecture-16/index.html","type":"Content"},{"title":"Lecture 17: Mind Like Fire Unbound","url":"lectures/lecture-17.html","type":"Literature"},{"title":"Lecture 17 Content: Mind Like Fire Unbound","url":"lecture-content/lecture-17/index.html","type":"Content"},{"title":"Demo: Brain Network Explorer","url":"lecture-content/interactive-demos/brain-network-explorer/index.html","type":"Demo"},{"title":"Demo: Two Visual Streams","url":"lecture-content/interactive-demos/two-visual-streams/index.html","type":"Demo"},{"title":"Demo: Attention Awareness","url":"lecture-content/interactive-demos/attention-awareness/index.html","type":"Demo"},{"title":"Demo: Neural Dynamics","url":"lecture-content/interactive-demos/neural-dynamics/index.html","type":"Demo"},{"title":"Demo: Predictive Coding","url":"lecture-content/interactive-demos/predictive-coding/index.html","type":"Demo"},{"title":"Demo: Split Brain","url":"lecture-content/interactive-demos/split-brain/index.html","type":"Demo"},{"title":"Demo: Emotional Brain Explorer","url":"lecture-content/interactive-demos/emotional-brain/index.html","type":"Demo"},{"title":"Demo: Memory Systems Lab","url":"lecture-content/interactive-demos/memory-systems/index.html","type":"Demo"},{"title":"Demo: Cognitive Control Dashboard","url":"lecture-content/interactive-demos/cognitive-control/index.html","type":"Demo"},{"title":"Demo: Brain Injury &amp; Recovery Simulator","url":"lecture-content/interactive-demos/brain-injury/index.html","type":"Demo"},{"title":"Demo: Agency &amp; Free Will Lab","url":"lecture-content/interactive-demos/agency-free-will/index.html","type":"Demo"},{"title":"Demo: Global Workspace Simulator","url":"lecture-content/interactive-demos/global-workspace/index.html","type":"Demo"},{"title":"Demo: Social Brain Explorer","url":"lecture-content/interactive-demos/social-brain/index.html","type":"Demo"},{"title":"Demo: Altered States Explorer","url":"lecture-content/interactive-demos/altered-states/index.html","type":"Demo"},{"title":"Course Literature","url":"course-literature.html","type":"Hub"},{"title":"Course Navigation","url":"course-navigation.html","type":"Hub"},{"title":"Interactive Demos","url":"interactive-demos.html","type":"Hub"},{"title":"Syllabus","url":"syllabus.html","type":"Hub"},{"title":"Assignments","url":"assignments.html","type":"Hub"},{"title":"Calendar","url":"calendar.html","type":"Hub"},{"title":"Today's Lecture","url":"today.html","type":"Hub"}];
+        var base = "../../../";
+        window.doSearch = function(q) {
+            var res = document.getElementById('searchResults');
+            if (!q || q.length < 2) { res.innerHTML = ''; return; }
+            var lq = q.toLowerCase();
+            var matches = idx.filter(function(item) {
+                return item.title.toLowerCase().indexOf(lq) !== -1 || item.type.toLowerCase().indexOf(lq) !== -1;
+            }).slice(0, 12);
+            res.innerHTML = matches.map(function(m) {
+                return '<a class="search-result" href="' + base + m.url + '"><span class="sr-type">' + m.type + '</span><span class="sr-title">' + m.title + '</span></a>';
+            }).join('');
+        };
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchOverlay').classList.add('active');
+                document.getElementById('searchInput').focus();
+            }
+        });
+    })();
+    </script>
+
+    <!-- App Scripts -->
+    <script>
+        const appState = {
+            activeTab: 'overview', selectedRegion: 'amygdala', activeInfoTab: 'pessoa',
+            sim: { prior: 1.5, priorP: 2.0, sensory: -2.0, sensoryP: 1.5 },
+            sandbox: { stage: 1, userChoice: null, prior: "Neutral Observer state", pred: "Unknown action path", theory: "" },
+            quiz: { currentQ: 0, selectedAns: null, submitted: false, score: 0 }
+        };
+
+        const brainDb = {
+            amygdala: { name: "Amygdala", tag: "Subcortical Hub", desc: "An essential emotional coordinator historically oversimplified as a simple threat alarm.", pessoa: "It acts as a primary integrative node. Direct neural links feed into the ventral striatum, prefrontal cortex, and hypothalamus. Pessoa highlights its capacity to dynamically coordinate whole-brain networks in response to motivationally significant sensory cues.", adolphs: "It is critical for rapidly detecting social relevance. Adolphs explains how bilateral amygdala damage impairs the capacity to recognize untrustworthy faces and blocks automatic attention from tracking social cues (especially eyes).", clark: "It acts as a precision gain controller. When the salience network labels a cue as emotionally threatening, it signals other networks to increase sensory precision weighting, locking attention onto potential threat markers." },
+            mpfc: { name: "Medial Prefrontal Cortex (mPFC)", tag: "High-Level Cognitive Hub", desc: "The central core of high-level social processing and self-reflection.", pessoa: "mPFC sits at the intersection of cognitive control, default-mode, and salience networks, showing that abstract planning and emotional processing are anatomically intertwined.", adolphs: "Crucial for mentalizing. It underpins Theory of Mind processes, allowing us to represent abstract, long-term traits of others, as well as our own identity.", clark: "The apex of the social prediction hierarchy. It maintains deep, abstract models of human behavior, feeding down top-down expectations about social norms and intentions to constrain lower-level perceptual areas." },
+            tpj: { name: "Temporoparietal Junction (TPJ)", tag: "Social Inference Engine", desc: "A key cortical region crucial for shifting attention and thinking about others' beliefs.", pessoa: "TPJ is a central component of the default mode network and interacts extensively with the lateral frontoparietal attentional network to switch focus.", adolphs: "Highly specialized for tracking transient social states, specifically representing others' temporary beliefs and desires (mentalizing).", clark: "It computes errors regarding social expectations. It fires when a partner's action conflicts with predicted social rules, signaling that our theory of their mind needs updating." },
+            insula: { name: "Insular Cortex (Insula)", tag: "Visceral-Empathy Engine", desc: "The key cortex translating bodily states into felt emotion.", pessoa: "A central component of the Salience Network. Pessoa describes how the insula links interoceptive monitoring with cognitive networks, making somatic states accessible to decision processes.", adolphs: "Crucial for simulation theory of empathy. By translating perceived distress in others (disgust, pain) into matching internal visceral activations, we understand their feelings by literally feeling them ourselves.", clark: "Calculates interoceptive prediction errors. It constantly compares top-down expectations of internal bodily states with actual signals from heart, lungs, and skin, updating the visceral sense of empathy." },
+            sts: { name: "Superior Temporal Sulcus (STS)", tag: "Perceptual Processing Gateway", desc: "A critical area for decoding visual biological motion.", pessoa: "Bridges complex sensory analysis with limbic structures via robust pathways to the amygdala and temporal poles.", adolphs: "The core of social perception. It specifically decodes biological motion, tracking eyes, head angle, hand gestures, and body language.", clark: "Decodes lower-level prediction errors. It receives raw visual data, compares it against predictions of movement trajectory, and forwards any discrepancies up to higher motor simulation systems." },
+            vs: { name: "Ventral Striatum", tag: "Reward & Motivation Hub", desc: "The brain's primary reinforcement engine.", pessoa: "Forms a major part of the integrated cortical-striatal-thalamic loop, linking cognitive expectations to immediate behavioral reinforcement and motor actions.", adolphs: "Processes social rewards. It fires when we encounter positive social stimuli like cooperation, smiles, or feedback from friends.", clark: "Generates reward prediction errors (RPEs). When social outcomes are better than expected, the ventral striatum signals the brain to reinforce that specific behavior." },
+            somato: { name: "Somatosensory Cortex", tag: "Mirror Simulation Core", desc: "The primary brain region for mapping physical touch and bodily awareness.", pessoa: "Directly connected to motor execution, amygdala, and insular networks, which allows thoughts to immediately manifest as bodily states.", adolphs: "Central to the somatic simulation of others. Adolphs notes that damage here impairs the capacity to identify emotional expressions because we can no longer mentally model their body states.", clark: "Acts as a sensory forward model. By predicting what actions would physically feel like in our own body, we can easily understand the physical movements of other people." },
+            pulvinar: { name: "Pulvinar Thalamus", tag: "Signal Routing Hub", desc: "A massive, deep routing station in the thalamus.", pessoa: "Pessoa highlights the pulvinar as a vital network hub, connecting subcortical areas like the amygdala to almost all of the visual cortex, allowing visual attention to adapt to emotion.", adolphs: "Critical for the rapid, non-conscious processing of visual social threats, helping bypass slower cortical loops.", clark: "Fosters precise message passing, routing predictive cues and feedback errors to adjust relative sensory gains." }
+        };
+
+        const sandboxStages = [
+            { num: 1, prompt: "Alex enters the room and starts walking slowly toward a desk with a warm coffee and a stack of paperwork. How does your predictive social brain model this?", visual: `<div class="flex flex-col items-center"><div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-indigo-400 flex items-center justify-center font-bold text-xs">Alex</div><div class="h-12 w-0.5 bg-slate-800"></div><span class="text-[10px] text-slate-400">Walking...</span></div><div class="flex flex-col items-center"><div class="text-3xl">☕</div><span class="text-[10px] text-teal-400 font-bold">Coffee</span></div><div class="flex flex-col items-center"><div class="text-3xl">📄</div><span class="text-[10px] text-teal-400 font-bold">Paperwork</span></div>`, choices: [{ text: "Predict 'Alex is tired'", nextStage: 2, setPrior: "Alex is tired/cold", setPred: "Predict Alex will pick up the warm coffee" }, { text: "Predict 'Alex is anxious'", nextStage: 2, setPrior: "Alex is anxious about work", setPred: "Predict Alex will grab the paperwork" }], theory: "Your mPFC selects a high-level social prior based on facial signs or context. This top-down belief generates specific predictions about Alex's destination (Clark, 2013)." },
+            { num: 2, prompt: "Your social prediction is set. As Alex approaches the desk, Alex's hand suddenly moves away from the expected object, drifting toward the other. A sensory prediction error is triggered! What happens next?", visual: `<div class="flex flex-col items-center"><div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-indigo-400 flex items-center justify-center font-bold text-xs">Alex</div><span class="text-xs text-rose-500 font-bold animate-pulse">&larr; Diverging!</span></div><div class="flex flex-col items-center opacity-40"><div class="text-3xl">☕</div><span class="text-[10px] text-slate-400">Unreached</span></div><div class="flex flex-col items-center border-2 border-teal-500 p-1.5 rounded-lg bg-teal-950/20"><div class="text-3xl">📄</div><span class="text-[10px] text-teal-400 font-bold">Reaching here</span></div>`, choices: [{ text: "Weight sensory data heavily (High Attention)", nextStage: 3, setPrior: "Update belief to: Alex must be busy", setPred: "Expectation updated. Prediction error minimized." }, { text: "Maintain initial expectation (Rigid Prior)", nextStage: 3, setPrior: "Cling to: Alex must be clumsy", setPred: "Expectation maintained despite hand deviation." }], theory: "STS and motor systems decode this unexpected hand movement, generating sensory prediction errors. How you update your Theory of Mind model depends on your attention (precision weighting)." },
+            { num: 3, prompt: "Alex picks up the object, sits down, and sighs deeply while looking up. Your brain tries to map this physical sign to internal feelings. How does it do this?", visual: `<div class="flex flex-col items-center"><div class="text-3xl">😫</div><span class="text-xs text-rose-400 font-bold">Deep Sigh</span></div>`, choices: [{ text: "Simulate somatic state (Empathy route)", nextStage: 4, setPrior: "Visceral match: Feeling worn-out", setPred: "Activate internal insular and somatosensory networks" }, { text: "Calculate logic route (Cognitive route)", nextStage: 4, setPrior: "Abstract concept: Under stress", setPred: "Activate TPJ/mPFC conceptual mentalizing" }], theory: "Adolphs (2009) outlines two simulation systems: a somatic mirror route (insula/somatosensory) that helps you feel Alex's fatigue, and a cognitive mentalizing route (mPFC) for abstract understanding." },
+            { num: 4, prompt: "Your brain's generative model of Alex has successfully updated: Alex is under severe pressure. Now, Alex looks at you. Because of your new social prior, how do you expect them to act?", visual: `<div class="flex justify-center items-center gap-6"><div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center font-bold">You</div><div class="text-xl animate-bounce">&harr;</div><div class="w-12 h-12 rounded-full border-2 border-teal-500 flex items-center justify-center font-bold">Alex</div></div>`, choices: [{ text: "Conclude (Finish Synthesis)", nextStage: 1, setPrior: "Social alignment complete.", setPred: "Interactive cycle reset." }], theory: "You've successfully run an active social inference cycle! By tracking another person's internal beliefs, you predicted their physical actions and aligned your mind with theirs." }
+        ];
+
+        const quizDb = [
+            { q: "How does Luiz Pessoa's (2017) concept of 'functionally integrated systems' support the somatic simulation theories of empathy described in Ralph Adolphs' (2009) paper?", choices: ["By proving that the somatosensory cortex works independently of other sensory regions during face recognition.", "By outlining anatomical connections that allow perceptual visual streams to directly engage subcortical emotion and somatosensory systems, forming integrated networks.", "By demonstrating that empathy occurs entirely within subcortical regions without involving any cortical pathways.", "By showing that the mirror neuron system is a separate brain module insulated from prefrontal planning networks."], correct: 1, feedback: "Correct! Pessoa explains that emotion is an emergent property of integrated networks (cortex-amygdala-somatosensory loops). This provides the exact structural infrastructure Adolphs outlines: allowing visual face inputs to instantly trigger mirroring/somatic simulations." },
+            { q: "According to Andy Clark (2013), how does 'precision weighting' (attention) alter social judgements in an anxious observer?", choices: ["Anxiety reduces all sensory processing, which prevents any top-down priors from influencing social judgements.", "Anxiety increases sensory prediction error gains, focusing attention on threat markers, which forces the observer to prioritize hostile interpretations.", "Anxiety completely disables mPFC predictions, leaving the observer with only bottom-up sensory responses.", "Precision weighting has no effect on social judgement and only modulates basic visual processing like contrast sensitivity."], correct: 1, feedback: "Correct! In Clark's model, attention is the tuning of prediction error precision. An anxious state (high amygdala/salience activity, Pessoa) elevates sensory error gain, emphasizing threat-relevant details, reinforcing fearful social priors." },
+            { q: "Which brain region acts as the primary visual gateway for decoding biological motion (like gaze shifts or hand gestures) before it is processed by high-level mentalizing networks?", choices: ["The Temporoparietal Junction (TPJ)", "The Medial Prefrontal Cortex (mPFC)", "The Superior Temporal Sulcus (STS)", "The Ventral Striatum"], correct: 2, feedback: "Correct! As detailed in Adolphs (2009), the STS is crucial for visual social perception, specifically decoding biological movements like gaze direction or hand actions, and routing this forward to simulation and mentalizing networks." },
+            { q: "What is the primary computational benefit of using Theory of Mind (mentalizing) as a generative model, as argued in Andy Clark's (2013) predictive framework?", choices: ["It allows us to completely ignore sensory inputs during social communication.", "It acts as a shortcut, explaining and predicting complex, highly variable physical movements by inferring a simple set of hidden mental causes.", "It allows the brain to operate without producing any prediction errors whatsoever.", "It prevents emotional states from interfering with cognitive logical evaluations."], correct: 1, feedback: "Correct! Clark highlights that predicting physical muscle movements is computationally overwhelming. By using Theory of Mind to infer abstract beliefs and intentions, the brain creates a top-down model that effortlessly explains and predicts sensory movements." },
+            { q: "If an observer has a strong social prior that a stranger is 'untrustworthy,' how must the stranger's visual face signal act to change this prior, based on active inference?", choices: ["The sensory signal must be highly ambiguous to challenge the prior expectation.", "The sensory signal must be highly precise and clear (elevated by active attention/gaze), generating substantial prediction errors that override the strong prior.", "The sensory signal cannot alter the prior, as top-down priors can never be modified by bottom-up visual signals.", "The sensory signal must trigger massive amygdala-driven threat responses to reduce prediction errors."], correct: 1, feedback: "Correct! To shift a highly precise prior, the incoming sensory data must also have very high precision (e.g., highly focused gaze, clear signals of trust). Under Clark's model, this generates powerful, precise prediction errors that force the high-level social priors to update." }
+        ];
+
+        function switchTab(tabId) {
+            appState.activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('bg-indigo-600', 'text-white'); btn.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-slate-800/50'); });
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.add('bg-indigo-600', 'text-white');
+            activeBtn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-slate-800/50');
+            if (tabId === 'lab') setTimeout(initSimulationCanvas, 50);
+        }
+
+        function selectBrainRegion(regionId) {
+            appState.selectedRegion = regionId;
+            const region = brainDb[regionId];
+            document.querySelectorAll('circle[id^="node-"]').forEach(node => { node.setAttribute('stroke-width', '2'); node.setAttribute('r', node.id === `node-${regionId}` ? '18' : '14'); });
+            document.getElementById('selected-region-name').innerText = region.name;
+            document.getElementById('selected-region-tag').innerText = region.tag;
+            document.getElementById('selected-region-desc').innerText = region.desc;
+            document.getElementById('region-pessoa-text').innerText = region.pessoa;
+            document.getElementById('region-adolphs-text').innerText = region.adolphs;
+            document.getElementById('region-clark-text').innerText = region.clark;
+            const tagEl = document.getElementById('selected-region-tag');
+            tagEl.className = 'px-2.5 py-1 text-xs font-semibold rounded-md ';
+            if (regionId === 'amygdala' || regionId === 'insula') { tagEl.classList.add('bg-rose-500/10', 'text-rose-400', 'border', 'border-rose-500/20'); }
+            else if (regionId === 'mpfc' || regionId === 'somato') { tagEl.classList.add('bg-teal-500/10', 'text-teal-400', 'border', 'border-teal-500/20'); }
+            else { tagEl.classList.add('bg-indigo-500/10', 'text-indigo-400', 'border', 'border-indigo-500/20'); }
+        }
+
+        function switchInfoTab(infoId) {
+            appState.activeInfoTab = infoId;
+            document.querySelectorAll('.region-tab-btn').forEach(btn => { btn.classList.remove('border-rose-500', 'text-rose-400', 'border-teal-500', 'text-teal-400', 'border-indigo-500', 'text-indigo-400'); btn.classList.add('border-transparent', 'text-slate-400'); });
+            document.querySelectorAll('.region-info-content').forEach(content => content.classList.add('hidden'));
+            const activeBtn = document.getElementById(`infobtn-${infoId}`);
+            const activeContent = document.getElementById(`infocontent-${infoId}`);
+            activeContent.classList.remove('hidden');
+            if (infoId === 'pessoa') { activeBtn.classList.add('border-rose-500', 'text-rose-400'); }
+            else if (infoId === 'adolphs') { activeBtn.classList.add('border-teal-500', 'text-teal-400'); }
+            else { activeBtn.classList.add('border-indigo-500', 'text-indigo-400'); }
+        }
+
+        let simCanvas = null, simCtx = null;
+        function initSimulationCanvas() {
+            simCanvas = document.getElementById('bayesianCanvas');
+            if (!simCanvas) return;
+            simCtx = simCanvas.getContext('2d');
+            resizeSimCanvas();
+            window.addEventListener('resize', resizeSimCanvas);
+            updateSimulation();
+        }
+        function resizeSimCanvas() {
+            if (!simCanvas) return;
+            const container = simCanvas.parentElement;
+            simCanvas.width = container.clientWidth * window.devicePixelRatio;
+            simCanvas.height = container.clientHeight * window.devicePixelRatio;
+            simCanvas.style.width = container.clientWidth + 'px';
+            simCanvas.style.height = container.clientHeight + 'px';
+            simCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            updateSimulation();
+        }
+        function updateSimulation() {
+            const prior = parseFloat(document.getElementById('slide-prior').value);
+            const priorP = parseFloat(document.getElementById('slide-prior-p').value);
+            const sensory = parseFloat(document.getElementById('slide-sensory').value);
+            const sensoryP = parseFloat(document.getElementById('slide-sensory-p').value);
+            document.getElementById('val-prior').innerText = prior.toFixed(1);
+            document.getElementById('val-prior-p').innerText = priorP.toFixed(1);
+            document.getElementById('val-sensory').innerText = sensory.toFixed(1);
+            document.getElementById('val-sensory-p').innerText = sensoryP.toFixed(1);
+            const postMean = (prior * priorP + sensory * sensoryP) / (priorP + sensoryP);
+            const postP = priorP + sensoryP;
+            const predictionError = sensory - prior;
+            const weightedPE = sensoryP * predictionError;
+            document.getElementById('output-pe').innerText = predictionError.toFixed(2);
+            document.getElementById('output-wpe').innerText = Math.abs(weightedPE).toFixed(2);
+            const wpeEl = document.getElementById('output-wpe');
+            wpeEl.className = Math.abs(weightedPE) > 3.5 ? "text-2xl font-extrabold text-rose-500 mt-1 animate-pulse" : "text-2xl font-extrabold text-teal-400 mt-1";
+            let judgment = "";
+            if (postMean < -2.5) judgment = "Highly Hostile Intent";
+            else if (postMean < -0.8) judgment = "Slightly Hostile Intent";
+            else if (postMean < 0.8) judgment = "Neutral State perceived";
+            else if (postMean < 2.5) judgment = "Slightly Friendly Intent";
+            else judgment = "Highly Friendly / Warm";
+            document.getElementById('output-judgment').innerText = judgment;
+            drawSimulationCurves(prior, priorP, sensory, sensoryP, postMean, postP);
+        }
+        function drawSimulationCurves(prior, priorP, sensory, sensoryP, post, postP) {
+            if (!simCtx || !simCanvas) return;
+            const w = simCanvas.width / window.devicePixelRatio;
+            const h = simCanvas.height / window.devicePixelRatio;
+            simCtx.clearRect(0, 0, w, h);
+            simCtx.strokeStyle = '#334155'; simCtx.lineWidth = 1.5;
+            simCtx.beginPath(); simCtx.moveTo(40, h - 40); simCtx.lineTo(w - 40, h - 40); simCtx.stroke();
+            function mapX(val) { return 60 + ((val + 6) / 12) * (w - 120); }
+            function mapY(yVal) { return h - 40 - (yVal * 120); }
+            function normalPDF(x, mean, precision) { const variance = 1 / precision; const stdDev = Math.sqrt(variance); return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-Math.pow(x - mean, 2) / (2 * variance)); }
+            function drawCurve(mean, precision, strokeStyle, fillStyle) {
+                simCtx.beginPath();
+                for (let x = -6; x <= 6; x += 0.1) { const y = normalPDF(x, mean, precision); const drawX = mapX(x); const drawY = mapY(y); if (x === -6) simCtx.moveTo(drawX, drawY); else simCtx.lineTo(drawX, drawY); }
+                simCtx.strokeStyle = strokeStyle; simCtx.lineWidth = 3; simCtx.stroke();
+                simCtx.lineTo(mapX(6), h - 40); simCtx.lineTo(mapX(-6), h - 40); simCtx.fillStyle = fillStyle; simCtx.fill();
+            }
+            drawCurve(sensory, sensoryP, '#0d9488', 'rgba(13,148,136,0.08)');
+            drawCurve(prior, priorP, '#4f46e5', 'rgba(79,70,229,0.08)');
+            drawCurve(post, postP, '#f43f5e', 'rgba(244,63,94,0.15)');
+            function drawPeakLabel(text, mean, precision, color) {
+                const peakY = mapY(normalPDF(mean, mean, precision));
+                simCtx.fillStyle = color; simCtx.font = 'bold 10px sans-serif'; simCtx.textAlign = 'center';
+                simCtx.fillText(text, mapX(mean), peakY - 8);
+                simCtx.beginPath(); simCtx.arc(mapX(mean), peakY, 3, 0, Math.PI * 2); simCtx.fill();
+            }
+            drawPeakLabel("Prior", prior, priorP, '#a5b4fc');
+            drawPeakLabel("Cue", sensory, sensoryP, '#2dd4bf');
+            drawPeakLabel("Posterior", post, postP, '#fda4af');
+        }
+
+        function updateSandboxStage() {
+            const stage = sandboxStages[appState.sandbox.stage - 1];
+            document.getElementById('sandbox-stage-num').innerText = stage.num;
+            document.getElementById('sandbox-prompt').innerText = stage.prompt;
+            document.getElementById('stage-viz').innerHTML = stage.visual;
+            document.getElementById('tom-prior-text').innerText = appState.sandbox.prior;
+            document.getElementById('tom-pred-text').innerText = appState.sandbox.pred;
+            document.getElementById('tom-theory-text').innerText = stage.theory;
+            const choicesContainer = document.getElementById('sandbox-choices');
+            choicesContainer.innerHTML = '';
+            stage.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold transition-all text-white shadow-md";
+                btn.innerText = choice.text;
+                btn.onclick = () => selectSandboxChoice(choice);
+                choicesContainer.appendChild(btn);
+            });
+        }
+        function selectSandboxChoice(choice) { appState.sandbox.prior = choice.setPrior; appState.sandbox.pred = choice.setPred; appState.sandbox.stage = choice.nextStage; updateSandboxStage(); }
+        function resetSandbox() { appState.sandbox.stage = 1; appState.sandbox.prior = "Alex's baseline mood is unknown."; appState.sandbox.pred = "Expectations uncalibrated."; updateSandboxStage(); }
+
+        function renderQuizQuestion() {
+            const qData = quizDb[appState.quiz.currentQ];
+            document.getElementById('quiz-q-num').innerText = appState.quiz.currentQ + 1;
+            document.getElementById('quiz-question').innerText = qData.q;
+            const choicesContainer = document.getElementById('quiz-choices');
+            choicesContainer.innerHTML = '';
+            qData.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/40 transition-all text-sm font-medium hover:border-slate-700 flex items-center justify-between group";
+                btn.id = `quiz-choice-${idx}`;
+                btn.innerHTML = `<span>${choice}</span><span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center group-hover:border-indigo-400 shrink-0 ml-4"></span>`;
+                btn.onclick = () => selectQuizAnswer(idx);
+                choicesContainer.appendChild(btn);
+            });
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('quiz-next-btn').innerText = "Submit Answer";
+            appState.quiz.submitted = false; appState.quiz.selectedAns = null;
+        }
+        function selectQuizAnswer(index) {
+            if (appState.quiz.submitted) return;
+            appState.quiz.selectedAns = index;
+            document.querySelectorAll('[id^="quiz-choice-"]').forEach((btn, idx) => {
+                const dot = btn.querySelector('span:last-child');
+                if (idx === index) { btn.className = "w-full text-left p-4 rounded-xl border border-indigo-500 bg-indigo-950/20 transition-all text-sm font-medium flex items-center justify-between shrink-0"; dot.className = "w-5 h-5 rounded-full border-2 border-indigo-400 bg-indigo-500 flex items-center justify-center shrink-0 ml-4"; dot.innerHTML = `<span class="w-2.5 h-2.5 bg-white rounded-full"></span>`; }
+                else { btn.className = "w-full text-left p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/40 transition-all text-sm font-medium hover:border-slate-700 flex items-center justify-between group"; dot.className = "w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center group-hover:border-indigo-400 shrink-0 ml-4"; dot.innerHTML = ""; }
+            });
+        }
+        function nextQuizQuestion() {
+            const qData = quizDb[appState.quiz.currentQ];
+            if (!appState.quiz.submitted) {
+                if (appState.quiz.selectedAns === null) { const nextBtn = document.getElementById('quiz-next-btn'); nextBtn.innerText = "Please select an answer!"; nextBtn.className = "px-5 py-2.5 bg-rose-600 text-white rounded-xl text-xs font-bold transition-all"; setTimeout(() => { nextBtn.className = "px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold transition-all"; nextBtn.innerText = "Submit Answer"; }, 1200); return; }
+                appState.quiz.submitted = true;
+                const isCorrect = appState.quiz.selectedAns === qData.correct;
+                if (isCorrect) { appState.quiz.score++; document.getElementById('quiz-score').innerText = appState.quiz.score; }
+                const feedbackBlock = document.getElementById('quiz-feedback');
+                feedbackBlock.classList.remove('hidden');
+                const badge = document.getElementById('quiz-result-badge');
+                if (isCorrect) { badge.innerText = "CORRECT"; badge.className = "px-2.5 py-0.5 text-xs font-bold rounded bg-teal-500/20 text-teal-400 border border-teal-500/30"; feedbackBlock.className = "p-5 rounded-xl border border-teal-500/20 bg-teal-950/10 space-y-3"; }
+                else { badge.innerText = "INCORRECT"; badge.className = "px-2.5 py-0.5 text-xs font-bold rounded bg-rose-500/20 text-rose-400 border border-rose-500/30"; feedbackBlock.className = "p-5 rounded-xl border border-rose-500/20 bg-rose-950/10 space-y-3"; }
+                document.getElementById('quiz-feedback-text').innerText = qData.feedback;
+                document.getElementById('quiz-next-btn').innerText = appState.quiz.currentQ === quizDb.length - 1 ? "Finish Quiz & See Score" : "Next Question";
+            } else {
+                if (appState.quiz.currentQ < quizDb.length - 1) { appState.quiz.currentQ++; renderQuizQuestion(); }
+                else {
+                    document.getElementById('tab-assessment').innerHTML = `<div class="glass-panel rounded-2xl p-8 max-w-2xl mx-auto border-slate-800 text-center space-y-6"><div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-full flex items-center justify-center text-indigo-400 mx-auto"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div class="space-y-2"><h3 class="text-2xl font-bold text-white">Assessment Complete!</h3><p class="text-slate-300 text-sm">You have finalized your synthesis evaluation across the three conceptual literature sources.</p></div><div class="text-4xl font-extrabold text-indigo-400">${appState.quiz.score} / 5</div><div class="pt-4 border-t border-slate-800"><button onclick="location.reload()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold transition-all text-white">Restart Coursework Suite</button></div></div>`;
+                }
+            }
+        }
+
+        window.onload = function() { selectBrainRegion('amygdala'); updateSandboxStage(); renderQuizQuestion(); };
+    </script>
 
 <script src="../../../analytics.js" defer></script>
 </body>
