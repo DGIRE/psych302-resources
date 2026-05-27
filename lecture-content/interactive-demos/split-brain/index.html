@@ -1,11 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Split Brain Experiment &mdash; Interactive Demo &mdash; PSYCH 302</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (powers interactive demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' },
+            neural: {
+              blue: '#3b82f6', emerald: '#10b981', amber: '#f59e0b',
+              rose: '#f43f5e', purple: '#8b5cf6'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'dash': 'dash 20s linear infinite',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
+    /* ── Site CSS Variables & Base Reset ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
@@ -44,7 +69,8 @@
         linear-gradient(180deg, #10182a 0%, #0c1525 100%);
     }
 
-    .container {
+    /* ── Site Container (renamed from .container to avoid Tailwind conflict) ── */
+    .site-container {
       position: relative;
       z-index: 1;
       max-width: 780px;
@@ -53,19 +79,7 @@
       padding: 20px;
     }
 
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--alpenglow); }
-
+    /* ── Header Card ── */
     .header-card {
       padding: 40px 28px 32px;
       background: rgba(255,255,255,0.03);
@@ -75,10 +89,7 @@
       text-align: center;
       animation: fadeIn 0.6s ease-out;
     }
-    .header-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-    }
+    .header-icon { font-size: 2.5rem; margin-bottom: 12px; }
     .header-card h1 {
       font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
       background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
@@ -92,285 +103,186 @@
       margin-bottom: 14px;
     }
     .header-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 540px;
-      margin: 0 auto;
+      font-size: 0.88rem; color: var(--text-secondary);
+      line-height: 1.6; max-width: 540px; margin: 0 auto;
     }
 
+    /* ── Quick Links ── */
     .quick-links {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: flex; gap: 10px; margin-bottom: 24px;
+      flex-wrap: wrap; justify-content: center;
     }
     .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.1);
       background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.25s;
+      color: var(--text-secondary); font-size: 0.78rem;
+      font-weight: 600; text-decoration: none; transition: all 0.25s;
     }
     .quick-link:hover {
       border-color: var(--accent);
       background: rgba(var(--glow-rgb), 0.08);
       color: var(--accent);
     }
-    .quick-link svg { width: 14px; height: 14px; }
+    .quick-link svg { width: 14px; height: 14px; display: inline; flex-shrink: 0; }
 
+    /* ── Section Card ── */
     .section-card {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 14px; padding: 24px; margin-bottom: 20px;
     }
     .section-card h2 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
     }
-    .concept-list {
-      list-style: none;
-    }
+    .concept-list { list-style: none; }
     .concept-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;
     }
     .concept-list li:last-child { border-bottom: none; }
     .concept-list li::before {
-      content: '\2022';
-      color: var(--accent);
-      font-weight: 700;
-      margin-right: 10px;
+      content: '\2022'; color: var(--accent); font-weight: 700; margin-right: 10px;
     }
 
-    .demo-area {
-      text-align: center;
-      padding: 80px 28px;
-      background: rgba(var(--glow-rgb), 0.02);
-      border: 2px dashed rgba(var(--glow-rgb), 0.15);
-      border-radius: 16px;
-      margin-bottom: 24px;
-    }
-    .demo-area .demo-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .demo-area h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .demo-area p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      max-width: 360px;
-      margin: 0 auto;
-      line-height: 1.55;
-    }
-
+    /* ── Footer ── */
     footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 40px 0 20px;
+      text-align: center; color: var(--text-muted);
+      font-size: 0.75rem; padding: 40px 0 20px;
     }
     footer a { color: var(--alpenglow); text-decoration: none; }
     footer a:hover { color: var(--alpenglow-warm); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 6px; margin-bottom: 32px; font-size: 0.78rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .breadcrumb a {
+      color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s; font-weight: 500;
+    }
+    .breadcrumb a:hover { color: var(--alpenglow); }
+    .breadcrumb .bc-sep { color: rgba(255,255,255,0.15); font-size: 0.7rem; user-select: none; }
+    .breadcrumb .bc-current { color: var(--text-secondary); font-weight: 600; }
+
+    /* ── Global Search FAB ── */
+    .search-fab {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(26,39,68,0.95); backdrop-filter: blur(12px);
+      color: var(--text-secondary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .search-fab:hover { border-color: var(--alpenglow); color: var(--alpenglow); transform: scale(1.08); }
+    .search-fab svg { width: 20px; height: 20px; display: inline; }
+    .search-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(12,21,37,0.92); backdrop-filter: blur(16px);
+      padding: 60px 20px 20px; animation: fadeIn 0.2s ease-out;
+    }
+    .search-overlay.active { display: block; }
+    .search-box { max-width: 560px; margin: 0 auto; }
+    .search-input {
+      width: 100%; padding: 14px 20px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06); color: var(--text-primary);
+      font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.3s;
+    }
+    .search-input:focus { border-color: var(--alpenglow); }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-results { max-width: 560px; margin: 16px auto 0; max-height: 60vh; overflow-y: auto; }
+    .search-result {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 8px; text-decoration: none;
+      color: var(--text-secondary); transition: all 0.2s;
+    }
+    .search-result:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+    .search-result .sr-type {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-muted);
+      background: rgba(255,255,255,0.05); padding: 2px 8px;
+      border-radius: 4px; white-space: nowrap;
+    }
+    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
+    .search-close {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.5rem; cursor: pointer; padding: 8px; transition: color 0.2s;
+    }
+    .search-close:hover { color: var(--alpenglow); }
+    .search-hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: 16px; }
+
+    /* ── Responsive ── */
     @media (max-width: 600px) {
       .header-card h1 { font-size: 1.25rem; }
       .quick-links { flex-direction: column; }
     }
-  
-    /* ── Extra-small phones ── */
     @media (max-width: 380px) {
       .header-card { padding: 24px 14px 20px; }
       .header-card h1 { font-size: 1.1rem; }
       .header-card p { font-size: 0.8rem; }
       .quick-link { font-size: 0.72rem; padding: 6px 12px; }
       .section-card { padding: 16px 12px; }
-      .demo-area { padding: 48px 16px; }
     }
-    /* ── Phone landscape ── */
     @media (max-width: 812px) and (orientation: landscape) {
       .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
       .quick-links { flex-direction: row; }
-      .demo-area { padding: 48px 20px; }
-    }
-  
-    /* ── Breadcrumb nav ── */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 32px;
-      font-size: 0.78rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .breadcrumb a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-      font-weight: 500;
-    }
-    .breadcrumb a:hover { color: var(--alpenglow); }
-    .breadcrumb .bc-sep {
-      color: rgba(255,255,255,0.15);
-      font-size: 0.7rem;
-      user-select: none;
-    }
-    .breadcrumb .bc-current {
-      color: var(--text-secondary);
-      font-weight: 600;
     }
 
-    /* ── Global Search ── */
-    .search-fab {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(26,39,68,0.95);
-      backdrop-filter: blur(12px);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .search-fab:hover {
-      border-color: var(--alpenglow);
-      color: var(--alpenglow);
-      transform: scale(1.08);
-    }
-    .search-fab svg { width: 20px; height: 20px; }
-    .search-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(12,21,37,0.92);
-      backdrop-filter: blur(16px);
-      padding: 60px 20px 20px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .search-overlay.active { display: block; }
-    .search-box {
-      max-width: 560px;
-      margin: 0 auto;
-    }
-    .search-input {
-      width: 100%;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .search-input:focus { border-color: var(--alpenglow); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-results {
-      max-width: 560px;
-      margin: 16px auto 0;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-    .search-result {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .search-result:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
-    .search-result .sr-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 2px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .search-result .sr-title { font-size: 0.88rem; font-weight: 500; }
-    .search-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 8px;
-      transition: color 0.2s;
-    }
-    .search-close:hover { color: var(--alpenglow); }
-    .search-hint {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      margin-top: 16px;
+    /* ── Interactive Demo Wrapper ── */
+    .demo-wrapper {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
+    /* Demo custom scrollbar */
+    .demo-wrapper ::-webkit-scrollbar { width: 8px; height: 8px; }
+    .demo-wrapper ::-webkit-scrollbar-track { background: #020617; }
+    .demo-wrapper ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    .demo-wrapper ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Demo connectivity animations */
+    @keyframes dash { to { stroke-dashoffset: -1000; } }
+    .network-line      { stroke-dasharray: 8, 8; animation: dash 30s linear infinite; }
+    .network-line-fast { stroke-dasharray: 4, 4; animation: dash 10s linear infinite; }
   </style>
 </head>
 <body>
 
   <div class="page-bg"></div>
 
-  <div class="container">
+  <!-- ══════════════════════════════════════════════════
+       SITE CHROME — Breadcrumb, Header, Links, Concepts
+       ══════════════════════════════════════════════════ -->
+  <div class="site-container">
 
-    <nav class="breadcrumb"><a href="../../../index.html">Home</a><span class="bc-sep">&#8250;</span><a href="../../../interactive-demos.html">Demos</a><span class="bc-sep">&#8250;</span><span class="bc-current">Split Brain</span></nav>
+    <nav class="breadcrumb">
+      <a href="../../../index.html">Home</a>
+      <span class="bc-sep">&#8250;</span>
+      <a href="../../../interactive-demos.html">Demos</a>
+      <span class="bc-sep">&#8250;</span>
+      <span class="bc-current">Split Brain</span>
+    </nav>
 
     <div class="header-card">
-      <div class="header-icon">&#x1F9EC;</div>
-      <span class="arc-tag">Social Brain &amp; Self</span>
+      <div class="header-icon">&#x1F9E0;</div>
+      <span class="arc-tag">Corpus Callosum &amp; Lateralization</span>
       <h1>Split Brain Experiment</h1>
-      <p>Step into a classic callosotomy paradigm. Present stimuli to different visual fields and discover what each hemisphere knows, doesn&rsquo;t know, and confabulates about &mdash; revealing the &ldquo;left-hemisphere interpreter.&rdquo;</p>
+      <p>Explore interhemispheric communication through interactive simulations of callosotomy patients. Visualize corpus callosum connectivity, run bimanual coordination experiments, and uncover how the left-hemisphere &ldquo;interpreter&rdquo; constructs a unified self.</p>
     </div>
 
     <div class="quick-links">
@@ -387,27 +299,583 @@
     <div class="section-card">
       <h2>Concepts Explored</h2>
       <ul class="concept-list">
-          <li>Hemispheric lateralization of function</li>
-          <li>The left-hemisphere &ldquo;interpreter&rdquo;</li>
-          <li>Callosotomy experiments (Sperry &amp; Gazzaniga)</li>
-          <li>Implications for the constructed self</li>
+        <li>Hemispheric lateralization of function</li>
+        <li>The left-hemisphere &ldquo;interpreter&rdquo;</li>
+        <li>Callosotomy experiments (Roland et al. 2017 &amp; Gazzaniga 2000)</li>
+        <li>Interhemispheric functional connectivity (rs-fMRI &amp; VMHC)</li>
+        <li>Implications for the constructed self</li>
       </ul>
     </div>
 
-    <div class="demo-area">
-      <div class="demo-icon">&#x1F9EC;</div>
-      <h2>Interactive Demo Loading Area</h2>
-      <p>This interactive visualization is being developed and will be available as the relevant lecture topic is covered in class.</p>
-    </div>
+  </div><!-- /.site-container -->
 
+
+  <!-- ══════════════════════════════════════════════════
+       INTERACTIVE DEMO — Full-width Tailwind dark section
+       ══════════════════════════════════════════════════ -->
+  <div class="demo-wrapper">
+
+    <!-- Sticky Tab Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40 px-6 py-4">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 bg-gradient-to-tr from-purple-600 to-blue-600 rounded-xl shadow-lg shadow-purple-500/20">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-base font-bold tracking-tight bg-gradient-to-r from-purple-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent">
+              Interhemispheric Communication &amp; Split-Brain Lab
+            </p>
+            <p class="text-xs text-slate-400 font-medium">Comparative Learning Platform: Roland et al. (2017) &amp; Gazzaniga (2000)</p>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 self-stretch md:self-auto">
+          <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-slate-800 text-white shadow-sm">
+            Brain Hub
+          </button>
+          <button onclick="switchTab('connectivity')" id="btn-connectivity" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+            Connectivity Lab
+          </button>
+          <button onclick="switchTab('experiments')" id="btn-experiments" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+            Split-Brain Suite
+          </button>
+          <button onclick="switchTab('library')" id="btn-library" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+            Study Library
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Demo Main Content Area -->
+    <main class="max-w-7xl mx-auto px-6 py-8 text-slate-100 font-sans antialiased">
+
+      <!-- ═══════════ TAB: BRAIN HUB (OVERVIEW) ═══════════ -->
+      <section id="tab-overview" class="tab-content space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          <!-- Left Column: Introduction -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+              <span class="px-2.5 py-1 text-xs font-semibold tracking-wider text-purple-400 bg-purple-500/10 rounded-full uppercase">Theoretical Framework</span>
+              <h2 class="text-2xl font-bold text-slate-100">Two Hemispheres, One Mind?</h2>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                How does the human brain construct a unified conscious experience when its processing pipelines are strictly lateralized? This digital lab compares two landmark scientific pathways:
+              </p>
+
+              <!-- Paper 1 -->
+              <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800 hover:border-purple-500/30 transition-all duration-300">
+                <div class="flex items-start gap-3">
+                  <span class="p-1.5 bg-purple-500/20 text-purple-400 rounded-lg mt-0.5 text-xs font-bold">01</span>
+                  <div class="space-y-1">
+                    <h3 class="text-sm font-bold text-slate-100">Roland et al. (2017) &bull; Physiological</h3>
+                    <p class="text-xs text-slate-400">
+                      Using rs-fMRI to map resting-state networks before and after surgical bisection. Proves the causal role of the Corpus Callosum in maintaining functional connectivity.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paper 2 -->
+              <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800 hover:border-blue-500/30 transition-all duration-300">
+                <div class="flex items-start gap-3">
+                  <span class="p-1.5 bg-blue-500/20 text-blue-400 rounded-lg mt-0.5 text-xs font-bold">02</span>
+                  <div class="space-y-1">
+                    <h3 class="text-sm font-bold text-slate-100">Michael S. Gazzaniga (2000) &bull; Cognitive</h3>
+                    <p class="text-xs text-slate-400">
+                      Synthesizing 40 years of split-brain patient behavioral studies. Proposes the Corpus Callosum as the great evolutionary &ldquo;enabler&rdquo; of human cognitive specialization.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instruction Guide -->
+            <div class="p-5 bg-slate-900 rounded-xl border border-slate-800 text-sm">
+              <h4 class="font-bold text-slate-200 mb-2 flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Platform Guide for Students:
+              </h4>
+              <ul class="list-disc list-inside space-y-1.5 text-slate-300 text-xs">
+                <li>Explore interactive cortical connectivity in the <span class="text-purple-400 font-semibold cursor-pointer" onclick="switchTab('connectivity')">Connectivity Lab</span>.</li>
+                <li>Run real-time psychological simulations in the <span class="text-blue-400 font-semibold cursor-pointer" onclick="switchTab('experiments')">Split-Brain Suite</span>.</li>
+                <li>Review high-yield structural summaries in the <span class="text-emerald-400 font-semibold cursor-pointer" onclick="switchTab('library')">Study Library</span>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Brain Structure Visualizer -->
+          <div class="lg:col-span-7 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-lg font-bold text-slate-100">Structural Map of the Human Commissures</h3>
+                <p class="text-xs text-slate-400">Click highlighted structures to examine clinical and functional properties</p>
+              </div>
+              <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700/80 text-slate-300 font-semibold">Sagittal Brain Projection</span>
+            </div>
+
+            <!-- SVG Brain Slice -->
+            <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-4 flex justify-center items-center">
+              <svg viewBox="0 0 600 400" class="w-full max-w-lg h-auto">
+                <!-- Brain silhouette -->
+                <path d="M 120,320 C 80,300 60,240 60,180 C 60,100 120,60 220,50 C 320,40 460,50 500,120 C 530,170 540,240 500,280 C 470,310 430,300 410,320 C 390,340 370,350 350,350 C 340,330 330,320 300,325 C 270,330 250,360 210,360 C 180,360 150,340 120,320 Z"
+                      fill="none" stroke="#475569" stroke-width="3" class="opacity-40" />
+                <!-- Cerebellum & Brainstem -->
+                <path d="M 350,350 C 350,380 370,390 390,390 C 420,390 440,360 440,330 C 440,310 420,295 410,320 Z" fill="none" stroke="#475569" stroke-width="2" class="opacity-30" />
+                <path d="M 300,325 C 290,360 280,390 290,400" fill="none" stroke="#475569" stroke-dasharray="4" stroke-width="2" class="opacity-30" />
+                <!-- Thalamus -->
+                <ellipse cx="280" cy="210" rx="35" ry="25" fill="#1e293b" stroke="#64748b" stroke-width="1.5" />
+                <text x="280" y="214" font-size="10" fill="#94a3b8" text-anchor="middle" font-weight="bold">Thalamus</text>
+                <!-- Corpus Callosum Body -->
+                <g onclick="showStructureDetail('cc-body')" class="cursor-pointer group">
+                  <path d="M 190,175 C 220,135 310,135 340,175 C 330,185 300,165 250,165 C 210,165 195,182 190,175 Z" fill="transparent" stroke="transparent" stroke-width="15" />
+                  <path id="cc-body-svg" d="M 190,175 C 220,135 310,135 340,175 C 330,185 300,165 250,165 C 210,165 195,182 190,175 Z"
+                        fill="#8b5cf6" fill-opacity="0.2" stroke="#8b5cf6" stroke-width="2"
+                        class="transition-all duration-200 group-hover:fill-opacity-50" />
+                </g>
+                <!-- Splenium -->
+                <g onclick="showStructureDetail('cc-splenium')" class="cursor-pointer group">
+                  <path d="M 340,175 C 348,185 352,205 340,215 C 330,210 330,195 332,185 Z" fill="transparent" stroke="transparent" stroke-width="15" />
+                  <path id="cc-splenium-svg" d="M 340,175 C 348,185 352,205 340,215 C 330,210 330,195 332,185 Z"
+                        fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="2"
+                        class="transition-all duration-200 group-hover:fill-opacity-50" />
+                </g>
+                <!-- Anterior Commissure -->
+                <g onclick="showStructureDetail('ac')" class="cursor-pointer group">
+                  <circle cx="235" cy="210" r="22" fill="transparent" />
+                  <circle id="ac-svg" cx="235" cy="210" r="8"
+                          fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="2"
+                          class="transition-all duration-200 group-hover:fill-opacity-60 animate-pulse" />
+                </g>
+                <!-- Projection lines -->
+                <path d="M 190,175 C 130,140 100,180 120,230" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,4" class="opacity-40" />
+                <path d="M 345,190 C 420,170 450,200 460,260" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,4" class="opacity-40" />
+                <path d="M 235,210 C 235,240 220,280 180,280" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="2,2" class="opacity-40" />
+                <!-- Labels -->
+                <text x="250" y="115" font-size="11" fill="#c084fc" font-weight="bold">Corpus Callosum (Trunk)</text>
+                <line x1="250" y1="120" x2="250" y2="150" stroke="#c084fc" stroke-width="1" stroke-dasharray="2,2" />
+                <text x="410" y="150" font-size="11" fill="#34d399" font-weight="bold">Splenium</text>
+                <line x1="410" y1="155" x2="345" y2="190" stroke="#34d399" stroke-width="1" stroke-dasharray="2,2" />
+                <text x="140" y="214" font-size="11" fill="#fbbf24" font-weight="bold">Anterior Commissure</text>
+                <line x1="210" y1="211" x2="225" y2="211" stroke="#fbbf24" stroke-dasharray="2,2" />
+              </svg>
+
+              <!-- Structure detail overlay -->
+              <div id="structure-detail-panel" class="absolute bottom-4 left-4 right-4 bg-slate-900/95 border border-slate-700/60 p-4 rounded-xl shadow-2xl transition-all duration-300">
+                <h4 id="sd-title" class="text-sm font-bold text-purple-400">Structure Highlighted: Corpus Callosum Trunk</h4>
+                <p id="sd-description" class="text-xs text-slate-300 mt-1 leading-relaxed">
+                  Connects frontal, somatic, and anterior parietal cortical areas. Roland et al. demonstrated that bisection of this segment eliminates somatosensory homotopic functional connectivity (reducing correlation metrics to near zero), representing a dramatic structural disruption.
+                </p>
+              </div>
+            </div>
+
+            <!-- Structure navigation buttons -->
+            <div class="grid grid-cols-3 gap-3">
+              <button onclick="showStructureDetail('cc-body')" class="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700/50 text-xs text-center font-semibold text-slate-200 transition-all duration-150">
+                Corpus Callosum Body
+              </button>
+              <button onclick="showStructureDetail('cc-splenium')" class="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700/50 text-xs text-center font-semibold text-slate-200 transition-all duration-150">
+                The Splenium
+              </button>
+              <button onclick="showStructureDetail('ac')" class="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700/50 text-xs text-center font-semibold text-slate-200 transition-all duration-150">
+                Anterior Commissure
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ TAB: CONNECTIVITY LAB ═══════════ -->
+      <section id="tab-connectivity" class="tab-content hidden space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+          <!-- Controls Panel -->
+          <div class="lg:col-span-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+              <div class="border-b border-slate-800 pb-3">
+                <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+                  Connectivity Simulator
+                </h2>
+                <p class="text-xs text-slate-400">Based on Roland et al. (2017) resting-state fMRI metrics</p>
+              </div>
+
+              <!-- Surgical state selection -->
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">1. Select Surgical State</label>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="setConnectivityState('intact')" id="state-intact" class="state-btn p-3 bg-purple-600/20 text-purple-300 border border-purple-500/40 rounded-xl text-left text-xs font-semibold transition-all duration-200">
+                    <div class="font-bold">A. Intact Brain (Pre-Surgery)</div>
+                    <div class="text-[10px] text-purple-400/80 mt-0.5">Symmetric, robust homotopic functional connectivity.</div>
+                  </button>
+                  <button onclick="setConnectivityState('partial')" id="state-partial" class="state-btn p-3 bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-750 rounded-xl text-left text-xs font-semibold transition-all duration-200">
+                    <div class="font-bold">B. Partial Callosotomy (Splenium Spared)</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Posterior third preserved; localized occipital networks.</div>
+                  </button>
+                  <button onclick="setConnectivityState('complete')" id="state-complete" class="state-btn p-3 bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-750 rounded-xl text-left text-xs font-semibold transition-all duration-200">
+                    <div class="font-bold">C. Complete Callosotomy</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Total bisection; severe reduction in temporal correlations.</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Network selection -->
+              <div class="space-y-2 pt-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-400">2. Active Resting Network (RSN)</label>
+                <select id="selected-network" onchange="updateNetworkDisplay()" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-semibold text-slate-200 focus:outline-none focus:border-purple-500">
+                  <option value="vis">Primary Visual (VIS) Network</option>
+                  <option value="smn">Primary Sensorimotor (SMN) Network</option>
+                  <option value="fpc">Frontoparietal Control (Multimodal)</option>
+                  <option value="dmn">Default Mode (DMN &mdash; Multimodal)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Metrics Readout -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+              <span class="text-[10px] font-bold tracking-widest text-emerald-400 uppercase">Interactive Readout</span>
+              <div class="flex flex-col gap-1.5">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs text-slate-400 font-medium">Functional Coupling:</span>
+                  <span id="metric-strength-badge" class="px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wide uppercase border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Robust Synchrony</span>
+                </div>
+                <div class="flex justify-between items-baseline pt-1">
+                  <span class="text-xs text-slate-500">Correlation metrics:</span>
+                  <span id="metric-z" class="text-sm font-mono font-bold text-emerald-400">r &asymp; 0.69 <span class="text-slate-500 text-xs ml-1">(z-score = 0.85)</span></span>
+                </div>
+              </div>
+              <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden">
+                <div id="metric-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 85%;"></div>
+              </div>
+              <p id="metric-explanation" class="text-xs text-slate-400 leading-relaxed pt-1">
+                Baseline homotopic functional connectivity represents strong synchrony between visual areas in both hemispheres.
+              </p>
+            </div>
+          </div>
+
+          <!-- Simulation Visualizer -->
+          <div class="lg:col-span-8 bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="font-bold text-slate-100 text-base">Voxel-Mirrored Homotopic Connectivity (VMHC)</h3>
+                <p class="text-xs text-slate-400">Visualizing electrical synchrony between homotopic brain coordinates</p>
+              </div>
+              <span id="state-badge" class="px-2.5 py-1 rounded bg-purple-500/10 border border-purple-500/30 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Intact Brain</span>
+            </div>
+
+            <!-- Network Animation Viewport -->
+            <div class="bg-slate-950 rounded-xl border border-slate-800 p-6 flex justify-center items-center relative min-h-[300px]">
+              <svg viewBox="0 0 500 300" class="w-full max-w-lg h-auto">
+                <path d="M 250,20 C 130,20 60,70 60,150 C 60,230 140,280 250,280 C 360,280 440,230 440,150 C 440,70 370,20 250,20 Z"
+                      fill="none" stroke="#334155" stroke-width="2.5" />
+                <line x1="250" y1="20" x2="250" y2="280" stroke="#1e293b" stroke-width="2" stroke-dasharray="4" />
+                <!-- Left Node -->
+                <g id="node-left" transform="translate(150, 150)" class="transition-all duration-500">
+                  <circle r="12" fill="#3b82f6" fill-opacity="0.3" stroke="#3b82f6" stroke-width="2" />
+                  <circle r="5" fill="#3b82f6" />
+                  <text y="-20" font-size="10" fill="#94a3b8" font-weight="bold" text-anchor="middle">Left ROI</text>
+                </g>
+                <!-- Right Node -->
+                <g id="node-right" transform="translate(350, 150)" class="transition-all duration-500">
+                  <circle r="12" fill="#3b82f6" fill-opacity="0.3" stroke="#3b82f6" stroke-width="2" />
+                  <circle r="5" fill="#3b82f6" />
+                  <text y="-20" font-size="10" fill="#94a3b8" font-weight="bold" text-anchor="middle">Right ROI</text>
+                </g>
+                <!-- Connectivity path -->
+                <path id="connectivity-line" d="M 150,150 L 250,150 L 350,150"
+                      fill="none" stroke="#3b82f6" stroke-width="3" class="network-line-fast opacity-90 transition-all duration-500" />
+                <!-- Subcortical bypass -->
+                <path id="subcortical-path-l" d="M 150,150 C 180,220 210,240 250,240" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="2,4" class="opacity-40" />
+                <path id="subcortical-path-r" d="M 350,150 C 320,220 290,240 250,240" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="2,4" class="opacity-40" />
+                <circle id="thalamic-relay" cx="250" cy="240" r="6" fill="#475569" class="opacity-80" />
+                <text x="250" y="260" font-size="8" fill="#64748b" text-anchor="middle" font-weight="bold">Extracallosal Pathway</text>
+              </svg>
+
+              <!-- Longitudinal recovery overlay -->
+              <div class="absolute top-4 right-4 bg-slate-900/90 border border-slate-800 p-2.5 rounded-lg text-center text-[10px]">
+                <span class="text-slate-400">Longitudinal Recovery (2&ndash;7 Years):</span>
+                <div class="font-bold text-rose-400 mt-0.5" id="longitudinal-status">No Signs of Recovery</div>
+              </div>
+            </div>
+
+            <!-- Synthesis block -->
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs leading-relaxed space-y-2">
+              <span class="font-bold text-purple-400">Roland et al. Key Insight:</span>
+              <p id="synthesis-text" class="text-slate-300">
+                The visual network retains intact functional connectivity after partial callosotomy because the splenium is preserved. However, frontoparietal multimodal networks are significantly reduced, revealing that callosal bisection isolates complex associative systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ TAB: SPLIT-BRAIN SUITE (EXPERIMENTS) ═══════════ -->
+      <section id="tab-experiments" class="tab-content hidden space-y-8">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+
+          <!-- Experiment A: Dual Drawing Tracer -->
+          <div class="xl:col-span-6 bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-6">
+            <div>
+              <span class="px-2 py-0.5 bg-blue-500/10 border border-blue-500/30 text-xs font-bold text-blue-400 rounded-lg">Experiment A</span>
+              <h3 class="text-lg font-bold text-slate-100 mt-2">The Dual-Drawing Tracer (Bimanual Coordination)</h3>
+              <p class="text-xs text-slate-400 mt-1">Simulating motor programming decoupling as reviewed by Gazzaniga (2000)</p>
+            </div>
+
+            <!-- Mode toggle -->
+            <div class="flex gap-4">
+              <button onclick="setDrawMode('normal')" id="draw-mode-normal" class="flex-1 py-2 bg-blue-600 text-white border border-blue-500 text-xs font-bold rounded-xl shadow-lg transition-all duration-150">
+                Normal Brain (Spatially Coupled)
+              </button>
+              <button onclick="setDrawMode('split')" id="draw-mode-split" class="flex-1 py-2 bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold rounded-xl transition-all duration-150">
+                Split-Brain (Spatially Decoupled)
+              </button>
+            </div>
+
+            <!-- Drawing Canvas -->
+            <div class="grid grid-cols-2 gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800 relative">
+              <!-- Left Hand -->
+              <div class="bg-slate-900 rounded-lg p-3 text-center space-y-2 relative overflow-hidden h-48 flex flex-col justify-center items-center border border-slate-800">
+                <span class="text-[10px] font-bold tracking-widest uppercase text-slate-400">Left Hand (Right Hemi)</span>
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                  <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="2 2" />
+                    <circle id="left-brush" cx="50" cy="50" r="4" fill="#3b82f6" class="transition-all duration-75" />
+                    <path id="left-trail" d="" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span class="text-[10px] font-mono font-semibold text-slate-400">Target: Perfect Circle</span>
+              </div>
+              <!-- Right Hand -->
+              <div class="bg-slate-900 rounded-lg p-3 text-center space-y-2 relative overflow-hidden h-48 flex flex-col justify-center items-center border border-slate-800">
+                <span class="text-[10px] font-bold tracking-widest uppercase text-slate-400">Right Hand (Left Hemi)</span>
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                  <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <rect x="15" y="15" width="70" height="70" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="2 2" />
+                    <circle id="right-brush" cx="50" cy="50" r="4" fill="#10b981" class="transition-all duration-75" />
+                    <path id="right-trail" d="" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span class="text-[10px] font-mono font-semibold text-slate-400">Target: Perfect Square</span>
+              </div>
+              <!-- Run button overlay -->
+              <div class="absolute inset-0 bg-slate-950/20 backdrop-blur-[1px] flex justify-center items-center pointer-events-none">
+                <div class="bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-2 pointer-events-auto shadow-xl text-center">
+                  <button onclick="triggerDrawingSimulation()" class="text-xs font-bold text-purple-400 hover:text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Execute Bimanual Trace
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explanation -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs leading-relaxed space-y-2">
+              <span class="font-bold text-blue-400">Physiological Explanation:</span>
+              <p id="drawing-explanation-text" class="text-slate-300">
+                In normal brains, trying to draw a circle and a square simultaneously results in massive spatial interference&mdash;the motor plans cross over the corpus callosum and fuse. In split-brain patients, because the hemispheres are disconnected, each hand carries out its own independent spatial program without cross-talk!
+              </p>
+            </div>
+          </div>
+
+          <!-- Experiment B: Left-Hemisphere Interpreter -->
+          <div class="xl:col-span-6 bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-6">
+            <div>
+              <span class="px-2 py-0.5 bg-purple-500/10 border border-purple-500/30 text-xs font-bold text-purple-400 rounded-lg">Experiment B</span>
+              <h3 class="text-lg font-bold text-slate-100 mt-2">The Left-Hemisphere Interpreter Scenario</h3>
+              <p class="text-xs text-slate-400 mt-1">Interactive walkthrough of the &ldquo;Chicken Claw + Snow Scene&rdquo; experiment</p>
+            </div>
+
+            <!-- Step progress bar -->
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-400 font-semibold" id="interpreter-step-num">Step 1 of 4</span>
+              <div class="flex gap-1">
+                <span class="w-3 h-1.5 rounded-full bg-purple-500 transition-all duration-300" id="step-dot-1"></span>
+                <span class="w-3 h-1.5 rounded-full bg-slate-800 transition-all duration-300" id="step-dot-2"></span>
+                <span class="w-3 h-1.5 rounded-full bg-slate-800 transition-all duration-300" id="step-dot-3"></span>
+                <span class="w-3 h-1.5 rounded-full bg-slate-800 transition-all duration-300" id="step-dot-4"></span>
+              </div>
+            </div>
+
+            <!-- Visual scenario canvas -->
+            <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 relative min-h-[220px] flex flex-col justify-between">
+              <div id="interpreter-visuals" class="flex justify-around items-center gap-4 py-4">
+                <!-- Left Visual Field -->
+                <div class="text-center space-y-2 flex-1">
+                  <span class="text-[9px] font-bold text-rose-400 uppercase tracking-widest block">Left Visual Field</span>
+                  <div id="left-field-item" class="p-3 bg-slate-900 rounded-xl border border-rose-500/30 flex items-center justify-center text-xl shadow-lg transition-all duration-300">
+                    ❄️ Snow Storm
+                  </div>
+                  <span class="text-[9px] text-slate-400">Projects to RIGHT Hemisphere</span>
+                </div>
+                <!-- Midline divider -->
+                <div class="w-0.5 h-16 bg-slate-800 relative flex justify-center items-center">
+                  <span class="text-[10px] bg-slate-950 px-1 text-slate-500">CC</span>
+                </div>
+                <!-- Right Visual Field -->
+                <div class="text-center space-y-2 flex-1">
+                  <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block">Right Visual Field</span>
+                  <div id="right-field-item" class="p-3 bg-slate-900 rounded-xl border border-blue-500/30 flex items-center justify-center text-xl shadow-lg transition-all duration-300">
+                    🐓 Chicken Claw
+                  </div>
+                  <span class="text-[9px] text-slate-400">Projects to LEFT Hemisphere</span>
+                </div>
+              </div>
+              <!-- Dialogue bubble -->
+              <div id="interpreter-bubble" class="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-center text-xs text-purple-300 italic">
+                &ldquo;Information is flashed to the visual hemifields. The patient sees both items simultaneously.&rdquo;
+              </div>
+            </div>
+
+            <!-- Step controls -->
+            <div class="flex justify-between items-center">
+              <button onclick="prevInterpreterStep()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">
+                Previous Step
+              </button>
+              <button onclick="nextInterpreterStep()" id="interpreter-next-btn" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-xs font-bold rounded-xl text-white shadow-md shadow-purple-500/10">
+                Next Step
+              </button>
+            </div>
+
+            <!-- Takeaway: anosognosia -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+              <span class="font-bold text-purple-400">The Interpreter at Large: Anosognosia &amp; Reduplicative Paramnesia</span>
+              <p class="text-slate-300 leading-relaxed">
+                Gazzaniga explains that neurological syndromes like <strong>anosognosia</strong> (denying paralysis of a left hand) represent the intact left-hemisphere interpreter trying to maintain a coherent narrative. Lacking feedback due to a right-parietal lesion, it constructs the logical explanation: <em>&ldquo;That hand on my lap is not mine, it must belong to you!&rdquo;</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ TAB: STUDY LIBRARY ═══════════ -->
+      <section id="tab-library" class="tab-content hidden space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          <!-- Roland et al. Deep Dive -->
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <span class="px-2.5 py-1 text-xs font-semibold tracking-wider text-purple-400 bg-purple-500/10 rounded-full uppercase">Physiological Focus</span>
+            <h2 class="text-xl font-bold text-slate-100">Roland et al. (2017) Summary</h2>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              A cohort study of 22 patients with medically refractory epilepsy undergoing complete (16 patients) or partial (6 patients) corpus callosotomy. Resting-state networks were evaluated before and after bisection.
+            </p>
+            <div class="space-y-3 pt-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">High-Yield Takeaways:</h4>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-purple-400">1. Multimodal Associative Vulnerability</span>
+                <p class="text-xs text-slate-300">
+                  Homotopic functional connectivity dropped to near zero in multimodal regions (frontal, parietal, temporal), whilst primary visual and sensorimotor regions were partially spared.
+                </p>
+              </div>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-purple-400">2. Splenium as a Functional Hub</span>
+                <p class="text-xs text-slate-300">
+                  In partial callosotomy, sparing posterior splenial fibers preserved functional visual connectivity and even helped support frontal homotopic connectivity via polysynaptic pathways.
+                </p>
+              </div>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-purple-400">3. Absence of Postnatal Recovery</span>
+                <p class="text-xs text-slate-300">
+                  Multiyear longitudinal follow-up (ranging from 2 to 7 years) showed no evidence of recovery of interhemispheric functional connectivity, implying that critical compensatory windows occur only during prenatal or very early postnatal development.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gazzaniga Deep Dive -->
+          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+            <span class="px-2.5 py-1 text-xs font-semibold tracking-wider text-blue-400 bg-blue-500/10 rounded-full uppercase">Cognitive Focus</span>
+            <h2 class="text-xl font-bold text-slate-100">Gazzaniga (2000) Summary</h2>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Synthesis of 40 years of bisection studies in split-brain subjects (including key patients such as L.B., N.G., J.W., and D.R.). Focuses on lateralization, sensory-motor coupling, attention, and consciousness.
+            </p>
+            <div class="space-y-3 pt-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">High-Yield Takeaways:</h4>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-blue-400">1. The Evolutionary Enabler Hypothesis</span>
+                <p class="text-xs text-slate-300">
+                  Sparing of redundant functions (e.g., visuospatial processing in the right hemisphere) allowed the left hemisphere to mutate and adapt to generative language without total functional loss.
+                </p>
+              </div>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-blue-400">2. Sensory-Motor Specialization &amp; Saccades</span>
+                <p class="text-xs text-slate-300">
+                  Reaching is bilaterally accessible; grasping is strictly contralateral. Saccadic eye movements remain integrated subcortically, allowing both hemispheres to initiate and track saccades.
+                </p>
+              </div>
+              <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+                <span class="text-xs font-bold text-blue-400">3. Double Memory Dissociation</span>
+                <p class="text-xs text-slate-300">
+                  Left hemisphere handles elaborative semantic memory (prone to schema-based false alarms); right hemisphere maintains literal, veridical episodic memory (highly accurate).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Methods comparison table -->
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-lg font-bold text-slate-100">Key Contrast: Methods &amp; Concepts</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300 border-collapse">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-4">Parameter</th>
+                  <th class="py-3 px-4 text-purple-400">Roland et al. (2017)</th>
+                  <th class="py-3 px-4 text-blue-400">Gazzaniga (2000)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800">
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-slate-200">Main Paradigm</td>
+                  <td class="py-3 px-4">rs-fMRI, functional connectivity temporal correlations</td>
+                  <td class="py-3 px-4">Behavioral tachistoscopy, Purkinje eyetracking, motor tests</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-slate-200">Target Area</td>
+                  <td class="py-3 px-4">Physiological networks (SMN, VIS, DMN, FPC, etc.)</td>
+                  <td class="py-3 px-4">Cognitive systems (Lexicon, Syntax, Memory, Spatial attention)</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-slate-200">Splenial Contribution</td>
+                  <td class="py-3 px-4">Mediates visual networks and polysynaptic associative connectivity</td>
+                  <td class="py-3 px-4">Enables transfer of orthographic/visual word form information</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-slate-200">Primary Network Sparing</td>
+                  <td class="py-3 px-4">Sufficient thalamocortical/extracallosal subcortical paths</td>
+                  <td class="py-3 px-4">Maintains subcortical pacemakers (temporal coordination)</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-semibold text-slate-200">Core Interpretation</td>
+                  <td class="py-3 px-4">Callosal structural integrity is causal to functional connectivity</td>
+                  <td class="py-3 px-4">Interpreter system constructs unified conscious &ldquo;self&rdquo;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /.demo-wrapper -->
+
+
+  <!-- ══════════════════════════════════════════════════
+       SITE CHROME — Footer
+       ══════════════════════════════════════════════════ -->
+  <div class="site-container">
     <footer>
       PSYCH 302 &mdash; <a href="https://canvas.uw.edu/courses/1888912" target="_blank" rel="noopener">Canvas Course Site</a> &mdash; University of Washington
     </footer>
-
   </div>
 
-  
-  <!-- Global Search -->
+
+  <!-- ══════════════════════════════════════════════════
+       GLOBAL SEARCH
+       ══════════════════════════════════════════════════ -->
   <button class="search-fab" onclick="document.getElementById('searchOverlay').classList.add('active');document.getElementById('searchInput').focus();" aria-label="Search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </button>
@@ -421,7 +889,7 @@
   </div>
   <script>
   (function() {
-    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today\'s Lecture", "url": "today.html", "type": "Hub"}];
+    var idx = [{"title": "Lecture 1: What Is the Mind?", "url": "lectures/lecture-01.html", "type": "Literature"}, {"title": "Lecture 1 Content: What Is the Mind?", "url": "lecture-content/lecture-01/index.html", "type": "Content"}, {"title": "Lecture 2: Neurons &amp; Circuits", "url": "lectures/lecture-02.html", "type": "Literature"}, {"title": "Lecture 2 Content: Neurons &amp; Circuits", "url": "lecture-content/lecture-02/index.html", "type": "Content"}, {"title": "Lecture 3: Brain Networks", "url": "lectures/lecture-03.html", "type": "Literature"}, {"title": "Lecture 3 Content: Brain Networks", "url": "lecture-content/lecture-03/index.html", "type": "Content"}, {"title": "Lecture 4: Language &amp; Brain Maps", "url": "lectures/lecture-04.html", "type": "Literature"}, {"title": "Lecture 4 Content: Language &amp; Brain Maps", "url": "lecture-content/lecture-04/index.html", "type": "Content"}, {"title": "Lecture 5: Visual Perception", "url": "lectures/lecture-05.html", "type": "Literature"}, {"title": "Lecture 5 Content: Visual Perception", "url": "lecture-content/lecture-05/index.html", "type": "Content"}, {"title": "Lecture 6: Attention", "url": "lectures/lecture-06.html", "type": "Literature"}, {"title": "Lecture 6 Content: Attention", "url": "lecture-content/lecture-06/index.html", "type": "Content"}, {"title": "Lecture 7: Emotional Brain", "url": "lectures/lecture-07.html", "type": "Literature"}, {"title": "Lecture 7 Content: Emotional Brain", "url": "lecture-content/lecture-07/index.html", "type": "Content"}, {"title": "Lecture 8: Memory", "url": "lectures/lecture-08.html", "type": "Literature"}, {"title": "Lecture 8 Content: Memory", "url": "lecture-content/lecture-08/index.html", "type": "Content"}, {"title": "Lecture 9: Cognitive Control", "url": "lectures/lecture-09.html", "type": "Literature"}, {"title": "Lecture 9 Content: Cognitive Control", "url": "lecture-content/lecture-09/index.html", "type": "Content"}, {"title": "Lecture 10: Brain Injury &amp; Recovery", "url": "lectures/lecture-10.html", "type": "Literature"}, {"title": "Lecture 10 Content: Brain Injury &amp; Recovery", "url": "lecture-content/lecture-10/index.html", "type": "Content"}, {"title": "Lecture 11: Agency", "url": "lectures/lecture-11.html", "type": "Literature"}, {"title": "Lecture 11 Content: Agency", "url": "lecture-content/lecture-11/index.html", "type": "Content"}, {"title": "Lecture 12: Global Workspace", "url": "lectures/lecture-12.html", "type": "Literature"}, {"title": "Lecture 12 Content: Global Workspace", "url": "lecture-content/lecture-12/index.html", "type": "Content"}, {"title": "Lecture 13: Dynamic Brain", "url": "lectures/lecture-13.html", "type": "Literature"}, {"title": "Lecture 13 Content: Dynamic Brain", "url": "lecture-content/lecture-13/index.html", "type": "Content"}, {"title": "Lecture 14: Predictive Brain", "url": "lectures/lecture-14.html", "type": "Literature"}, {"title": "Lecture 14 Content: Predictive Brain", "url": "lecture-content/lecture-14/index.html", "type": "Content"}, {"title": "Lecture 15: Social Brain", "url": "lectures/lecture-15.html", "type": "Literature"}, {"title": "Lecture 15 Content: Social Brain", "url": "lecture-content/lecture-15/index.html", "type": "Content"}, {"title": "Lecture 16: Split Brain", "url": "lectures/lecture-16.html", "type": "Literature"}, {"title": "Lecture 16 Content: Split Brain", "url": "lecture-content/lecture-16/index.html", "type": "Content"}, {"title": "Lecture 17: Mind Like Fire Unbound", "url": "lectures/lecture-17.html", "type": "Literature"}, {"title": "Lecture 17 Content: Mind Like Fire Unbound", "url": "lecture-content/lecture-17/index.html", "type": "Content"}, {"title": "Demo: Brain Network Explorer", "url": "lecture-content/interactive-demos/brain-network-explorer/index.html", "type": "Demo"}, {"title": "Demo: Two Visual Streams", "url": "lecture-content/interactive-demos/two-visual-streams/index.html", "type": "Demo"}, {"title": "Demo: Attention Awareness", "url": "lecture-content/interactive-demos/attention-awareness/index.html", "type": "Demo"}, {"title": "Demo: Neural Dynamics", "url": "lecture-content/interactive-demos/neural-dynamics/index.html", "type": "Demo"}, {"title": "Demo: Predictive Coding", "url": "lecture-content/interactive-demos/predictive-coding/index.html", "type": "Demo"}, {"title": "Demo: Split Brain", "url": "lecture-content/interactive-demos/split-brain/index.html", "type": "Demo"}, {"title": "Demo: Emotional Brain Explorer", "url": "lecture-content/interactive-demos/emotional-brain/index.html", "type": "Demo"}, {"title": "Demo: Memory Systems Lab", "url": "lecture-content/interactive-demos/memory-systems/index.html", "type": "Demo"}, {"title": "Demo: Cognitive Control Dashboard", "url": "lecture-content/interactive-demos/cognitive-control/index.html", "type": "Demo"}, {"title": "Demo: Brain Injury &amp; Recovery Simulator", "url": "lecture-content/interactive-demos/brain-injury/index.html", "type": "Demo"}, {"title": "Demo: Agency &amp; Free Will Lab", "url": "lecture-content/interactive-demos/agency-free-will/index.html", "type": "Demo"}, {"title": "Demo: Global Workspace Simulator", "url": "lecture-content/interactive-demos/global-workspace/index.html", "type": "Demo"}, {"title": "Demo: Social Brain Explorer", "url": "lecture-content/interactive-demos/social-brain/index.html", "type": "Demo"}, {"title": "Demo: Altered States Explorer", "url": "lecture-content/interactive-demos/altered-states/index.html", "type": "Demo"}, {"title": "Course Literature", "url": "course-literature.html", "type": "Hub"}, {"title": "Course Navigation", "url": "course-navigation.html", "type": "Hub"}, {"title": "Interactive Demos", "url": "interactive-demos.html", "type": "Hub"}, {"title": "Syllabus", "url": "syllabus.html", "type": "Hub"}, {"title": "Assignments", "url": "assignments.html", "type": "Hub"}, {"title": "Calendar", "url": "calendar.html", "type": "Hub"}, {"title": "Today's Lecture", "url": "today.html", "type": "Hub"}];
     var base = "../../../";
     window.doSearch = function(q) {
       var res = document.getElementById('searchResults');
@@ -445,6 +913,270 @@
   })();
   </script>
 
-<script src="../../../analytics.js" defer></script>
+
+  <!-- ══════════════════════════════════════════════════
+       INTERACTIVE JAVASCRIPT
+       ══════════════════════════════════════════════════ -->
+  <script>
+    // ── Tab Switching ──
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-slate-800', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-400', 'hover:text-slate-200');
+      });
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      var activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200');
+        activeBtn.classList.add('bg-slate-800', 'text-white', 'shadow-sm');
+      }
+    }
+
+    // ── Brain Hub: Structural Showcase ──
+    var structuralData = {
+      'cc-body': {
+        title: 'Corpus Callosum Trunk (Body)',
+        description: 'Interconnects frontal, somatic sensory, and anterior parietal cortical areas. Roland et al. demonstrated that complete bisection of this segment eliminates somatosensory homotopic functional connectivity (reducing correlation metrics to near zero), representing a dramatic structural disruption of functional communication.',
+        color: '#8b5cf6'
+      },
+      'cc-splenium': {
+        title: 'The Splenium (Posterior CC)',
+        description: 'Preserved posterior third of the corpus callosum. In partial callosotomy, keeping the splenium intact preserves interhemispheric functional visual connectivity. Gazzaniga notes that the splenium is highly specialized, specifically permitting visual word form (orthographic) transfer while blocking primary shape-matching.',
+        color: '#10b981'
+      },
+      'ac': {
+        title: 'Anterior Commissure',
+        description: 'The minor forebrain commissure. Gazzaniga clarifies a striking interspecies difference: while an intact anterior commissure successfully transfers visual information in split-brain monkeys, it performs no visual transfer in split-brain humans, primarily carrying olfactory and non-visual semantic data.',
+        color: '#f59e0b'
+      }
+    };
+
+    function showStructureDetail(id) {
+      var data = structuralData[id];
+      if (!data) return;
+      document.getElementById('sd-title').innerText = data.title;
+      document.getElementById('sd-title').style.color = data.color;
+      document.getElementById('sd-description').innerText = data.description;
+      ['cc-body-svg', 'cc-splenium-svg', 'ac-svg'].forEach(function(svgId) {
+        var el = document.getElementById(svgId);
+        if (el) el.setAttribute('fill-opacity', '0.2');
+      });
+      var activeEl = document.getElementById(id + '-svg');
+      if (activeEl) activeEl.setAttribute('fill-opacity', '0.6');
+    }
+
+    // ── Connectivity Simulator ──
+    var currentSurgicalState = 'intact';
+
+    function setConnectivityState(state) {
+      currentSurgicalState = state;
+      document.querySelectorAll('.state-btn').forEach(function(btn) {
+        btn.classList.remove('bg-purple-600/20', 'text-purple-300', 'border-purple-500/40');
+        btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700/60');
+      });
+      var activeBtn = document.getElementById('state-' + state);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700/60');
+        activeBtn.classList.add('bg-purple-600/20', 'text-purple-300', 'border-purple-500/40');
+      }
+      document.getElementById('state-badge').innerText = state.toUpperCase() + ' STATE';
+      updateNetworkDisplay();
+    }
+
+    function getStrengthDescriptor(zVal) {
+      if (zVal >= 0.7)  return { label: 'Robust Synchrony',                   colorClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' };
+      if (zVal >= 0.3)  return { label: 'Moderate Coupling',                   colorClass: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
+      if (zVal >= 0.05) return { label: 'Profound Deficit (Sparing Detected)', colorClass: 'bg-rose-500/10 text-rose-400 border-rose-500/20' };
+      return               { label: 'Fully Abolished (No Connectivity)',        colorClass: 'bg-slate-800 text-slate-400 border-slate-700' };
+    }
+
+    function updateNetworkDisplay() {
+      var network = document.getElementById('selected-network').value;
+      var connectivityLine = document.getElementById('connectivity-line');
+      var leftNode  = document.getElementById('node-left');
+      var rightNode = document.getElementById('node-right');
+
+      var zVal = 0.0, barWidth = '0%', explanation = '', pulseClass = 'network-line-fast', color = '#3b82f6';
+
+      if (currentSurgicalState === 'intact') {
+        zVal        = (network === 'vis' || network === 'smn') ? 0.85 : 0.75;
+        explanation = 'Intact Brain: Robust homotopic functional connectivity across all hemispheres.';
+        pulseClass  = 'network-line-fast';
+        color       = '#3b82f6';
+      } else if (currentSurgicalState === 'partial') {
+        if (network === 'vis') {
+          zVal = 0.78; color = '#10b981'; pulseClass = 'network-line-fast';
+          explanation = 'Partial Callosotomy: Spared splenium fibers preserve robust visual homotopic connectivity.';
+        } else if (network === 'smn') {
+          zVal = 0.15; color = '#ef4444'; pulseClass = 'network-line';
+          explanation = 'Partial Callosotomy: Anterior fibers are bisected, severely reducing somatosensory homotopic connectivity.';
+        } else {
+          zVal = 0.38; color = '#f59e0b'; pulseClass = 'network-line';
+          explanation = 'Partial Callosotomy: Multimodal frontal-parietal connectivity is significantly reduced but partially supported by posterior hubs.';
+        }
+      } else if (currentSurgicalState === 'complete') {
+        if (network === 'vis' || network === 'smn') {
+          zVal = 0.18; color = '#fbbf24'; pulseClass = 'network-line';
+          explanation = 'Complete Callosotomy: Primary networks are reduced but partially spared due to thalamocortical/extracallosal subcortical loop synchrony.';
+        } else {
+          zVal = -0.05; color = '#ef4444'; pulseClass = 'network-line';
+          explanation = 'Complete Callosotomy: Multimodal frontoparietal networks drop to near zero, indicating absolute interhemispheric disconnection.';
+        }
+      }
+
+      var rVal = Math.tanh(zVal).toFixed(2);
+      document.getElementById('metric-z').innerHTML = '<span class="text-slate-400">r ≈</span> ' + rVal + ' <span class="text-slate-500 text-xs ml-1.5">(z-score = ' + zVal.toFixed(2) + ')</span>';
+
+      var strengthBadge = document.getElementById('metric-strength-badge');
+      var strengthInfo  = getStrengthDescriptor(zVal);
+      strengthBadge.innerText   = strengthInfo.label;
+      strengthBadge.className   = 'px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wide uppercase border ' + strengthInfo.colorClass;
+
+      barWidth = Math.max(0, Math.min(100, (zVal + 0.1) * 100)) + '%';
+      document.getElementById('metric-bar').style.width           = barWidth;
+      document.getElementById('metric-bar').style.backgroundColor = color;
+      document.getElementById('metric-explanation').innerText     = explanation;
+
+      connectivityLine.setAttribute('stroke', color);
+      connectivityLine.setAttribute('class',  pulseClass);
+      connectivityLine.style.opacity = Math.max(0.1, zVal);
+
+      leftNode.querySelector('circle').setAttribute('stroke',  color);
+      rightNode.querySelector('circle').setAttribute('stroke', color);
+    }
+
+    // ── Bimanual Drawing Tracer ──
+    var currentDrawMode = 'normal';
+    var drawInterval = null;
+
+    function setDrawMode(mode) {
+      currentDrawMode = mode;
+      document.querySelectorAll('[id^="draw-mode-"]').forEach(function(btn) {
+        btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
+        btn.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
+      });
+      document.getElementById('draw-mode-' + mode).classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
+      document.getElementById('draw-mode-' + mode).classList.add('bg-blue-600', 'text-white', 'border-blue-500');
+
+      var expText = document.getElementById('drawing-explanation-text');
+      if (mode === 'normal') {
+        expText.innerHTML = '<strong>Spatially Coupled (Normal Brain):</strong> When an intact brain tries to trace a circle and a square simultaneously, spatial signals cross over the corpus callosum and interfere, causing both paths to drift. Tracing different shapes simultaneously is almost impossible.';
+      } else {
+        expText.innerHTML = '<strong>Spatially Decoupled (Split-Brain):</strong> With the corpus callosum sectioned, each hemisphere coordinates its own limb independently. The left hand draws a perfect circle, and the right hand draws a perfect square simultaneously, completely immune to spatial interference!';
+      }
+    }
+
+    function triggerDrawingSimulation() {
+      if (drawInterval) clearInterval(drawInterval);
+
+      var leftBrush  = document.getElementById('left-brush');
+      var rightBrush = document.getElementById('right-brush');
+      var leftTrail  = document.getElementById('left-trail');
+      var rightTrail = document.getElementById('right-trail');
+
+      var angle = 0, step = 0, maxSteps = 100;
+      var leftPathPoints = [], rightPathPoints = [];
+
+      drawInterval = setInterval(function() {
+        angle = (step / maxSteps) * 2 * Math.PI;
+        var lx, ly, rx, ry;
+
+        if (currentDrawMode === 'split') {
+          lx = 50 + 35 * Math.cos(angle);
+          ly = 50 + 35 * Math.sin(angle);
+          if      (step < 25) { rx = 15 + (step / 25) * 70;          ry = 15; }
+          else if (step < 50) { rx = 85;                              ry = 15 + ((step - 25) / 25) * 70; }
+          else if (step < 75) { rx = 85 - ((step - 50) / 25) * 70;   ry = 85; }
+          else                { rx = 15;                              ry = 85 - ((step - 75) / 25) * 70; }
+        } else {
+          var cx = 50 + 35 * Math.cos(angle);
+          var cy = 50 + 35 * Math.sin(angle);
+          var sx, sy;
+          if      (step < 25) { sx = 15 + (step / 25) * 70;          sy = 15; }
+          else if (step < 50) { sx = 85;                              sy = 15 + ((step - 25) / 25) * 70; }
+          else if (step < 75) { sx = 85 - ((step - 50) / 25) * 70;   sy = 85; }
+          else                { sx = 15;                              sy = 85 - ((step - 75) / 25) * 70; }
+          lx = cx * 0.7 + sx * 0.3;
+          ly = cy * 0.7 + sy * 0.3;
+          rx = sx * 0.7 + cx * 0.3;
+          ry = sy * 0.7 + cy * 0.3;
+        }
+
+        leftBrush.setAttribute('cx', lx);
+        leftBrush.setAttribute('cy', ly);
+        rightBrush.setAttribute('cx', rx);
+        rightBrush.setAttribute('cy', ry);
+
+        leftPathPoints.push((step === 0 ? 'M' : 'L') + ' ' + lx + ' ' + ly);
+        rightPathPoints.push((step === 0 ? 'M' : 'L') + ' ' + rx + ' ' + ry);
+        leftTrail.setAttribute('d',  leftPathPoints.join(' '));
+        rightTrail.setAttribute('d', rightPathPoints.join(' '));
+
+        step++;
+        if (step >= maxSteps) clearInterval(drawInterval);
+      }, 30);
+    }
+
+    // ── Left-Hemisphere Interpreter Walkthrough ──
+    var currentInterpreterStep = 1;
+
+    var interpreterSteps = [
+      {
+        visuals: { left: '❄️ Snow Storm', right: '🐓 Chicken Claw' },
+        bubble: 'First, visual inputs are flashed to the split visual fields. The LEFT field sees a snowstorm (goes to the Right Hemisphere). The RIGHT field sees a chicken claw (goes to the speaking Left Hemisphere).',
+        nextBtn: 'Flash Stimulus'
+      },
+      {
+        visuals: { left: '❄️ ➡️ 🖐️', right: '🐓 ➡️ 🖐️' },
+        bubble: 'Next, cards are presented to the patient. The patient is asked to point with their left hand and right hand to matching associative items.',
+        nextBtn: 'Point to Associations'
+      },
+      {
+        visuals: { left: '🛠️ Shovel', right: '🐔 Chicken' },
+        bubble: 'The patient points to the SHOVEL with their left hand (controlled by the Right Hemisphere) and points to the CHICKEN with their right hand (controlled by the Left Hemisphere).',
+        nextBtn: 'Trigger Interpreter Speech'
+      },
+      {
+        visuals: { left: '🛠️ Shovel', right: '🐔 Chicken' },
+        bubble: 'Left Hemisphere Speech: “Oh, that is simple. The chicken claw goes with the chicken, and you need a shovel to clean out the chicken shed!” (Lacking access to the Right Hemisphere’s snowstorm, the left-hemisphere Interpreter constructs a coherent, logical theory to rationalize the action).',
+        nextBtn: 'Restart Scenario'
+      }
+    ];
+
+    function setInterpreterStep(step) {
+      currentInterpreterStep = step;
+      var data = interpreterSteps[step - 1];
+      document.getElementById('interpreter-step-num').innerText = 'Step ' + step + ' of 4';
+      for (var i = 1; i <= 4; i++) {
+        var dot = document.getElementById('step-dot-' + i);
+        if (i <= step) {
+          dot.classList.remove('bg-slate-800'); dot.classList.add('bg-purple-500');
+        } else {
+          dot.classList.remove('bg-purple-500'); dot.classList.add('bg-slate-800');
+        }
+      }
+      document.getElementById('left-field-item').innerText  = data.visuals.left;
+      document.getElementById('right-field-item').innerText = data.visuals.right;
+      document.getElementById('interpreter-bubble').innerText  = data.bubble;
+      document.getElementById('interpreter-next-btn').innerText = data.nextBtn;
+    }
+
+    function nextInterpreterStep() {
+      setInterpreterStep(currentInterpreterStep < 4 ? currentInterpreterStep + 1 : 1);
+    }
+    function prevInterpreterStep() {
+      if (currentInterpreterStep > 1) setInterpreterStep(currentInterpreterStep - 1);
+    }
+
+    // ── Init ──
+    window.onload = function() {
+      showStructureDetail('cc-body');
+      setConnectivityState('intact');
+      setInterpreterStep(1);
+    };
+  </script>
+
+  <script src="../../../analytics.js" defer></script>
 </body>
 </html>
