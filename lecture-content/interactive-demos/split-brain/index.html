@@ -76,40 +76,40 @@
       max-width: 780px;
       width: 100%;
       margin: 0 auto;
-      padding: 20px;
+      padding: 16px 20px;
     }
 
-    /* ── Header Card ── */
+    /* ── Header Card (compact) ── */
     .header-card {
-      padding: 40px 28px 32px;
+      padding: 16px 24px 14px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      margin-bottom: 24px;
+      border-radius: 14px;
+      margin-bottom: 10px;
       text-align: center;
       animation: fadeIn 0.6s ease-out;
     }
-    .header-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .header-icon { font-size: 1.5rem; margin-bottom: 6px; }
     .header-card h1 {
-      font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px;
+      font-size: 1.15rem; font-weight: 800; line-height: 1.25; margin-bottom: 4px;
       background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .header-card .arc-tag {
       display: inline-block;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 1px;
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 1px;
       text-transform: uppercase; color: var(--text-muted);
-      background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 4px;
-      margin-bottom: 14px;
+      background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 4px;
+      margin-bottom: 6px;
     }
     .header-card p {
-      font-size: 0.88rem; color: var(--text-secondary);
-      line-height: 1.6; max-width: 540px; margin: 0 auto;
+      font-size: 0.8rem; color: var(--text-secondary);
+      line-height: 1.5; max-width: 580px; margin: 0 auto;
     }
 
-    /* ── Quick Links ── */
+    /* ── Quick Links (embedded in header) ── */
     .quick-links {
-      display: flex; gap: 10px; margin-bottom: 24px;
+      display: flex; gap: 8px; margin-top: 12px; margin-bottom: 0;
       flex-wrap: wrap; justify-content: center;
     }
     .quick-link {
@@ -163,7 +163,7 @@
     /* ── Breadcrumb ── */
     .breadcrumb {
       display: flex; align-items: center; flex-wrap: wrap;
-      gap: 6px; margin-bottom: 32px; font-size: 0.78rem;
+      gap: 6px; margin-bottom: 12px; font-size: 0.78rem;
       animation: fadeIn 0.3s ease-out;
     }
     .breadcrumb a {
@@ -226,18 +226,17 @@
 
     /* ── Responsive ── */
     @media (max-width: 600px) {
-      .header-card h1 { font-size: 1.25rem; }
-      .quick-links { flex-direction: column; }
+      .header-card h1 { font-size: 1rem; }
+      .quick-links { flex-direction: column; align-items: center; }
     }
     @media (max-width: 380px) {
-      .header-card { padding: 24px 14px 20px; }
-      .header-card h1 { font-size: 1.1rem; }
-      .header-card p { font-size: 0.8rem; }
+      .header-card { padding: 12px 14px 10px; }
+      .header-card h1 { font-size: 0.95rem; }
+      .header-card p { font-size: 0.75rem; }
       .quick-link { font-size: 0.72rem; padding: 6px 12px; }
-      .section-card { padding: 16px 12px; }
     }
     @media (max-width: 812px) and (orientation: landscape) {
-      .header-card { padding: 24px 20px 18px; margin-bottom: 16px; }
+      .header-card { padding: 12px 20px 10px; margin-bottom: 8px; }
       .quick-links { flex-direction: row; }
     }
 
@@ -282,29 +281,17 @@
       <div class="header-icon">&#x1F9E0;</div>
       <span class="arc-tag">Corpus Callosum &amp; Lateralization</span>
       <h1>Split Brain Experiment</h1>
-      <p>Explore interhemispheric communication through interactive simulations of callosotomy patients. Visualize corpus callosum connectivity, run bimanual coordination experiments, and uncover how the left-hemisphere &ldquo;interpreter&rdquo; constructs a unified self.</p>
-    </div>
-
-    <div class="quick-links">
-      <a class="quick-link" href="../../lecture-16/index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Lecture 16 Content
-      </a>
-      <a class="quick-link" href="../../../lectures/lecture-16.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Lecture 16 Literature
-      </a>
-    </div>
-
-    <div class="section-card">
-      <h2>Concepts Explored</h2>
-      <ul class="concept-list">
-        <li>Hemispheric lateralization of function</li>
-        <li>The left-hemisphere &ldquo;interpreter&rdquo;</li>
-        <li>Callosotomy experiments (Roland et al. 2017 &amp; Gazzaniga 2000)</li>
-        <li>Interhemispheric functional connectivity (rs-fMRI &amp; VMHC)</li>
-        <li>Implications for the constructed self</li>
-      </ul>
+      <p>Explore callosotomy patients interactively &mdash; visualize corpus callosum connectivity, run bimanual coordination experiments, and uncover how the left-hemisphere &ldquo;interpreter&rdquo; constructs a unified self.</p>
+      <div class="quick-links">
+        <a class="quick-link" href="../../lecture-16/index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          Lecture 16 Content
+        </a>
+        <a class="quick-link" href="../../../lectures/lecture-16.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          Lecture 16 Literature
+        </a>
+      </div>
     </div>
 
   </div><!-- /.site-container -->
